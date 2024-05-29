@@ -4,6 +4,8 @@
 # se usa sin password de root
 #el esquema se importa del archivo cafeteria.sql
 #el cual se copia en la carpeta /docker-entrypoint-initdb.d
+#limitamos el procesador y mejoria de contenedor
+#levante con docker-compose up -d
 services:
   mysql:
     image: mysql:8.0-debian
@@ -11,10 +13,20 @@ services:
     restart: unless-stopped
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"      
-      MYSQL_DATABASE: restaurante      
+      MYSQL_DATABASE: cafeteria      
     ports:
       - "3306:3306"
     volumes:
-      - ./cafeteria.sql:/docker-entrypoint-initdb.d
+      - ./cafeteria.sql:/docker-entrypoint-initdb.d/cafeteria.sql
+    deploy:
+          resources:
+            limits:
+              cpus: '2'
+              memory: 1G
+            reservations:
+              cpus: '1'
+              memory: 256M    
+    
+    
 
     
