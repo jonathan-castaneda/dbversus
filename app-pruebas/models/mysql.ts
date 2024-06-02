@@ -13,14 +13,19 @@ const sequelize = new Sequelize({
     port: 3306
 });
 
-const categorias = sequelize.define('categorias', {
+const categorias = sequelize.define('categorias', 
+{
   id: { type: DataTypes.NUMBER, primaryKey: true},
-  nombre: DataTypes.STRING,
+  nombre: { type: DataTypes.STRING , allowNull: false},
+}, 
+{
+  timestamps: false //no crea campos createdAt ni updateAt
 });
 
 const db={
     sequelize,
     categorias
 }
-
-export default db;
+//exporto dos objetos el objeto db.sequelize y el objeto categorias
+//export default db;
+export {sequelize, categorias}; //exporto dos objetos el objeto db.sequelize y el objeto categorias
