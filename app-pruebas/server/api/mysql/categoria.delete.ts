@@ -1,4 +1,4 @@
-
+//Endpoint para eliminar una categoria de la base de datos
 import {categorias} from "../../utils/mysql";
 
 export default defineEventHandler(async (event) => {
@@ -7,17 +7,16 @@ export default defineEventHandler(async (event) => {
     //console.log(body)
     
     try {
-        //ahora guardo en la base de datos
-        //await db.sequelize.authenticate();
-        const data = await categorias.create({
-                        id: body.id,
-                        nombre: body.nombre,
-                        });
-        return { statusCode:200, "message":"insertado" };
+        //eliminamos de la base de datos
+        const data = await categorias.destroy({
+                        where: {
+                            id: body.id
+                        }
+                    });
+        return { statusCode:200, "message":"eliminado" };
       } catch (error) {
         console.error('Unable to connect to the database:', error);
         return(error)
       }
-
     
   })
