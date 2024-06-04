@@ -1,5 +1,5 @@
 //buscamos una categoria por su ID dicho id viene en el get
-import{categorias} from "../../utils/mysql";
+import{categorias} from "../../../utils/mysql";
 export default defineEventHandler(async (event) => {      
     try {
         const data = await categorias.findOne({where: {id: event.context.params.id}});

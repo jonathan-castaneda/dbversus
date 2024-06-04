@@ -1,0 +1,7 @@
+{
+    "categorias":{
+        "insertar":50,
+        "aleatorio":25,
+        "actualizar":25        
+    }
+}

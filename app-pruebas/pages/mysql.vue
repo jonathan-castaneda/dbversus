@@ -5,12 +5,12 @@
             <div class="q-ml-lg">
                 <q-btn @click="realizarPruebas" color="primary">Iniciar</q-btn>
             </div>
-            
-            
         </div>
         <div class="row">
             <p>{{ tiemposInsercion }}</p>
             <p>{{ tiemposConsulta }}</p>
+            <p>{{ tiemposActualizacion }}</p>
+            <p>{{ tiemposEliminacion }}</p>
 
         </div>
         
@@ -19,27 +19,31 @@
 
 <script setup lang="ts">
 import { ref} from 'vue'
+import pruebas from '../server/utils/pruebas.json'
 
 const tiemposInsercion= ref([])
 const tiemposConsulta= ref([])
+const tiemposActualizacion= ref([])
+const tiemposEliminacion= ref([])
+
 
 function realizarPruebas() {
-    //categoriasInsertar()
-    //categoriasConsultar()
-    categoriasConsultarAzar()
+    categoriasInsertar(pruebas.categorias.insertar)
+    categoriasConsultar()
+    categoriasConsultarAzar(pruebas.categorias.aleatorio)
 }
 
-//insertando 50 categorias
-async function categoriasInsertar() {
+//insertando nuevas categorias
+ function categoriasInsertar(total: number) {
     let start = new Date().getTime();    
-    for (let i = 1; i <= 50; i++) {
+    for (let i = 1; i <= total; i++) {
         const ldata = {
             id: i,
             nombre: "Categoria " + i,
         }
         //agrego usando useFetch
         
-        const { data, error } = await useFetch('http://localhost:3000/api/mysql/categoria', {
+        const { data, error } = useFetch('http://localhost:3000/api/mysql/categoria', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -50,12 +54,13 @@ async function categoriasInsertar() {
     let end = new Date().getTime();
     let time = end - start;
     tiemposInsercion.value.push(time);
+    
 }
 
-//Consultando las 50 categorias
-async function categoriasConsultar() {
+//Consultando todas las categorias
+function categoriasConsultar() {    
     let start = new Date().getTime();
-    const { data, error } = await useFetch('http://localhost:3000/api/mysql/categorias', {
+    const { data, error } = useFetch('http://localhost:3000/api/mysql/categorias', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -63,15 +68,15 @@ async function categoriasConsultar() {
     })
     let end = new Date().getTime();
     let time = end - start;
-    tiemposConsulta.value.push(time);    
+    tiemposConsulta.value.push(time);        
 }
 
-//Consultamos 25 categorias al azar (min 1, max 50)
-async function categoriasConsultarAzar() {
+//Consultamos categorias al azar
+function categoriasConsultarAzar(total:number) {    
     let start = new Date().getTime();
-    for (let i = 1; i <= 25; i++) {
-        let id = Math.floor(Math.random() * 50) + 1;
-        const { data, error } = await useFetch('http://localhost:3000/api/mysql/categoria/' + id, {
+    for (let i = 1; i <= total; i++) {
+        let id = Math.floor(Math.random() * pruebas.categorias.insertar) + 1;
+        const { data, error } = useFetch('http://localhost:3000/api/mysql/categoria/' + id, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -80,7 +85,24 @@ async function categoriasConsultarAzar() {
     }
     let end = new Date().getTime();
     let time = end - start;
-    tiemposConsulta.value.push(time);
+    tiemposConsulta.value.push(time);    
+}
+
+//eliminando las categorias
+function categoriasEliminar(total:number) {
+    let start = new Date().getTime();
+    for (let i = 1; i <= total; i++) {
+        const { data, error } = useFetch('http://localhost:3000/api/mysql/categorias', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: i })
+        })  
+    }
+    let end = new Date().getTime();
+    let time = end - start;
+    tiemposEliminacion.value.push(time);    
 }
 
 
