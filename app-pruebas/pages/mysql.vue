@@ -28,9 +28,20 @@ const tiemposEliminacion= ref([])
 
 
 function realizarPruebas() {
+    //iniciamos con insertar
     categoriasInsertar(pruebas.categorias.insertar)
+    
+    //ahora procedemos a realizar consultas
     categoriasConsultar()
     categoriasConsultarAzar(pruebas.categorias.aleatorio)
+
+    //Actualizaciones de datos
+    categoriasActualizar(pruebas.categorias.actualizar)
+
+    //Consultas de Resumentes o Totales -Avanzadas
+
+    //Eliminacion de datos
+    categoriasEliminar(pruebas.categorias.insertar)
 }
 
 //insertando nuevas categorias
@@ -88,11 +99,31 @@ function categoriasConsultarAzar(total:number) {
     tiemposConsulta.value.push(time);    
 }
 
+function categoriasActualizar(total:number) {
+    let start = new Date().getTime();
+    for (let i = 1; i <= total; i++) {
+        const ldata = {
+            id: i,
+            nombre: "Categoria " + i + " Actualizada",
+        }
+        const { data, error } = useFetch('http://localhost:3000/api/mysql/categoria/'+i, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(ldata)
+        })        
+    }
+    let end = new Date().getTime();
+    let time = end - start;
+    tiemposActualizacion.value.push(time);    
+}
+
 //eliminando las categorias
 function categoriasEliminar(total:number) {
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
-        const { data, error } = useFetch('http://localhost:3000/api/mysql/categorias', {
+        const { data, error } = useFetch('http://localhost:3000/api/mysql/categoria/'+i, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
