@@ -3,5 +3,15 @@
         "insertar":50,
         "aleatorio":25,
         "actualizar":25        
+    },
+    "productos":{
+        "insertar":250,
+        "aleatorio":100,
+        "actualizar":100        
+    },
+    "ordenes":{
+        "insertar":500,
+        "aleatorio":50,
+        "actualizar":50        
     }
 }
