@@ -7,11 +7,10 @@
             </div>
         </div>
         <div class="row">
-            <p>{{ tiemposInsercion }}</p>
-            <p>{{ tiemposConsulta }}</p>
-            <p>{{ tiemposActualizacion }}</p>
-            <p>{{ tiemposEliminacion }}</p>
-
+            <p>{{ tiemposInsercion }} {{ erroresInsercion }}</p> <br>
+            <p>{{ tiemposConsulta }} {{ erroresConsulta }}</p> <br>
+            <p>{{ tiemposActualizacion }} {{ erroresActualizacion }}</p> <br>
+            <p>{{ tiemposEliminacion }} {{ erroresEliminacion }}</p>
         </div>
         
     </div>
@@ -25,7 +24,10 @@ const tiemposInsercion= ref([])
 const tiemposConsulta= ref([])
 const tiemposActualizacion= ref([])
 const tiemposEliminacion= ref([])
-
+const erroresInsercion= ref(0)
+const erroresConsulta= ref(0)
+const erroresActualizacion= ref(0)
+const erroresEliminacion= ref(0)
 
 function realizarPruebas() {
     //iniciamos con insertar
@@ -59,7 +61,10 @@ function realizarPruebas() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(ldata)
+            body: JSON.stringify(ldata),
+            onRequestError({ request, options, error }) {
+                erroresInsercion.value++
+            },
         })        
     }
     let end = new Date().getTime();
