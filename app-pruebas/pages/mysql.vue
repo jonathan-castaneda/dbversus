@@ -267,5 +267,69 @@ async function productosEliminar(total:number) {
 }
 //FIN DE PRODUCTOS
 
+//Metodos para las ordenes
+
+async function ordenesInsertar(total:number, totaldetalle:number){
+    let start = new Date().getTime();
+    //vamos a insertar las ordenes por bloques de meses de modo que las ordenes esten distribuidas en todos los dias de ese mes
+    for (let mes=0; mes<=11; mes++){
+        //variable que contiene el año actual
+        let anio = new Date().getFullYear();
+        for (let i = 1; i <= (total/12); i++) {
+            //creo una variable fecha que contenga el año, mes y dia al azar
+            let lfecha = new Date(anio, mes, Math.floor(Math.random() * 27) + 1);           
+        const ldata = {
+            id: i,
+            fecha:lfecha,
+            total: Math.floor(Math.random() * 100) + 1,
+        }
+        //agrego usando useFetch        
+        await useFetch('http://localhost:3000/api/mysql/orden', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(ldata),            
+            onRequestError({ request, options, error }) {
+                erroresInsercion.value++
+            },
+            onResponse({ response }) {
+                //Ahora Agregamos los detalles de la orden los cuales serán segun el totaldetalle
+                for (let j = 1; j <= totaldetalle; j++) {
+                    const ldatadetalle = {                        
+                        idorden: i,
+                        idproducto: Math.floor(Math.random() * pruebas.productos.insertar) + 1,
+                        cantidad: Math.floor(Math.random() * 10) + 1,
+                        precio: Math.floor(Math.random() * 100) + 1,
+                    }
+                    //agrego usando useFetch        
+                    await useFetch('http://localhost:3000/api/mysql/ordendetalle', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(ldatadetalle),            
+                        onRequestError({ request, options, error }) {
+                            erroresInsercion.value++
+                        },
+                    })        
+                }
+
+               
+            } //fin del onResponse
+        })        
+    }
+
+    } //fin del for del mes
+   
+    let end = new Date().getTime();
+    let time = end - start;
+    tiemposInsercion.value.push(time);
+
+}
+
+
+//Fin de las ordenes
+
 
 </script>

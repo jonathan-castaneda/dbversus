@@ -6,13 +6,17 @@
           </q-toolbar-title>
           <q-tabs inline-label
         class="text-white shadow-2" align="justify" >
-        <q-tab @click="navigateTo('/mysql')" icon="description" label="Mysql" />
-        <q-tab @click="navigateTo('/mariadb')" icon="database" label="MariaDB" />
-        <q-tab icon="save" label="PostgreSQL" />
-        <q-tab icon="folder" label="Oracle" />
-        <q-tab icon="cloud" label="MongoDB" />
-        <q-tab icon="task" label="Cassandra" />
-        <q-tab icon="description" label="CouchDB" />
+        <q-tab @click="navigateTo('/mysql')" label="Mysql" class="text-capitalize" />
+        <q-tab @click="navigateTo('/mariadb')"  label="MariaDB" class="text-capitalize" />
+        <q-tab  label="PostgreSQL" class="text-capitalize" />
+        <q-tab  label="SQLite" class="text-capitalize" />
+        <q-tab  label="SQL Server" class="text-capitalize" />
+        <q-tab  label="FireBird" class="text-capitalize" />
+        <q-tab  label="Oracle" class="text-capitalize" />
+        <q-tab  label="MongoDB" class="text-capitalize" />
+        <q-tab  label="Cassandra" class="text-capitalize" />
+        <q-tab  label="CouchDB" class="text-capitalize" />
+        <q-tab  label="RethinkDB" class="text-capitalize" />
       </q-tabs>
         <q-space />
     </q-toolbar>
