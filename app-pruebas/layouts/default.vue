@@ -1,5 +1,6 @@
 <template>
-        <q-toolbar class="bg-secondary">
+    <div>
+      <q-toolbar class="bg-secondary">
           <q-toolbar-title @click="navigateTo('/')">            
             DB Rendimiento
           </q-toolbar-title>
@@ -15,6 +16,8 @@
       </q-tabs>
         <q-space />
     </q-toolbar>
+    <slot></slot>
+    </div>
     
   </template>
 
