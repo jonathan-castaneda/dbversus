@@ -34,22 +34,23 @@ async function realizarPruebas() {
     //iniciamos con insertar
     await categoriasInsertar(pruebas.categorias.insertar)
     await productosInsertar(pruebas.productos.insertar)
+    await ordenesInsertar(pruebas.ordenes.insertar, pruebas.ordenes.detalleoden)
     
     //ahora procedemos a realizar consultas
-    await categoriasConsultar()
-    await categoriasConsultarAzar(pruebas.categorias.aleatorio)
-    await productosConsultar()
-    await productosConsultarAzar(pruebas.productos.aleatorio)
+    //await categoriasConsultar()
+    //await categoriasConsultarAzar(pruebas.categorias.aleatorio)
+    //await productosConsultar()
+    //await productosConsultarAzar(pruebas.productos.aleatorio)
 
     //Actualizaciones de datos
-    await categoriasActualizar(pruebas.categorias.actualizar)
-    await productosActualizar(pruebas.productos.actualizar)
+    //await categoriasActualizar(pruebas.categorias.actualizar)
+    //await productosActualizar(pruebas.productos.actualizar)
 
     //Consultas de Resumentes o Totales -Avanzadas
 
     //Eliminacion de datos
-    await categoriasEliminar(pruebas.categorias.insertar)
-    await productosEliminar(pruebas.productos.insertar)
+    //await categoriasEliminar(pruebas.categorias.insertar)
+    //await productosEliminar(pruebas.productos.insertar)
 }
 
 //insertando nuevas categorias
@@ -277,23 +278,40 @@ async function ordenesInsertar(total:number, totaldetalle:number){
         let anio = new Date().getFullYear();
         for (let i = 1; i <= (total/12); i++) {
             //creo una variable fecha que contenga el año, mes y dia al azar
-            let lfecha = new Date(anio, mes, Math.floor(Math.random() * 27) + 1);           
+            let lfecha: string = anio +","+ mes + "," + Math.floor(Math.random() * 28 + 1);
         const ldata = {
             id: i,
             fecha:lfecha,
             total: Math.floor(Math.random() * 100) + 1,
         }
+        
         //agrego usando useFetch        
         await useFetch('http://localhost:3000/api/mysql/orden', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(ldata),            
+            body: JSON.stringify(ldata),
             onRequestError({ request, options, error }) {
                 erroresInsercion.value++
             },
             onResponse({ response }) {
+                //detalleOrdenInsertar(totaldetalle)
+            },                       
+            
+        })        
+    }
+
+    } //fin del for del mes
+   
+    let end = new Date().getTime();
+    let time = end - start;
+    tiemposInsercion.value.push(time);
+
+}
+
+async function detalleOrdenInsertar(totalordenes: number){
+   
                 //Ahora Agregamos los detalles de la orden los cuales serán segun el totaldetalle
                 for (let j = 1; j <= totaldetalle; j++) {
                     const ldatadetalle = {                        
@@ -316,15 +334,8 @@ async function ordenesInsertar(total:number, totaldetalle:number){
                 }
 
                
-            } //fin del onResponse
-        })        
-    }
+     
 
-    } //fin del for del mes
-   
-    let end = new Date().getTime();
-    let time = end - start;
-    tiemposInsercion.value.push(time);
 
 }
 

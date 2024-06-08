@@ -1,21 +1,33 @@
 //agregamos una orden
 import { ordenes } from "../../utils/mysql";
-export default defineEventHandler(async (event) => {
-    
+
+//importamos fecha de sequelize types
+import { DataTypes } from 'sequelize';
+
+export default defineEventHandler(async (event) => {    
     const body = await readBody(event);
-    //console.log(body)    
+    console.log(body)
     try {
+
         //valido que en el body vengan todos los campos requeridos
         if (!body.id || !body.fecha || !body.total || body.total < 0 ) {
             return { statusCode: 400, "message": "Faltan campos requeridos" };
         }
-        //ahora guardo en la base de datos
-        //await db.sequelize.authenticate();
-        const data = await ordenes.create({
+        //console.log(body) 
+        //la fecha viene en string anho,mes,dia
+        //la convierto a un objeto Date
+        //console.log(body.fecha)
+        let [anho,mes,dia] = body.fecha.split(",");
+        let lfecha = new Date(anho,mes-1,dia,0,0,0,0);
+        //console.log(lfecha)
+               
+        await ordenes.create({
             id: body.id,
-            fecha: body.fecha,
-            total: body.total,
+            fecha: lfecha,
+            total: body.total
         });
+       
+        
         return { statusCode: 200, "message": "insertado" };
     } catch (error) {
         console.error('Unable to connect to the database:', error);

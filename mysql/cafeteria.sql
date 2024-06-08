@@ -37,7 +37,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `cafeteria`.`ordenes` (
   `id` INT NOT NULL,
-  `fecha` DATETIME NOT NULL,
+  `fecha` DATE NOT NULL,
   `total` DECIMAL(8,2) NOT NULL DEFAULT '0.00',
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
