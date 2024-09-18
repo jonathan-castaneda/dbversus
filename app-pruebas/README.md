@@ -6,6 +6,8 @@ Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introdu
 
 Se requiere de node 21.7.3
 
+Recuerda que primero debes levantar los gestores dokerizados de las bases de datos para poder hacer las pruebas.
+
 Make sure to install the dependencies:
 
 ```bash
@@ -18,8 +20,6 @@ pnpm install
 # yarn
 yarn install
 
-# bun
-bun install
 ```
 
 ## Development Server
@@ -36,8 +36,7 @@ pnpm run dev
 # yarn
 yarn dev
 
-# bun
-bun run dev
+
 ```
 
 ## Production

@@ -7,6 +7,14 @@
             </div>
         </div>
         <div class="row">
+            <div class="text-caption col-12">
+                Recuerda que debes tener arrancado el contenedor de MYSQL levantado con docker y no debe tener datos, solo debe tener la estructura de las tablas.
+                Haz clic en iniciar y comenzamos las pruebas, primero insertando, luego actualizando, consultando y eliminando.
+                Si vuelves ha hacer pruebas se recomienda que ejecutes docker compose down y luego docker compose up -d
+            </div>
+            <div class="col-12 text-h6">Resultados de las pruebas:</div>
+        </div>
+        <div class="row">
             <p >{{ tiemposInsercion }} {{ erroresInsercion }} </p> 
             <p >{{ tiemposConsulta }} {{ erroresConsulta }}</p> 
             <p >{{ tiemposActualizacion }} {{ erroresActualizacion }}</p> 
@@ -30,8 +38,13 @@ const erroresActualizacion= ref(0)
 const erroresEliminacion= ref(0)
 
 
+/*
+Categorias y Productos funciona todo bien, 
+trabajando en ordenesInsertar y detalleOrdenInsertar
+*/
 async function realizarPruebas() {
-    //iniciamos con insertar
+    try {
+        //iniciamos con insertar
     await categoriasInsertar(pruebas.categorias.insertar)
     await productosInsertar(pruebas.productos.insertar)
     await ordenesInsertar(pruebas.ordenes.insertar, pruebas.ordenes.detalleoden)
@@ -49,8 +62,15 @@ async function realizarPruebas() {
     //Consultas de Resumentes o Totales -Avanzadas
 
     //Eliminacion de datos
-    //await categoriasEliminar(pruebas.categorias.insertar)
     //await productosEliminar(pruebas.productos.insertar)
+    //await categoriasEliminar(pruebas.categorias.insertar)
+
+    console.log("Terminaron las pruebas realizadas")
+} catch (error) {
+        console.error(error)
+    }
+
+    
 }
 
 //insertando nuevas categorias
