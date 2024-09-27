@@ -1,11 +1,11 @@
-import { detalleOrden } from "../../../utils/mysql";
+import { detalleorden } from "../../../utils/mysql";
 //Endpoint donde obtenemos todos los detalle orden seguin el id de la orden
 export default defineEventHandler(async (event) => {   
     try {
         //buscamos en la base de datos
-        const data = await detalleOrden.findAll({
+        const data = await detalleorden.findAll({
                         where: {
-                            idOrden: event.context.params.idorden
+                            idorden: event.context.params.idorden
                         }
                     });
         return { statusCode:200, data };

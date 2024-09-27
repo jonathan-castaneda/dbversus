@@ -37,18 +37,18 @@ const productos = sequelize.define('productos',
 const ordenes = sequelize.define('ordenes', 
 {
   id: { type: DataTypes.NUMBER, primaryKey: true},
-  fecha: { type: DataTypes.DATE , allowNull: false},
+  fecha: { type: DataTypes.DATEONLY , allowNull: false},  
   total: { type: DataTypes.NUMBER , allowNull: false},  
 }, 
 {
   timestamps: false //no crea campos createdAt ni updateAt
 });
 
-//Tabla detalleOrden
-const detalleOrden = sequelize.define('detalleOrden', 
+//Tabla detalleorden
+const detalleorden = sequelize.define('detalleorden', 
 {
-  idOrden: { type: DataTypes.NUMBER , primaryKey: true},
-  idProducto: { type: DataTypes.NUMBER , primaryKey: true},
+  idorden: { type: DataTypes.NUMBER , primaryKey: true},
+  idproducto: { type: DataTypes.NUMBER , primaryKey: true},
   cantidad: { type: DataTypes.NUMBER , allowNull: false},
   precio: { type: DataTypes.NUMBER , allowNull: false}  
 }, 
@@ -61,8 +61,8 @@ const db={
     categorias,
     productos,
     ordenes,
-    detalleOrden
+    detalleorden
 }
 //exporto dos objetos el objeto db.sequelize y el objeto categorias
 //export default db;
-export {sequelize, categorias, productos, ordenes, detalleOrden}; //exporto dos objetos el objeto db.sequelize y el objeto categorias
+export {sequelize, categorias, productos, ordenes, detalleorden}; //exporto dos objetos el objeto db.sequelize y el objeto categorias

@@ -1,10 +1,10 @@
-import { detalleOrden} from "../../../utils/mysql";
+import { detalleorden} from "../../../utils/mysql";
 export default defineEventHandler(async (event) => {   
     try {
         //eliminamos de la base de datos
-        const data = await detalleOrden.destroy({
+        const data = await detalleorden.destroy({
                         where: {
-                            idOrden: event.context.params.idorden
+                            idorden: event.context.params.idorden
                         }
                     });
         return { statusCode:200, "message":"eliminado" };

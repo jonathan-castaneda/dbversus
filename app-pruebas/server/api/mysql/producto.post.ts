@@ -6,9 +6,10 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event);
     //console.log(body)    
     try {
-        //valido que en el body vengan todos los campos requeridos
+        //valido que en el body vengan todos los campos requeridos        
         if (!body.id || !body.nombre || !body.precio || body.precio<0  || !body.idCategoria) {
-            return { statusCode:400, "message":"Faltan campos requeridos" };
+          //console.log("Faltan campos requeridos")  
+          return { statusCode:400, "message":"Faltan campos requeridos" };
         }
         //ahora guardo en la base de datos
         //await db.sequelize.authenticate();

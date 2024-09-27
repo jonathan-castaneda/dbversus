@@ -4,9 +4,10 @@ import { ordenes } from "../../utils/mysql";
 //importamos fecha de sequelize types
 import { DataTypes } from 'sequelize';
 
-export default defineEventHandler(async (event) => {    
+export default defineEventHandler(async (event) => {
+    //console.log("entro a orden.post")    
     const body = await readBody(event);
-    console.log(body)
+    //console.log(body)
     try {
 
         //valido que en el body vengan todos los campos requeridos
@@ -18,19 +19,20 @@ export default defineEventHandler(async (event) => {
         //la convierto a un objeto Date
         //console.log(body.fecha)
         let [anho,mes,dia] = body.fecha.split(",");
+        // en new Date de javascript el mes es de 0 a 11
         let lfecha = new Date(anho,mes-1,dia,0,0,0,0);
         //console.log(lfecha)
-               
+        
+        //AQUI TENGO EL ERROR problema de fecha
         await ordenes.create({
             id: body.id,
-            fecha: lfecha,
+            fecha: lfecha,            
             total: body.total
-        });
-       
+        });       
         
         return { statusCode: 200, "message": "insertado" };
     } catch (error) {
-        console.error('Unable to connect to the database:', error);
+        console.error('Ocurrio un error:', error);
         return (error);
     }
 })
