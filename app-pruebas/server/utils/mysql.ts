@@ -44,25 +44,26 @@ const ordenes = sequelize.define('ordenes',
   timestamps: false //no crea campos createdAt ni updateAt
 });
 
-//Tabla detalleorden
-const detalleorden = sequelize.define('detalleorden', 
-{
+//Tabla detalleordenes OJO QUE LE PONE LA S AL FINAL DEBE SER PLURAL SIEMPRE
+const detalleordenes=sequelize.define('detalleordenes',{
   idorden: { type: DataTypes.NUMBER , primaryKey: true},
   idproducto: { type: DataTypes.NUMBER , primaryKey: true},
   cantidad: { type: DataTypes.NUMBER , allowNull: false},
   precio: { type: DataTypes.NUMBER , allowNull: false}  
-}, 
-{
+},{
   timestamps: false //no crea campos createdAt ni updateAt
 });
+
+
+
 
 const db={
     sequelize,
     categorias,
     productos,
     ordenes,
-    detalleorden
+    detalleordenes
 }
 //exporto dos objetos el objeto db.sequelize y el objeto categorias
 //export default db;
-export {sequelize, categorias, productos, ordenes, detalleorden}; //exporto dos objetos el objeto db.sequelize y el objeto categorias
+export {sequelize, categorias, productos, ordenes, detalleordenes}; //exporto dos objetos el objeto db.sequelize y el objeto categorias

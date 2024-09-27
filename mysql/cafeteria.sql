@@ -66,9 +66,9 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `cafeteria`.`detalleorden`
+-- Table `cafeteria`.`detalleordenes`  OJO LLEVA S AL FINAL POR SEQUELIZE
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `cafeteria`.`detalleorden` (
+CREATE TABLE IF NOT EXISTS `cafeteria`.`detalleordenes` (
   `idorden` INT NOT NULL,
   `idproducto` INT NOT NULL,
   `cantidad` INT NOT NULL,

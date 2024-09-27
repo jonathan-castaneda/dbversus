@@ -1,8 +1,8 @@
-import { detalleorden} from "../../../utils/mysql";
+import { detalleordenes} from "../../../utils/mysql";
 export default defineEventHandler(async (event) => {   
     try {
         //eliminamos de la base de datos
-        const data = await detalleorden.destroy({
+        const data = await detalleordenes.destroy({
                         where: {
                             idorden: event.context.params.idorden
                         }
