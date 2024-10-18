@@ -6,6 +6,8 @@ tenemos una carpeta llamada `app-pruebas` que contiene las pruebas, es un proyec
 
 ```bash
 
+cd app-pruebas
+
 npm install
 
 npm run dev
@@ -15,7 +17,7 @@ npm run dev
 ## Carpeta de base de datos
 para cada gestor de base de base se tiene el script inicial del esquema y se tiene tambien el archivo docker-compose.yml para así levantar el gestor de base de datos.
 
-para levantar los gestores:
+para levantar los gestores se debe de ejecutar el siguiente comando:
 
 ```bash
 docker compose -f ./mysql/docker-compose.yml up -d

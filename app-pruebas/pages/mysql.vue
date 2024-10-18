@@ -46,11 +46,11 @@ trabajando en ordenesInsertar y detalleOrdenInsertar
 async function realizarPruebas() {
     try {
         //iniciamos con insertar
-    //await categoriasInsertar(pruebas.categorias.insertar)
-    //await productosInsertar(pruebas.productos.insertar)
+    await categoriasInsertar(pruebas.categorias.insertar)
+    await productosInsertar(pruebas.productos.insertar)
     
     await ordenesInsertar(pruebas.ordenes.insertar, pruebas.ordenes.detalleoden)
-    
+    //await ordenesInsertar(2, 5)
     
     //ahora procedemos a realizar consultas
     //await categoriasConsultar()
@@ -338,7 +338,8 @@ async function detalleOrdenInsertar(idOrden: number, totaldetalle: number){
                 for (let j = 1; j <= totaldetalle; j++) {
                     const ldatadetalle = {                        
                         idorden: idOrden,
-                        idproducto: Math.floor(Math.random() * pruebas.productos.insertar) + 1,
+                        //idproducto: Math.floor(Math.random() * (pruebas.productos.insertar/2)) + 1,
+                        idproducto:j,
                         cantidad: Math.floor(Math.random() * 10) + 1,
                         precio: Math.floor(Math.random() * 100) + 1,
                     }
