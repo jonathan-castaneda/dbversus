@@ -57,9 +57,15 @@ async function realizarPruebas() {
     //await productosConsultar()
     //await productosConsultarAzar(pruebas.productos.aleatorio)
 
+    // CONSULTAMOS ORDENES AL AZAR DEBEMOS TRAER LOS DATOS DE ORDEN Y SUS DETALLES
+    //probar este método a ver si funciona
+    //await ordenesConsultarAzar(pruebas.ordenes.aleatorio)
+
+
     //Actualizaciones de datos
     //await categoriasActualizar(pruebas.categorias.actualizar)
     //await productosActualizar(pruebas.productos.actualizar)
+    //await ordenesActualizar(pruebas.ordenes.actualizar)
 
     //Consultas de Resumentes o Totales -Avanzadas
 
@@ -361,6 +367,75 @@ async function detalleOrdenInsertar(idOrden: number, totaldetalle: number){
 
 }
 
+async function ordenesConsultarAzar(total:number) {    
+    let start = new Date().getTime();
+    for (let i = 1; i <= total; i++) {
+        let id = Math.floor(Math.random() * pruebas.ordenes.insertar) + 1;
+        await useFetch('http://localhost:3000/api/mysql/orden/' + id, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            onRequestError({ request, options, error }) {
+                erroresConsulta.value++
+            },
+        })
+        //ahora consultamos los detalles de la orden
+        await useFetch('http://localhost:3000/api/mysql/detalleorden/' + id, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            onRequestError({ request, options, error }) {
+                erroresConsulta.value++
+            },
+        })        
+    }
+    let end = new Date().getTime();
+    let time = end - start;
+    tiemposConsulta.value.push(time);    
+}
+
+async function ordenesActualizar(total:number) {
+    let start = new Date().getTime();
+    for (let i = 1; i <= total; i++) {
+        const ldata = {
+            id: i,
+            fecha: new Date().toISOString(),
+            total: Math.floor(Math.random() * 100) + 1,
+        }
+        await useFetch('http://localhost:3000/api/mysql/orden/'+i, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(ldata),
+            onRequestError({ request, options, error }) {
+                erroresActualizacion.value++
+            },
+        })
+        //ahora actualizamos los detalles de la orden
+        const ldatadetalle = {
+            idorden: i,
+            idproducto: Math.floor(Math.random() * (pruebas.productos.insertar/2)) + 1,
+            cantidad: Math.floor(Math.random() * 10) + 1,
+            precio: Math.floor(Math.random() * 100) + 1,
+        }
+        await useFetch('http://localhost:3000/api/mysql/detalleorden/'+i, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(ldatadetalle),
+            onRequestError({ request, options, error }) {
+                erroresActualizacion.value++
+            },
+        })        
+    }
+    let end = new Date().getTime();
+    let time = end - start;
+    tiemposActualizacion.value.push(time);    
+}
 
 //Fin de las ordenes
 
