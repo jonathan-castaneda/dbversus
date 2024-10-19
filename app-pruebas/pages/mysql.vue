@@ -47,10 +47,9 @@ async function realizarPruebas() {
     try {
         //iniciamos con insertar
     await categoriasInsertar(pruebas.categorias.insertar)
-    await productosInsertar(pruebas.productos.insertar)
-    
+    await productosInsertar(pruebas.productos.insertar)    
     await ordenesInsertar(pruebas.ordenes.insertar, pruebas.ordenes.detalleoden)
-    //await ordenesInsertar(2, 5)
+    
     
     //ahora procedemos a realizar consultas
     //await categoriasConsultar()
