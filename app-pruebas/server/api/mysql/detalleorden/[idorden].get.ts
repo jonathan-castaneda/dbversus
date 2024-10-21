@@ -1,8 +1,7 @@
 import { detalleordenes } from "../../../utils/mysql";
 //Endpoint donde obtenemos todos los detalle orden seguin el id de la orden
-export default defineEventHandler(async (event) => {   
-    try {
-        //buscamos en la base de datos
+export default defineEventHandler(async (event) => {     
+    try {        
         const data = await detalleordenes.findAll({
                         where: {
                             idorden: event.context.params.idorden

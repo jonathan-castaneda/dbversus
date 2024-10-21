@@ -46,9 +46,9 @@ trabajando en ordenesInsertar y detalleOrdenInsertar
 async function realizarPruebas() {
     try {
         //iniciamos con insertar
-    await categoriasInsertar(pruebas.categorias.insertar)
-    await productosInsertar(pruebas.productos.insertar)    
-    await ordenesInsertar(pruebas.ordenes.insertar, pruebas.ordenes.detalleoden)
+    //await categoriasInsertar(pruebas.categorias.insertar)
+    //await productosInsertar(pruebas.productos.insertar)    
+    //await ordenesInsertar(pruebas.ordenes.insertar, pruebas.ordenes.detalleoden)
     
     
     //ahora procedemos a realizar consultas
@@ -57,17 +57,17 @@ async function realizarPruebas() {
     //await productosConsultar()
     //await productosConsultarAzar(pruebas.productos.aleatorio)
 
-    // CONSULTAMOS ORDENES AL AZAR DEBEMOS TRAER LOS DATOS DE ORDEN Y SUS DETALLES
-    //probar este método a ver si funciona
+    // CONSULTAMOS ORDENES AL AZAR DEBEMOS TRAER LOS DATOS DE ORDEN Y SUS DETALLES    
     //await ordenesConsultarAzar(pruebas.ordenes.aleatorio)
-
+    
 
     //Actualizaciones de datos
     //await categoriasActualizar(pruebas.categorias.actualizar)
     //await productosActualizar(pruebas.productos.actualizar)
     //await ordenesActualizar(pruebas.ordenes.actualizar)
-
+    
     //Consultas de Resumentes o Totales -Avanzadas
+    //OJO ESTOY AQUI
 
     //Eliminacion de datos
     //await productosEliminar(pruebas.productos.insertar)
@@ -375,7 +375,7 @@ async function ordenesConsultarAzar(total:number) {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-            },
+            },           
             onRequestError({ request, options, error }) {
                 erroresConsulta.value++
             },
@@ -385,7 +385,7 @@ async function ordenesConsultarAzar(total:number) {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-            },
+            },           
             onRequestError({ request, options, error }) {
                 erroresConsulta.value++
             },
@@ -414,23 +414,42 @@ async function ordenesActualizar(total:number) {
                 erroresActualizacion.value++
             },
         })
-        //ahora actualizamos los detalles de la orden
-        const ldatadetalle = {
-            idorden: i,
-            idproducto: Math.floor(Math.random() * (pruebas.productos.insertar/2)) + 1,
-            cantidad: Math.floor(Math.random() * 10) + 1,
-            precio: Math.floor(Math.random() * 100) + 1,
-        }
-        await useFetch('http://localhost:3000/api/mysql/detalleorden/'+i, {
-            method: 'PUT',
+        //ahora actualizamos los detalles de la orden, primero hacemos GET y traemos todos los detalles
+        // luego le multiplicamos por dos la cantidad y enviamos las actualizaciones de cada detalle
+        let datos = await useFetch('http://localhost:3000/api/mysql/detalleorden/' + i, {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(ldatadetalle),
+            },           
             onRequestError({ request, options, error }) {
-                erroresActualizacion.value++
+                erroresConsulta.value++
             },
-        })        
+        })       
+        //convertir a json datos.data
+        let ldatos = datos.data.value.data
+        //console.log(ldatos)
+        for (let j = 0; j < ldatos.length; j++) {
+            const ldatadetalle = {                        
+                idorden: i,
+                idproducto: ldatos[j].idproducto,
+                cantidad: ldatos[j].cantidad * 2,
+                precio: ldatos[j].precio,
+            }
+            //console.log(ldatadetalle)
+            //ahora invocamos PUT detalleorden para enviar los cambios
+            await useFetch('http://localhost:3000/api/mysql/detalleorden/' + ldatos[j].idorden + '/'+  ldatos[j].idproducto  , {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(ldatadetalle),            
+                onRequestError({ request, options, error }) {
+                    erroresActualizacion.value++
+                },
+            })     
+        } //fin del for de los detalles        
+
+        
     }
     let end = new Date().getTime();
     let time = end - start;
