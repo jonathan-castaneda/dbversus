@@ -32,6 +32,7 @@ const tiemposInsercion= ref([])
 const tiemposConsulta= ref([])
 const tiemposActualizacion= ref([])
 const tiemposEliminacion= ref([])
+const tiemposResumen= ref([])
 const erroresInsercion= ref(0)
 const erroresConsulta= ref(0)
 const erroresActualizacion= ref(0)
@@ -67,7 +68,10 @@ async function realizarPruebas() {
     //await ordenesActualizar(pruebas.ordenes.actualizar)
     
     //Consultas de Resumentes o Totales -Avanzadas
-    //OJO ESTOY AQUI
+    await resumenesContarOrdenes()
+    await resumenesProductos()
+    await resumenesProductosFecha()
+    await resumenesTotalDiario()
 
     //Eliminacion de datos
     //await productosEliminar(pruebas.productos.insertar)
@@ -460,6 +464,73 @@ async function ordenesActualizar(total:number) {
 
 
 //consultas de resumenes o totales
+async function resumenesContarOrdenes() {
+    let start = new Date().getTime();
+    await useFetch('http://localhost:3000/api/mysql/resumenes/countordenes', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        onRequestError({ request, options, error }) {
+            erroresConsulta.value++
+        },
+    })
+    let end = new Date().getTime();
+    let time = end - start;
+    tiemposResumen.value.push(time);
+}
 
+async function resumenesProductos() {
+    let start = new Date().getTime();
+    await useFetch('http://localhost:3000/api/mysql/resumenes/productosdiarios', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        onRequestError({ request, options, error }) {
+            erroresConsulta.value++
+        },
+    })
+    let end = new Date().getTime();
+    let time = end - start;
+    tiemposResumen.value.push(time);
+}
+
+async function resumenesProductosFecha() {
+    let start = new Date().getTime();
+    let anio = new Date().getFullYear();        
+    let mes = Math.floor(Math.random() * 12)+1;
+    let dia = Math.floor(Math.random() * 28 + 1);
+    let fecha= anio + "-" + mes + "-" + dia;
+
+    await useFetch('http://localhost:3000/api/mysql/resumenes/productosdiariosfecha?fecha=' + fecha, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        onRequestError({ request, options, error }) {
+            erroresConsulta.value++
+        },
+    })
+    let end = new Date().getTime();
+    let time = end - start;
+    tiemposResumen.value.push(time);
+}
+
+async function resumenesTotalDiario() {
+    let start = new Date().getTime();
+    await useFetch('http://localhost:3000/api/mysql/resumenes/totaldiario', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        onRequestError({ request, options, error }) {
+            erroresConsulta.value++
+        },
+    })
+    let end = new Date().getTime();
+    let time = end - start;
+    tiemposResumen.value.push(time);
+}
 
 </script>
