@@ -459,4 +459,7 @@ async function ordenesActualizar(total:number) {
 //Fin de las ordenes
 
 
+//consultas de resumenes o totales
+
+
 </script>

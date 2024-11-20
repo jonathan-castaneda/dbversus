@@ -44,6 +44,7 @@ const ordenes = sequelize.define('ordenes',
   timestamps: false //no crea campos createdAt ni updateAt
 });
 
+
 //Tabla detalleordenes OJO QUE LE PONE LA S AL FINAL DEBE SER PLURAL SIEMPRE
 const detalleordenes=sequelize.define('detalleordenes',{
   idorden: { type: DataTypes.NUMBER , primaryKey: true},
@@ -54,6 +55,13 @@ const detalleordenes=sequelize.define('detalleordenes',{
   timestamps: false //no crea campos createdAt ni updateAt
 });
 
+//asociaciones o relaciones entre las tablas
+ordenes.hasMany(detalleordenes, {foreignKey: 'idorden'});
+detalleordenes.belongsTo(ordenes, {foreignKey: 'idorden'});
+productos.hasMany(detalleordenes, {foreignKey: 'idproducto'});
+detalleordenes.belongsTo(productos, {foreignKey: 'idproducto'});
+categorias.hasMany(productos, {foreignKey: 'idCategoria'});
+productos.belongsTo(categorias, {foreignKey: 'idCategoria'});
 
 
 
