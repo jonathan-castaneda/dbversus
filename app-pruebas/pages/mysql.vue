@@ -18,7 +18,9 @@
             <p >{{ tiemposInsercion }} {{ erroresInsercion }} </p> 
             <p >{{ tiemposConsulta }} {{ erroresConsulta }}</p> 
             <p >{{ tiemposActualizacion }} {{ erroresActualizacion }}</p> 
+            <p>{{ tiemposResumen }}</p>
             <p>{{ tiemposEliminacion }} {{ erroresEliminacion }}</p>
+            
         </div>
         
     </div>
@@ -68,10 +70,11 @@ async function realizarPruebas() {
     //await ordenesActualizar(pruebas.ordenes.actualizar)
     
     //Consultas de Resumentes o Totales -Avanzadas
-    await resumenesContarOrdenes()
-    await resumenesProductos()
-    await resumenesProductosFecha()
-    await resumenesTotalDiario()
+    //await resumenesContarOrdenes()
+    //await resumenesProductos()
+    //await resumenesProductosFecha()
+    //await resumenesTotalDiario()
+    //await resumenesTopten()
 
     //Eliminacion de datos
     //await productosEliminar(pruebas.productos.insertar)
@@ -460,6 +463,25 @@ async function ordenesActualizar(total:number) {
     tiemposActualizacion.value.push(time);    
 }
 
+async function ordenesEliminar(total:number) {
+    let start = new Date().getTime();
+    for (let i = 1; i <= total; i++) {
+        await useFetch('http://localhost:3000/api/mysql/orden/'+i, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: i }),
+        onRequestError({ request, options, error }) {
+            erroresEliminacion.value++
+        }
+        })  
+    }
+    let end = new Date().getTime();
+    let time = end - start;
+    tiemposEliminacion.value.push(time);    
+}
+
 //Fin de las ordenes
 
 
@@ -532,5 +554,22 @@ async function resumenesTotalDiario() {
     let time = end - start;
     tiemposResumen.value.push(time);
 }
+
+async function resumenesTopten() {
+    let start = new Date().getTime();
+    await useFetch('http://localhost:3000/api/mysql/resumenes/topten', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        onRequestError({ request, options, error }) {
+            erroresConsulta.value++
+        },
+    })
+    let end = new Date().getTime();
+    let time = end - start;
+    tiemposResumen.value.push(time);
+}
+
 
 </script>
