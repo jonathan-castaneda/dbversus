@@ -77,6 +77,7 @@ async function realizarPruebas() {
     //await resumenesTopten()
 
     //Eliminacion de datos
+    await ordenesEliminar(pruebas.ordenes.insertar)
     //await productosEliminar(pruebas.productos.insertar)
     //await categoriasEliminar(pruebas.categorias.insertar)
 
