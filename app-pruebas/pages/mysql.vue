@@ -466,6 +466,18 @@ async function ordenesActualizar(total:number) {
 async function ordenesEliminar(total:number) {
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
+        //primero eliminamos los detalles de la orden
+        await useFetch('http://localhost:3000/api/mysql/detalleorden/'+i, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id: i }),
+            onRequestError({ request, options, error }) {
+                erroresEliminacion.value++
+            }
+        })
+
         await useFetch('http://localhost:3000/api/mysql/orden/'+i, {
         method: 'DELETE',
         headers: {
