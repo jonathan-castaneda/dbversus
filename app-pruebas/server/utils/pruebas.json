@@ -10,10 +10,9 @@
         "actualizar":100        
     },
     "ordenes":{
-        "insertar":600,
+        "insertar":100,
         "aleatorio":50,
         "actualizar":50,
         "detalleoden":15      
-    },
-    "consultasAvanzadas":30
+    }    
 }
