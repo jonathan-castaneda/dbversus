@@ -94,11 +94,14 @@
                     <template v-slot:prepend>
                     <q-icon name="warning" />
                     </template>
-                </q-input>                
-
+                </q-input>
             </div>
             <div class="col-2 q-ml-md">                
-                
+                <q-scroll-area style="height: 300px;">
+                    <div v-for="n in mensajes" :key="n" class="q-py-xs">
+                        {{ n }}
+                    </div>
+                </q-scroll-area>   
                 
             </div>
         </div>
@@ -126,6 +129,7 @@ const erroresActualizacion= ref(0)
 const erroresEliminacion= ref(0)
 const cargando= ref(false)
 const totalPruebas= ref(19)
+const mensajes= ref([])
 
 //propiedad computada del porcentaje de pruebas realizadas
 const avance = computed(() => {
@@ -266,11 +270,14 @@ async function realizarPruebas() {
     cargando.value=true
     totalPruebas.value=19 // son 19 pruebas a realizar
 
-        //iniciamos con insertar
+    
+    //iniciamos con insertar
+    mensajes.value.push("Iniciando pruebas de inserción")
     await categoriasInsertar(pruebas.categorias.insertar)
     await productosInsertar(pruebas.productos.insertar)    
     await ordenesInsertar(pruebas.ordenes.insertar, pruebas.ordenes.detalleoden)
     
+    mensajes.value.push("Iniciando pruebas de consultas")
     
     //ahora procedemos a realizar consultas
     await categoriasConsultar()
@@ -283,11 +290,13 @@ async function realizarPruebas() {
     
 
     //Actualizaciones de datos
+    mensajes.value.push("Iniciando pruebas de actualización")
     await categoriasActualizar(pruebas.categorias.actualizar)
     await productosActualizar(pruebas.productos.actualizar)
     await ordenesActualizar(pruebas.ordenes.actualizar)
     
     //Consultas de Resumentes o Totales -Avanzadas
+    mensajes.value.push("Iniciando pruebas de resumenes")
     await resumenesContarOrdenes()
     await resumenesProductos()
     await resumenesProductosFecha()
@@ -295,11 +304,13 @@ async function realizarPruebas() {
     await resumenesTopten()
 
     //Eliminacion de datos
+    mensajes.value.push("Iniciando pruebas de eliminación")
     ordenesEliminar(pruebas.ordenes.insertar)
     await productosEliminar(pruebas.productos.insertar)
     await categoriasEliminar(pruebas.categorias.insertar)
 
     console.log("Terminaron las pruebas realizadas")
+    mensajes.value.push("Terminaron las pruebas realizadas")
     cargando.value=false
     
 } catch (error) {
@@ -318,8 +329,8 @@ async function realizarPruebas() {
             id: i,
             nombre: "Categoria " + i,
         }
-        //agrego usando useFetch        
-        await useFetch('http://localhost:3000/api/mysql/categoria', {
+        //agrego usando $fetch        
+        await $fetch('http://localhost:3000/api/mysql/categoria', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -339,7 +350,7 @@ async function realizarPruebas() {
 //Consultando todas las categorias
 async function categoriasConsultar() {    
     let start = new Date().getTime();
-    await useFetch('http://localhost:3000/api/mysql/categorias', {
+    await $fetch('http://localhost:3000/api/mysql/categorias', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -358,10 +369,10 @@ async function categoriasConsultarAzar(total:number) {
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
         let id = Math.floor(Math.random() * pruebas.categorias.insertar) + 1;
-        await useFetch('http://localhost:3000/api/mysql/categoria/' + id, {
+        await $fetch('http://localhost:3000/api/mysql/categoria/' + id, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
+                    'Content-Type': 'application/json',
             },
             onRequestError({ request, options, error }) {
                 erroresConsulta.value++
@@ -373,14 +384,14 @@ async function categoriasConsultarAzar(total:number) {
     tiemposConsulta.value.push(time);    
 }
 
-function categoriasActualizar(total:number) {
+async function categoriasActualizar(total:number) {
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
         const ldata = {
             id: i,
             nombre: "Categoria " + i + " Actualizada",
         }
-        useFetch('http://localhost:3000/api/mysql/categoria/'+i, {
+        await $fetch('http://localhost:3000/api/mysql/categoria/'+i, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -397,10 +408,10 @@ function categoriasActualizar(total:number) {
 }
 
 //eliminando las categorias
-function categoriasEliminar(total:number) {
+async function categoriasEliminar(total:number) {
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
-        useFetch('http://localhost:3000/api/mysql/categoria/'+i, {
+        await $fetch('http://localhost:3000/api/mysql/categoria/'+i, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -427,8 +438,8 @@ async function productosInsertar(total: number) {
             precio: Math.floor(Math.random() * 100) + 1,
             idCategoria: Math.floor(Math.random() * pruebas.categorias.insertar) + 1,
         }
-        //agrego usando useFetch        
-        await useFetch('http://localhost:3000/api/mysql/producto', {
+        //agrego usando $fetch        
+        await $fetch('http://localhost:3000/api/mysql/producto', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -447,7 +458,7 @@ async function productosInsertar(total: number) {
 
 async function productosConsultar() {    
     let start = new Date().getTime();
-    await useFetch('http://localhost:3000/api/mysql/productos', {
+    await $fetch('http://localhost:3000/api/mysql/productos', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -465,7 +476,7 @@ async function productosConsultarAzar(total:number) {
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
         let id = Math.floor(Math.random() * pruebas.productos.insertar) + 1;
-        await useFetch('http://localhost:3000/api/mysql/producto/' + id, {
+        await $fetch('http://localhost:3000/api/mysql/producto/' + id, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -480,7 +491,7 @@ async function productosConsultarAzar(total:number) {
     tiemposConsulta.value.push(time);    
 }
 
-function productosActualizar(total:number) {
+async function productosActualizar(total:number) {
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
         const ldata = {
@@ -489,7 +500,8 @@ function productosActualizar(total:number) {
             precio: Math.floor(Math.random() * 100) + 1,
             categoria: Math.floor(Math.random() * pruebas.categorias.insertar) + 1,
         }
-        useFetch('http://localhost:3000/api/mysql/producto/'+i, {
+
+        await $fetch('http://localhost:3000/api/mysql/producto/'+i, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -505,10 +517,10 @@ function productosActualizar(total:number) {
     tiemposActualizacion.value.push(time);    
 }
 
-function productosEliminar(total:number) {
+async function productosEliminar(total:number) {
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
-        useFetch('http://localhost:3000/api/mysql/producto/'+i, {
+        await $fetch('http://localhost:3000/api/mysql/producto/'+i, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -540,8 +552,8 @@ async function ordenesInsertar(total:number, totaldetalle:number){
                 fecha:lfecha,
                 total: Math.floor(Math.random() * 100) + 1,
         }
-        //agrego usando useFetch        
-        await useFetch('http://localhost:3000/api/mysql/orden', {
+        //agrego usando $fetch        
+        await $fetch('http://localhost:3000/api/mysql/orden', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -576,8 +588,8 @@ async function detalleOrdenInsertar(idOrden: number, totaldetalle: number){
                         cantidad: Math.floor(Math.random() * 10) + 1,
                         precio: Math.floor(Math.random() * 100) + 1,
                     }
-                    //agrego usando useFetch        
-                    await useFetch('http://localhost:3000/api/mysql/detalleorden', {
+                    //agrego usando $fetch        
+                    await $fetch('http://localhost:3000/api/mysql/detalleorden', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -599,7 +611,7 @@ async function ordenesConsultarAzar(total:number) {
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
         let id = Math.floor(Math.random() * pruebas.ordenes.insertar) + 1;
-        await useFetch('http://localhost:3000/api/mysql/orden/' + id, {
+        await $fetch('http://localhost:3000/api/mysql/orden/' + id, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -609,7 +621,7 @@ async function ordenesConsultarAzar(total:number) {
             },
         })
         //ahora consultamos los detalles de la orden
-        await useFetch('http://localhost:3000/api/mysql/detalleorden/' + id, {
+        await $fetch('http://localhost:3000/api/mysql/detalleorden/' + id, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -624,7 +636,7 @@ async function ordenesConsultarAzar(total:number) {
     tiemposConsulta.value.push(time);    
 }
 
-function ordenesActualizar(total:number) {
+async function ordenesActualizar(total:number) {
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
         const ldata = {
@@ -632,7 +644,7 @@ function ordenesActualizar(total:number) {
             fecha: new Date().toISOString(),
             total: Math.floor(Math.random() * 100) + 1,
         }
-        useFetch('http://localhost:3000/api/mysql/orden/'+i, {
+        await $fetch('http://localhost:3000/api/mysql/orden/'+i, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -644,7 +656,7 @@ function ordenesActualizar(total:number) {
         })
         //ahora actualizamos los detalles de la orden, primero hacemos GET y traemos todos los detalles
         // luego le multiplicamos por dos la cantidad y enviamos las actualizaciones de cada detalle
-        let datos = useFetch('http://localhost:3000/api/mysql/detalleorden/' + i, {
+        let datos = await $fetch('http://localhost:3000/api/mysql/detalleorden/' + i, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -652,9 +664,11 @@ function ordenesActualizar(total:number) {
             onRequestError({ request, options, error }) {
                 erroresConsulta.value++
             },
-        })       
+        })
+        //console.log (datos.data)
+        //return       
         //convertir a json datos.data
-        let ldatos = datos.data.value.data
+        let ldatos = datos.data
         //console.log(ldatos)
         for (let j = 0; j < ldatos.length; j++) {
             const ldatadetalle = {                        
@@ -665,7 +679,7 @@ function ordenesActualizar(total:number) {
             }
             //console.log(ldatadetalle)
             //ahora invocamos PUT detalleorden para enviar los cambios
-             useFetch('http://localhost:3000/api/mysql/detalleorden/' + ldatos[j].idorden + '/'+  ldatos[j].idproducto  , {
+            await $fetch('http://localhost:3000/api/mysql/detalleorden/' + ldatos[j].idorden + '/'+  ldatos[j].idproducto  , {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -684,11 +698,11 @@ function ordenesActualizar(total:number) {
     tiemposActualizacion.value.push(time);    
 }
 
-function ordenesEliminar(total:number) {
+async function ordenesEliminar(total:number) {
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
         
-        useFetch('http://localhost:3000/api/mysql/orden/'+i, {
+        await $fetch('http://localhost:3000/api/mysql/orden/'+i, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -710,7 +724,7 @@ function ordenesEliminar(total:number) {
 //consultas de resumenes o totales
 async function resumenesContarOrdenes() {
     let start = new Date().getTime();
-    await useFetch('http://localhost:3000/api/mysql/resumenes/countordenes', {
+    await $fetch('http://localhost:3000/api/mysql/resumenes/countordenes', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -726,7 +740,7 @@ async function resumenesContarOrdenes() {
 
 async function resumenesProductos() {
     let start = new Date().getTime();
-    await useFetch('http://localhost:3000/api/mysql/resumenes/productosdiarios', {
+    await $fetch('http://localhost:3000/api/mysql/resumenes/productosdiarios', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -747,7 +761,7 @@ async function resumenesProductosFecha() {
     let dia = Math.floor(Math.random() * 28 + 1);
     let fecha= anio + "-" + mes + "-" + dia;
 
-    await useFetch('http://localhost:3000/api/mysql/resumenes/productosdiariosfecha?fecha=' + fecha, {
+    await $fetch('http://localhost:3000/api/mysql/resumenes/productosdiariosfecha?fecha=' + fecha, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -763,7 +777,7 @@ async function resumenesProductosFecha() {
 
 async function resumenesTotalDiario() {
     let start = new Date().getTime();
-    await useFetch('http://localhost:3000/api/mysql/resumenes/totaldiario', {
+    await $fetch('http://localhost:3000/api/mysql/resumenes/totaldiario', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -779,7 +793,7 @@ async function resumenesTotalDiario() {
 
 async function resumenesTopten() {
     let start = new Date().getTime();
-    await useFetch('http://localhost:3000/api/mysql/resumenes/topten', {
+    await $fetch('http://localhost:3000/api/mysql/resumenes/topten', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
