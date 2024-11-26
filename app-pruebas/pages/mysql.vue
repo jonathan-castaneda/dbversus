@@ -5,82 +5,35 @@
             
         </div>
         <div class="row">
-            <div class="text-caption col-12">
+            <div class="text-caption col-12 q-ml-md">
                 Recuerda que debes tener arrancado el contenedor de MYSQL levantado con docker y no debe tener datos, solo debe tener la estructura de las tablas.
                 Haz clic en iniciar y comenzamos las pruebas, primero insertando, luego actualizando, consultando y eliminando.
-                Si vuelves ha hacer pruebas se recomienda que ejecutes docker compose down y luego docker compose up -d
+                Si vuelves ha hacer pruebas se recomienda que ejecutes docker compose down y luego <strong>docker compose up -d</strong> 
+                <p>Recuerda que en el archivo <strong>/mysql/docker-compose.yml</strong> defines la memoria y el CPU asignado al contenedor para las pruebas</p>
             </div>
-            <div class="col-12">
-                <div class="row ">
-                    <div class="col-2 q-mx-sm">
-                        <div >Pruebas en Categorias</div>
-                        <q-input class="q-my-sm" label="Categorias Inserción" filled v-model="pruebas.categorias.insertar"  dense>
-                            <template v-slot:prepend>
-                            <q-icon name="done" />
-                            </template>
-                        </q-input>
-                        <q-input class="q-my-sm" label="Categorias Actualizar" filled v-model="pruebas.categorias.actualizar"  dense>
-                            <template v-slot:prepend>
-                            <q-icon name="done" />
-                            </template>
-                        </q-input>
-                        <q-input class="q-my-sm" label="Categorias Consulta" filled v-model="pruebas.categorias.aleatorio"  dense>
-                            <template v-slot:prepend>
-                            <q-icon name="done" />
-                            </template>
-                        </q-input>
-                    </div>
-                    <div class="col-2 q-mx-sm">
-                        <div>Pruebas en Productos</div>
-                        <q-input class="q-my-sm" label="Productos Inserción" filled v-model="pruebas.productos.insertar"  dense>
-                            <template v-slot:prepend>
-                            <q-icon name="done" />
-                            </template>
-                        </q-input>
-                        <q-input class="q-my-sm" label="Productos Actualizar" filled v-model="pruebas.productos.actualizar"  dense>
-                            <template v-slot:prepend>
-                            <q-icon name="done" />
-                            </template>
-                        </q-input>
-                        <q-input class="q-my-sm" label="Productos Consulta" filled v-model="pruebas.productos.aleatorio"  dense>
-                            <template v-slot:prepend>
-                            <q-icon name="done" />
-                            </template>
-                        </q-input>
-                
-                    </div>
-                    <div class="col-2 q-mx-sm">
-                        <div>Pruebas en Ordenes</div>
-                        <q-input class="q-my-sm" label="Ordenes Inserción" filled v-model="pruebas.ordenes.insertar"  dense>
-                            <template v-slot:prepend>
-                            <q-icon name="done" />
-                            </template>
-                        </q-input>
-                        <q-input class="q-my-sm" label="Ordenes Actualizar" filled v-model="pruebas.ordenes.actualizar"  dense>
-                            <template v-slot:prepend>
-                            <q-icon name="done" />
-                            </template>
-                        </q-input>
-                        <q-input class="q-my-sm" label="Ordenes Consulta" filled v-model="pruebas.ordenes.aleatorio"  dense>
-                            <template v-slot:prepend>
-                            <q-icon name="done" />
-                            </template>
-                        </q-input>
-                        
-                    </div>
-                    <div class="col-2 q-mx-sm">
-                        <div>.</div>
-                        <q-input class="q-my-sm" label="Detalle Ordenes" filled v-model="pruebas.ordenes.detalleoden"  dense>
-                            <template v-slot:prepend>
-                            <q-icon name="done" />
-                            </template>
-                        </q-input>
-                    </div>
+            <div class="col-12 row q-ml-md">
+                <div class="col-2">
+                    <div class="text-bold">Pruebas en Categorias</div>
+                    Insercion: <strong>{{ pruebas.categorias.insertar }}</strong><br>
+                    Actualizacion: <strong>{{ pruebas.categorias.actualizar }}</strong><br>
+                    Consulta: <strong>{{ pruebas.categorias.aleatorio }}</strong><br>
                 </div>
-            </div>
-            <div class="col-1"></div>
-            <div class="col-3 q-ml-lg">
-                <q-btn :loading="cargando" @click="realizarPruebas" color="primary">Iniciar Pruebas</q-btn>
+                <div class="col-2">
+                    <div class="text-bold">Pruebas en Productos</div>
+                    Insercion: <strong>{{ pruebas.productos.insertar }}</strong><br>
+                    Actualizacion: <strong>{{ pruebas.productos.actualizar }}</strong><br>
+                    Consulta: <strong>{{ pruebas.productos.aleatorio }}</strong><br>
+                </div>
+                <div class="col-2">
+                    <div class="text-bold">Pruebas en Ordenes</div>
+                    Insercion: <strong>{{ pruebas.ordenes.insertar }}</strong><br>
+                    Actualizacion: <strong>{{ pruebas.ordenes.actualizar }}</strong><br>
+                    Consulta: <strong>{{ pruebas.ordenes.aleatorio }}</strong><br>
+                    Detalle Ordenes: <strong>{{ pruebas.ordenes.detalleoden }}</strong><br>
+            
+                </div>
+                <div class="col-3 q-ml-lg">
+                <q-btn size="lg" :loading="cargando" @click="realizarPruebas" color="primary">Iniciar Pruebas</q-btn>
                 <q-circular-progress
                 show-value
                 font-size="12px"
@@ -94,10 +47,11 @@
                 {{ avance }}%
                 </q-circular-progress>
             </div>
-            
+
+            </div>
         </div>
         
-        <div class="row q-ml-lg">
+        <div class="row q-ml-lg q-mt-md">
             <q-table
             flat bordered
             title="Pruebas sobre Gestor MySQL"
@@ -110,7 +64,7 @@
             >
             <template v-slot:top-right>
                 <q-btn
-                color="primary"
+                color="secondary"
                 icon-right="archive"
                 label="Exportar a csv"
                 no-caps
@@ -154,11 +108,11 @@
 
 <script setup lang="ts">
 import { ref, computed} from 'vue'
-import { exportFile, useQuasar } from 'quasar'
+import { exportFile } from 'quasar'
 
 import pruebas from '../server/utils/pruebas.json'
 
-const $q = useQuasar()
+//const $q = useQuasar()
 
 
 const tiemposInsercion= ref([])
@@ -183,7 +137,7 @@ const columns = [
   {
     name: 'name',
     required: true,
-    label: 'Prueba (Tiempos en mili segundos)',
+    label: 'Prueba (Tiempos en segundos)',
     align: 'left',
     field: row => row.name,
     format: val => `${val}`,
@@ -208,7 +162,7 @@ const rows=computed(() => {
                 c: tiemposInsercion.value[2]? tiemposInsercion.value[2]: 0,
                 d: tiemposInsercion.value[3]? tiemposInsercion.value[3]: 0,
                 e: tiemposInsercion.value[4]? tiemposInsercion.value[4]: 0, 
-                total: tiemposInsercion.value.reduce((a, b) => a + b, 0)  
+                total: tiemposInsercion.value.reduce((a, b) => a + b, 0)/1000
             },
                 {
                     name: 'Consultar',
@@ -217,7 +171,7 @@ const rows=computed(() => {
                     c: tiemposConsulta.value[2]? tiemposConsulta.value[2]: 0,
                     d: tiemposConsulta.value[3]? tiemposConsulta.value[3]: 0,
                     e: tiemposConsulta.value[4]? tiemposConsulta.value[4]: 0,
-                    total: tiemposConsulta.value.reduce((a, b) => a + b, 0)  
+                    total: tiemposConsulta.value.reduce((a, b) => a + b, 0)  /1000
                 },
                 {
                     name: 'Actualizar',
@@ -226,7 +180,7 @@ const rows=computed(() => {
                     c: tiemposActualizacion.value[2]? tiemposActualizacion.value[2]: 0,
                     d: tiemposActualizacion.value[3]? tiemposActualizacion.value[3]: 0,
                     e: tiemposActualizacion.value[4]? tiemposActualizacion.value[4]: 0,  
-                    total: tiemposActualizacion.value.reduce((a, b) => a + b, 0)  
+                    total: tiemposActualizacion.value.reduce((a, b) => a + b, 0) /1000 
                 },
                 {
                     name: 'Resumenes',
@@ -235,7 +189,7 @@ const rows=computed(() => {
                     c: tiemposResumen.value[2]? tiemposResumen.value[2]: 0,
                     d: tiemposResumen.value[3]? tiemposResumen.value[3]: 0,
                     e: tiemposResumen.value[4]? tiemposResumen.value[4]: 0,
-                    total: tiemposResumen.value.reduce((a, b) => a + b, 0)
+                    total: tiemposResumen.value.reduce((a, b) => a + b, 0)/1000
                 },
                 {
                     name: 'Eliminar',
@@ -244,7 +198,7 @@ const rows=computed(() => {
                     c: tiemposEliminacion.value[2]? tiemposEliminacion.value[2]: 0,
                     d: tiemposEliminacion.value[3]? tiemposEliminacion.value[3]: 0,
                     e: tiemposEliminacion.value[4]? tiemposEliminacion.value[4]: 0,
-                    total: tiemposEliminacion.value.reduce((a, b) => a + b, 0)
+                    total: tiemposEliminacion.value.reduce((a, b) => a + b, 0)/1000
                 },
             ]
 
@@ -308,6 +262,7 @@ trabajando en ordenesInsertar y detalleOrdenInsertar
 */
 async function realizarPruebas() {
     try {
+        
     cargando.value=true
     totalPruebas.value=19 // son 19 pruebas a realizar
 
@@ -340,18 +295,13 @@ async function realizarPruebas() {
     await resumenesTopten()
 
     //Eliminacion de datos
-    await ordenesEliminar(pruebas.ordenes.insertar)
+    ordenesEliminar(pruebas.ordenes.insertar)
     await productosEliminar(pruebas.productos.insertar)
     await categoriasEliminar(pruebas.categorias.insertar)
 
     console.log("Terminaron las pruebas realizadas")
     cargando.value=false
-    //muestro un notify
-    $q.notify({
-        message: 'Pruebas realizadas con éxito',
-        color: 'positive',
-        icon: 'thumb_up'
-    })
+    
 } catch (error) {
         console.error(error)
     }
@@ -423,14 +373,14 @@ async function categoriasConsultarAzar(total:number) {
     tiemposConsulta.value.push(time);    
 }
 
-async function categoriasActualizar(total:number) {
+function categoriasActualizar(total:number) {
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
         const ldata = {
             id: i,
             nombre: "Categoria " + i + " Actualizada",
         }
-        await useFetch('http://localhost:3000/api/mysql/categoria/'+i, {
+        useFetch('http://localhost:3000/api/mysql/categoria/'+i, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -447,10 +397,10 @@ async function categoriasActualizar(total:number) {
 }
 
 //eliminando las categorias
-async function categoriasEliminar(total:number) {
+function categoriasEliminar(total:number) {
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
-        await useFetch('http://localhost:3000/api/mysql/categoria/'+i, {
+        useFetch('http://localhost:3000/api/mysql/categoria/'+i, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -530,7 +480,7 @@ async function productosConsultarAzar(total:number) {
     tiemposConsulta.value.push(time);    
 }
 
-async function productosActualizar(total:number) {
+function productosActualizar(total:number) {
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
         const ldata = {
@@ -539,7 +489,7 @@ async function productosActualizar(total:number) {
             precio: Math.floor(Math.random() * 100) + 1,
             categoria: Math.floor(Math.random() * pruebas.categorias.insertar) + 1,
         }
-        await useFetch('http://localhost:3000/api/mysql/producto/'+i, {
+        useFetch('http://localhost:3000/api/mysql/producto/'+i, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -555,10 +505,10 @@ async function productosActualizar(total:number) {
     tiemposActualizacion.value.push(time);    
 }
 
-async function productosEliminar(total:number) {
+function productosEliminar(total:number) {
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
-        await useFetch('http://localhost:3000/api/mysql/producto/'+i, {
+        useFetch('http://localhost:3000/api/mysql/producto/'+i, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -607,7 +557,7 @@ async function ordenesInsertar(total:number, totaldetalle:number){
             })
             
         //ahora vienen los detalles de cada orden
-        detalleOrdenInsertar(conta, totaldetalle)
+        await detalleOrdenInsertar(conta, totaldetalle)
     }//fin del for del conta de las ordenes
    
     let end = new Date().getTime();
@@ -674,7 +624,7 @@ async function ordenesConsultarAzar(total:number) {
     tiemposConsulta.value.push(time);    
 }
 
-async function ordenesActualizar(total:number) {
+function ordenesActualizar(total:number) {
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
         const ldata = {
@@ -682,7 +632,7 @@ async function ordenesActualizar(total:number) {
             fecha: new Date().toISOString(),
             total: Math.floor(Math.random() * 100) + 1,
         }
-        await useFetch('http://localhost:3000/api/mysql/orden/'+i, {
+        useFetch('http://localhost:3000/api/mysql/orden/'+i, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -694,7 +644,7 @@ async function ordenesActualizar(total:number) {
         })
         //ahora actualizamos los detalles de la orden, primero hacemos GET y traemos todos los detalles
         // luego le multiplicamos por dos la cantidad y enviamos las actualizaciones de cada detalle
-        let datos = await useFetch('http://localhost:3000/api/mysql/detalleorden/' + i, {
+        let datos = useFetch('http://localhost:3000/api/mysql/detalleorden/' + i, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -715,7 +665,7 @@ async function ordenesActualizar(total:number) {
             }
             //console.log(ldatadetalle)
             //ahora invocamos PUT detalleorden para enviar los cambios
-            await useFetch('http://localhost:3000/api/mysql/detalleorden/' + ldatos[j].idorden + '/'+  ldatos[j].idproducto  , {
+             useFetch('http://localhost:3000/api/mysql/detalleorden/' + ldatos[j].idorden + '/'+  ldatos[j].idproducto  , {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -734,22 +684,11 @@ async function ordenesActualizar(total:number) {
     tiemposActualizacion.value.push(time);    
 }
 
-async function ordenesEliminar(total:number) {
+function ordenesEliminar(total:number) {
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
-        //primero eliminamos los detalles de la orden
-        await useFetch('http://localhost:3000/api/mysql/detalleorden/'+i, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ id: i }),
-            onRequestError({ request, options, error }) {
-                erroresEliminacion.value++
-            }
-        })
-
-        await useFetch('http://localhost:3000/api/mysql/orden/'+i, {
+        
+        useFetch('http://localhost:3000/api/mysql/orden/'+i, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
