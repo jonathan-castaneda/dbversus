@@ -1,5 +1,5 @@
 
-import {categorias} from "../../utils/mysql";
+import {categorias} from "../../utils/mysql/mysql";
 
 export default defineEventHandler(async (event) => {
     // imprimimos en consola la data que recibimos

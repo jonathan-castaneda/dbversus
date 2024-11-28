@@ -11,7 +11,7 @@
 // SE DEBE INVOCAR ASI
 //http://localhost:3000/api/mysql/resumenes/productosdiariosfecha?fecha=2024-01-02
 
-import { ordenes, detalleordenes, productos } from "../../../utils/mysql";
+import { ordenes, detalleordenes, productos } from "../../../utils/mysql/mysql";
 export default defineEventHandler(async (event) => {   
     
     //return { statusCode:200, "hola": getQuery(event) };

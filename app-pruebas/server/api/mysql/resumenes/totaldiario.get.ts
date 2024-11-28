@@ -1,6 +1,6 @@
 //Devolveremos las fechas y la suma de las ordenes en esas fechas
 //ordenando por la fecha
-import { ordenes } from "../../../utils/mysql";
+import { ordenes } from "../../../utils/mysql/mysql";
 export default defineEventHandler(async (event) => {      
     try {
         const data = await ordenes.findAll({

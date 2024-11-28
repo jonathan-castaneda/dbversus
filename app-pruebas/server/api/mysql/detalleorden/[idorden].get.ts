@@ -1,4 +1,4 @@
-import { detalleordenes } from "../../../utils/mysql";
+import { detalleordenes } from "../../../utils/mysql/mysql";
 //Endpoint donde obtenemos todos los detalle orden seguin el id de la orden
 export default defineEventHandler(async (event) => {     
     try {        

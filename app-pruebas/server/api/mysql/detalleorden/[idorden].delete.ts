@@ -1,4 +1,4 @@
-import { detalleordenes} from "../../../utils/mysql";
+import { detalleordenes} from "../../../utils/mysql/mysql";
 export default defineEventHandler(async (event) => {   
     try {
         //eliminamos de la base de datos

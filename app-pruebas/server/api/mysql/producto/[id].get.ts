@@ -1,5 +1,5 @@
 //buscamos un producto por su ID dicho id viene en el get
-import {productos} from "../../../utils/mysql";
+import {productos} from "../../../utils/mysql/mysql";
 export default defineEventHandler(async (event) => {      
     try {
         const data = await productos.findOne({where: {id: event.context.params.id}});

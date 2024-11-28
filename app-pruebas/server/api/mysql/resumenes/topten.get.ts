@@ -7,7 +7,7 @@
 //order by 3 desc
 //limit 10
 
-import { ordenes, detalleordenes, productos } from "../../../utils/mysql";
+import { ordenes, detalleordenes, productos } from "../../../utils/mysql/mysql";
 export default defineEventHandler(async (event) => {   
     try {               
         const data = await detalleordenes.findAll({

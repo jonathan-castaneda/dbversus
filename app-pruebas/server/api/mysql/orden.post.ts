@@ -1,5 +1,5 @@
 //agregamos una orden
-import { ordenes } from "../../utils/mysql";
+import { ordenes } from "../../utils/mysql/mysql";
 
 //importamos fecha de sequelize types
 import { DataTypes } from 'sequelize';

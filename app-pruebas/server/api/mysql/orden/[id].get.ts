@@ -1,4 +1,4 @@
-import {ordenes} from '../../../utils/mysql';
+import {ordenes} from '../../../utils/mysql/mysql';
 export default defineEventHandler(async (event) => {   
     try {
         //obtenemos la orden con el id que viene en la url

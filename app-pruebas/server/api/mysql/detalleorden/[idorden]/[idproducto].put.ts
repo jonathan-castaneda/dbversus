@@ -1,4 +1,4 @@
-import { detalleordenes } from "../../../../utils/mysql";
+import { detalleordenes } from "../../../../utils/mysql/mysql";
 export default defineEventHandler(async (event) => {   
     try {
         //actualizamos el detalle orden con el id de la orden y el id del producto

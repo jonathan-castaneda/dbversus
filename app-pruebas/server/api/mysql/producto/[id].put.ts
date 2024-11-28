@@ -1,5 +1,5 @@
 //se va actualizar los productos con el id que viene en el get y el json de la data
-import {productos} from "../../../utils/mysql";
+import {productos} from "../../../utils/mysql/mysql";
 export default defineEventHandler(async (event) => {  
     try {
       const body = await readBody(event);

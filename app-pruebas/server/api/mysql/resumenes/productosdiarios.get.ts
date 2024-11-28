@@ -6,7 +6,7 @@
 //join productos on detalleordenes.idproducto = productos.id 
 //group by ordenes.fecha, detalleordenes.idproducto, productos.nombre order by ordenes.fecha
 //implementamos esta consulta sql en sequelize
-import { ordenes, detalleordenes, productos } from "../../../utils/mysql";
+import { ordenes, detalleordenes, productos } from "../../../utils/mysql/mysql";
 export default defineEventHandler(async (event) => {      
     try {
         const data = await ordenes.findAll({

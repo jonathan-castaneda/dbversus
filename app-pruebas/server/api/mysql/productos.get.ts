@@ -1,4 +1,4 @@
-import {productos} from "../../utils/mysql";
+import {productos} from "../../utils/mysql/mysql";
 export default defineEventHandler(async (event) => {      
     try {        
         const data = await productos.findAll();

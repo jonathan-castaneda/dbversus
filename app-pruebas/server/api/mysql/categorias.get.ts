@@ -1,5 +1,5 @@
 //obtenemos todas las categorias de la base de datos
-import {categorias} from "../../utils/mysql";
+import {categorias} from "../../utils/mysql/mysql";
 
 export default defineEventHandler(async (event) => {      
     try {        

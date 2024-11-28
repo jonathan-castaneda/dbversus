@@ -1,5 +1,5 @@
 //Endpoint para eliminar un producto de la base de datos
-import {productos} from "../../../utils/mysql";
+import {productos} from "../../../utils/mysql/mysql";
 
 export default defineEventHandler(async (event) => {   
     try {

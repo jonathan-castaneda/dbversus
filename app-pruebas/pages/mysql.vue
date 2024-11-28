@@ -61,16 +61,7 @@
             row-key="name"
             class="col-6"
             
-            >
-            <template v-slot:top-right>
-                <q-btn
-                color="secondary"
-                icon-right="archive"
-                label="Exportar a csv"
-                no-caps
-                @click="exportTable"
-                />
-            </template>
+            >            
             </q-table>
            
             <div class="col-2 q-ml-md">
@@ -114,8 +105,10 @@ import { ref, computed} from 'vue'
 import { exportFile } from 'quasar'
 
 import pruebas from '../server/utils/pruebas.json'
-
-//const $q = useQuasar()
+import { categoriasInsertar, categoriasConsultar, categoriasConsultarAzar, categoriasActualizar, categoriasEliminar } from '../server/utils/mysql/categorias'
+import { productosInsertar, productosConsultar, productosConsultarAzar, productosActualizar, productosEliminar } from '../server/utils/mysql/productos'
+import { ordenesInsertar, ordenesConsultarAzar, ordenesActualizar, ordenesEliminar } from '../server/utils/mysql/ordenes'
+import { resumenesContarOrdenes, resumenesProductos, resumenesProductosFecha, resumenesTotalDiario, resumenesTopten } from '../server/utils/mysql/resumenes'
 
 
 const tiemposInsercion= ref([])
@@ -210,104 +203,76 @@ const rows=computed(() => {
 })
 
 
-function wrapCsvValue (val, formatFn, row) {
-  let formatted = formatFn !== void 0
-    ? formatFn(val, row)
-    : val
 
-  formatted = formatted === void 0 || formatted === null
-    ? ''
-    : String(formatted)
-
-  formatted = formatted.split('"').join('""')
-  /**
-   * Excel accepts \n and \r in strings, but some other CSV parsers do not
-   * Uncomment the next two lines to escape new lines
-   */
-  // .split('\n').join('\\n')
-  // .split('\r').join('\\r')
-
-  return `"${formatted}"`
-}
-
-function exportTable () {
-        // naive encoding to csv format
-        const rows2= rows.value
-
-        const content = [columns.map(col => wrapCsvValue(col.label))].concat(
-          rows2.map(row => columns.map(col => wrapCsvValue(
-            typeof col.field === 'function'
-              ? col.field(row)
-              : row[ col.field === void 0 ? col.name : col.field ],
-            col.format,
-            row
-          )).join(','))
-        ).join('\r\n')
-
-        const status = exportFile(
-          'table-export.csv',
-          content,
-          'text/csv'
-        )
-
-        if (status !== true) {
-          $q.notify({
-            message: 'Browser denied file download...',
-            color: 'negative',
-            icon: 'warning'
-          })
-        }
-      }
-
-/*
-Categorias y Productos funciona todo bien, 
-OJO *****************************
-trabajando en ordenesInsertar y detalleOrdenInsertar
-*/
 async function realizarPruebas() {
     try {
         
     cargando.value=true
     totalPruebas.value=19 // son 19 pruebas a realizar
-
+    let tiempo:number;
     
-    //iniciamos con insertar
-    mensajes.value.push("Iniciando pruebas de inserción")
-    await categoriasInsertar(pruebas.categorias.insertar)
-    await productosInsertar(pruebas.productos.insertar)    
-    await ordenesInsertar(pruebas.ordenes.insertar, pruebas.ordenes.detalleoden)
+    //INSERTANDO DATOS
+    mensajes.value.push("Iniciando pruebas de inserción")    
+    tiempo=await categoriasInsertar(pruebas.categorias.insertar)
+    tiempo==-1? erroresInsercion.value++: tiemposInsercion.value.push(tiempo);   
+    
+    tiempo=await productosInsertar(pruebas.productos.insertar)
+    tiempo==-1? erroresInsercion.value++: tiemposInsercion.value.push(tiempo);   
+    tiempo=await ordenesInsertar(pruebas.ordenes.insertar, pruebas.ordenes.detalleoden)
+    tiempo==-1? erroresInsercion.value++: tiemposInsercion.value.push(tiempo);
     
     mensajes.value.push("Iniciando pruebas de consultas")
     
-    //ahora procedemos a realizar consultas
-    await categoriasConsultar()
-    await categoriasConsultarAzar(pruebas.categorias.aleatorio)
-    await productosConsultar()
-    await productosConsultarAzar(pruebas.productos.aleatorio)
+    //PROCEDEMOS A CONSULTAR LOS DATOS    
+    tiempo=await categoriasConsultar()
+    tiempo==-1? erroresConsulta.value++: tiemposConsulta.value.push(tiempo);
+    
+    tiempo=await categoriasConsultarAzar(pruebas.categorias.aleatorio)
+    tiempo==-1? erroresConsulta.value++: tiemposConsulta.value.push(tiempo);
+    
+    tiempo=await productosConsultar()
+    tiempo==-1? erroresConsulta.value++: tiemposConsulta.value.push(tiempo);
+
+    tiempo=await productosConsultarAzar(pruebas.productos.aleatorio)
+    tiempo==-1? erroresConsulta.value++: tiemposConsulta.value.push(tiempo);
 
     // CONSULTAMOS ORDENES AL AZAR DEBEMOS TRAER LOS DATOS DE ORDEN Y SUS DETALLES    
-    await ordenesConsultarAzar(pruebas.ordenes.aleatorio)
-    
+    tiempo=await ordenesConsultarAzar(pruebas.ordenes.aleatorio)
+    tiempo==-1? erroresConsulta.value++: tiemposConsulta.value.push(tiempo);
 
-    //Actualizaciones de datos
+    //ACTUALIZACION DE DATOS
     mensajes.value.push("Iniciando pruebas de actualización")
-    await categoriasActualizar(pruebas.categorias.actualizar)
-    await productosActualizar(pruebas.productos.actualizar)
-    await ordenesActualizar(pruebas.ordenes.actualizar)
+    
+    tiempo=await categoriasActualizar(pruebas.categorias.actualizar)
+    tiempo==-1? erroresActualizacion.value++: tiemposActualizacion.value.push(tiempo);
+    
+    tiempo=await productosActualizar(pruebas.productos.actualizar)
+    tiempo==-1? erroresActualizacion.value++: tiemposActualizacion.value.push(tiempo);
+    tiempo=await ordenesActualizar(pruebas.ordenes.actualizar)
+    tiempo==-1? erroresActualizacion.value++: tiemposActualizacion.value.push(tiempo);
     
     //Consultas de Resumentes o Totales -Avanzadas
     mensajes.value.push("Iniciando pruebas de resumenes")
-    await resumenesContarOrdenes()
-    await resumenesProductos()
-    await resumenesProductosFecha()
-    await resumenesTotalDiario()
-    await resumenesTopten()
+    tiempo=await resumenesContarOrdenes()
+    tiempo==-1? erroresConsulta.value++: tiemposResumen.value.push(tiempo);
+    tiempo=await resumenesProductos()
+    tiempo==-1? erroresConsulta.value++: tiemposResumen.value.push(tiempo);
+    tiempo=await resumenesProductosFecha()
+    tiempo==-1? erroresConsulta.value++: tiemposResumen.value.push(tiempo);
+    tiempo=await resumenesTotalDiario()
+    tiempo==-1? erroresConsulta.value++: tiemposResumen.value.push(tiempo);
+    tiempo=await resumenesTopten()
+    tiempo==-1? erroresConsulta.value++: tiemposResumen.value.push(tiempo);
 
     //Eliminacion de datos
     mensajes.value.push("Iniciando pruebas de eliminación")
-    ordenesEliminar(pruebas.ordenes.insertar)
-    await productosEliminar(pruebas.productos.insertar)
-    await categoriasEliminar(pruebas.categorias.insertar)
+    tiempo=await ordenesEliminar(pruebas.ordenes.insertar)
+    tiempo==-1? erroresEliminacion.value++: tiemposEliminacion.value.push(tiempo);
+    tiempo=await productosEliminar(pruebas.productos.insertar)
+    tiempo==-1? erroresEliminacion.value++: tiemposEliminacion.value.push(tiempo);
+    
+    tiempo=await categoriasEliminar(pruebas.categorias.insertar)
+    tiempo==-1? erroresEliminacion.value++: tiemposEliminacion.value.push(tiempo);
 
     console.log("Terminaron las pruebas realizadas")
     mensajes.value.push("Terminaron las pruebas realizadas")
@@ -315,497 +280,7 @@ async function realizarPruebas() {
     
 } catch (error) {
         console.error(error)
-    }
-
-    
+    }    
 }
-
-//insertando nuevas categorias
- async function categoriasInsertar(total: number) {
-    console.log("Iniciando insercion de categorias")
-    let start = new Date().getTime();    
-    for (let i = 1; i <= total; i++) {
-        const ldata = {
-            id: i,
-            nombre: "Categoria " + i,
-        }
-        //agrego usando $fetch        
-        await $fetch('http://localhost:3000/api/mysql/categoria', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(ldata),            
-            onRequestError({ request, options, error }) {
-                erroresInsercion.value++
-            },
-        })        
-    }
-    let end = new Date().getTime();
-    let time = end - start;
-    tiemposInsercion.value.push(time);
-    
-}
-
-//Consultando todas las categorias
-async function categoriasConsultar() {    
-    let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/mysql/categorias', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        onRequestError({ request, options, error }) {
-            erroresConsulta.value++
-        },
-    })
-    let end = new Date().getTime();
-    let time = end - start;
-    tiemposConsulta.value.push(time);        
-}
-
-//Consultamos categorias al azar
-async function categoriasConsultarAzar(total:number) {    
-    let start = new Date().getTime();
-    for (let i = 1; i <= total; i++) {
-        let id = Math.floor(Math.random() * pruebas.categorias.insertar) + 1;
-        await $fetch('http://localhost:3000/api/mysql/categoria/' + id, {
-            method: 'GET',
-            headers: {
-                    'Content-Type': 'application/json',
-            },
-            onRequestError({ request, options, error }) {
-                erroresConsulta.value++
-            },
-        })        
-    }
-    let end = new Date().getTime();
-    let time = end - start;
-    tiemposConsulta.value.push(time);    
-}
-
-async function categoriasActualizar(total:number) {
-    let start = new Date().getTime();
-    for (let i = 1; i <= total; i++) {
-        const ldata = {
-            id: i,
-            nombre: "Categoria " + i + " Actualizada",
-        }
-        await $fetch('http://localhost:3000/api/mysql/categoria/'+i, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(ldata),
-            onRequestError({ request, options, error }) {
-                erroresActualizacion.value++
-            },
-        })        
-    }
-    let end = new Date().getTime();
-    let time = end - start;
-    tiemposActualizacion.value.push(time);    
-}
-
-//eliminando las categorias
-async function categoriasEliminar(total:number) {
-    let start = new Date().getTime();
-    for (let i = 1; i <= total; i++) {
-        await $fetch('http://localhost:3000/api/mysql/categoria/'+i, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: i }),
-        onRequestError({ request, options, error }) {
-            erroresEliminacion.value++
-        }
-        })  
-    }
-    let end = new Date().getTime();
-    let time = end - start;
-    tiemposEliminacion.value.push(time);    
-}
-
-//METODOS CON PRODUCTOS
-async function productosInsertar(total: number) { 
-    console.log("Iniciando insercion de productos")   
-    let start = new Date().getTime();    
-    for (let i = 1; i <= total; i++) {
-        const ldata = {
-            id: i,
-            nombre: "Producto " + i,
-            precio: Math.floor(Math.random() * 100) + 1,
-            idCategoria: Math.floor(Math.random() * pruebas.categorias.insertar) + 1,
-        }
-        //agrego usando $fetch        
-        await $fetch('http://localhost:3000/api/mysql/producto', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(ldata),            
-            onRequestError({ request, options, error }) {
-                erroresInsercion.value++
-            },
-        })        
-    }
-    let end = new Date().getTime();
-    let time = end - start;
-    tiemposInsercion.value.push(time);
-    
-}
-
-async function productosConsultar() {    
-    let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/mysql/productos', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        onRequestError({ request, options, error }) {
-            erroresConsulta.value++
-        },
-    })
-    let end = new Date().getTime();
-    let time = end - start;
-    tiemposConsulta.value.push(time);        
-}
-
-async function productosConsultarAzar(total:number) {    
-    let start = new Date().getTime();
-    for (let i = 1; i <= total; i++) {
-        let id = Math.floor(Math.random() * pruebas.productos.insertar) + 1;
-        await $fetch('http://localhost:3000/api/mysql/producto/' + id, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            onRequestError({ request, options, error }) {
-                erroresConsulta.value++
-            },
-        })        
-    }
-    let end = new Date().getTime();
-    let time = end - start;
-    tiemposConsulta.value.push(time);    
-}
-
-async function productosActualizar(total:number) {
-    let start = new Date().getTime();
-    for (let i = 1; i <= total; i++) {
-        const ldata = {
-            id: i,
-            nombre: "Producto " + i + " Actualizado",
-            precio: Math.floor(Math.random() * 100) + 1,
-            categoria: Math.floor(Math.random() * pruebas.categorias.insertar) + 1,
-        }
-
-        await $fetch('http://localhost:3000/api/mysql/producto/'+i, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(ldata),
-            onRequestError({ request, options, error }) {
-                erroresActualizacion.value++
-            },
-        })        
-    }
-    let end = new Date().getTime();
-    let time = end - start;
-    tiemposActualizacion.value.push(time);    
-}
-
-async function productosEliminar(total:number) {
-    let start = new Date().getTime();
-    for (let i = 1; i <= total; i++) {
-        await $fetch('http://localhost:3000/api/mysql/producto/'+i, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: i }),
-        onRequestError({ request, options, error }) {
-            erroresEliminacion.value++
-        }
-        })  
-    }
-    let end = new Date().getTime();
-    let time = end - start;
-    tiemposEliminacion.value.push(time);    
-}
-//FIN DE PRODUCTOS
-
-//Metodos para las ordenes
-
-async function ordenesInsertar(total:number, totaldetalle:number){
-    console.log("Iniciando insercion de ordenes")
-    let start = new Date().getTime();
-    for (let conta=1; conta<=total; conta ++){
-        let anio = new Date().getFullYear();
-        //mes es un numero del 1 al 12
-        let mes = Math.floor(Math.random() * 12)+1;
-        let lfecha: string = anio +","+ mes + "," + Math.floor(Math.random() * 28 + 1);
-        const ldata = {
-                id: conta,
-                fecha:lfecha,
-                total: Math.floor(Math.random() * 100) + 1,
-        }
-        //agrego usando $fetch        
-        await $fetch('http://localhost:3000/api/mysql/orden', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(ldata),
-                onRequestError({ request, options, error }) {
-                    erroresInsercion.value++
-                },
-                onResponse({ response }) {
-                    //detalleOrdenInsertar(totaldetalle)
-                },                       
-                
-            })
-            
-        //ahora vienen los detalles de cada orden
-        await detalleOrdenInsertar(conta, totaldetalle)
-    }//fin del for del conta de las ordenes
-   
-    let end = new Date().getTime();
-    let time = end - start;
-    tiemposInsercion.value.push(time);
-
-}
-
-async function detalleOrdenInsertar(idOrden: number, totaldetalle: number){   
-                //Ahora Agregamos los detalles de la orden los cuales serán segun el totaldetalle
-                for (let j = 1; j <= totaldetalle; j++) {
-                    const ldatadetalle = {                        
-                        idorden: idOrden,
-                        //idproducto: Math.floor(Math.random() * (pruebas.productos.insertar/2)) + 1,
-                        idproducto:j,
-                        cantidad: Math.floor(Math.random() * 10) + 1,
-                        precio: Math.floor(Math.random() * 100) + 1,
-                    }
-                    //agrego usando $fetch        
-                    await $fetch('http://localhost:3000/api/mysql/detalleorden', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(ldatadetalle),            
-                        onRequestError({ request, options, error }) {
-                            erroresInsercion.value++
-                        },
-                    })        
-                }
-
-               
-     
-
-
-}
-
-async function ordenesConsultarAzar(total:number) {    
-    let start = new Date().getTime();
-    for (let i = 1; i <= total; i++) {
-        let id = Math.floor(Math.random() * pruebas.ordenes.insertar) + 1;
-        await $fetch('http://localhost:3000/api/mysql/orden/' + id, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },           
-            onRequestError({ request, options, error }) {
-                erroresConsulta.value++
-            },
-        })
-        //ahora consultamos los detalles de la orden
-        await $fetch('http://localhost:3000/api/mysql/detalleorden/' + id, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },           
-            onRequestError({ request, options, error }) {
-                erroresConsulta.value++
-            },
-        })        
-    }
-    let end = new Date().getTime();
-    let time = end - start;
-    tiemposConsulta.value.push(time);    
-}
-
-async function ordenesActualizar(total:number) {
-    let start = new Date().getTime();
-    for (let i = 1; i <= total; i++) {
-        const ldata = {
-            id: i,
-            fecha: new Date().toISOString(),
-            total: Math.floor(Math.random() * 100) + 1,
-        }
-        await $fetch('http://localhost:3000/api/mysql/orden/'+i, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(ldata),
-            onRequestError({ request, options, error }) {
-                erroresActualizacion.value++
-            },
-        })
-        //ahora actualizamos los detalles de la orden, primero hacemos GET y traemos todos los detalles
-        // luego le multiplicamos por dos la cantidad y enviamos las actualizaciones de cada detalle
-        let datos = await $fetch('http://localhost:3000/api/mysql/detalleorden/' + i, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },           
-            onRequestError({ request, options, error }) {
-                erroresConsulta.value++
-            },
-        })
-        //console.log (datos.data)
-        //return       
-        //convertir a json datos.data
-        let ldatos = datos.data
-        //console.log(ldatos)
-        for (let j = 0; j < ldatos.length; j++) {
-            const ldatadetalle = {                        
-                idorden: i,
-                idproducto: ldatos[j].idproducto,
-                cantidad: ldatos[j].cantidad * 2,
-                precio: ldatos[j].precio,
-            }
-            //console.log(ldatadetalle)
-            //ahora invocamos PUT detalleorden para enviar los cambios
-            await $fetch('http://localhost:3000/api/mysql/detalleorden/' + ldatos[j].idorden + '/'+  ldatos[j].idproducto  , {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(ldatadetalle),            
-                onRequestError({ request, options, error }) {
-                    erroresActualizacion.value++
-                },
-            })     
-        } //fin del for de los detalles        
-
-        
-    }
-    let end = new Date().getTime();
-    let time = end - start;
-    tiemposActualizacion.value.push(time);    
-}
-
-async function ordenesEliminar(total:number) {
-    let start = new Date().getTime();
-    for (let i = 1; i <= total; i++) {
-        
-        await $fetch('http://localhost:3000/api/mysql/orden/'+i, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: i }),
-        onRequestError({ request, options, error }) {
-            erroresEliminacion.value++
-        }
-        })  
-    }
-    let end = new Date().getTime();
-    let time = end - start;
-    tiemposEliminacion.value.push(time);    
-}
-
-//Fin de las ordenes
-
-
-//consultas de resumenes o totales
-async function resumenesContarOrdenes() {
-    let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/mysql/resumenes/countordenes', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        onRequestError({ request, options, error }) {
-            erroresConsulta.value++
-        },
-    })
-    let end = new Date().getTime();
-    let time = end - start;
-    tiemposResumen.value.push(time);
-}
-
-async function resumenesProductos() {
-    let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/mysql/resumenes/productosdiarios', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        onRequestError({ request, options, error }) {
-            erroresConsulta.value++
-        },
-    })
-    let end = new Date().getTime();
-    let time = end - start;
-    tiemposResumen.value.push(time);
-}
-
-async function resumenesProductosFecha() {
-    let start = new Date().getTime();
-    let anio = new Date().getFullYear();        
-    let mes = Math.floor(Math.random() * 12)+1;
-    let dia = Math.floor(Math.random() * 28 + 1);
-    let fecha= anio + "-" + mes + "-" + dia;
-
-    await $fetch('http://localhost:3000/api/mysql/resumenes/productosdiariosfecha?fecha=' + fecha, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        onRequestError({ request, options, error }) {
-            erroresConsulta.value++
-        },
-    })
-    let end = new Date().getTime();
-    let time = end - start;
-    tiemposResumen.value.push(time);
-}
-
-async function resumenesTotalDiario() {
-    let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/mysql/resumenes/totaldiario', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        onRequestError({ request, options, error }) {
-            erroresConsulta.value++
-        },
-    })
-    let end = new Date().getTime();
-    let time = end - start;
-    tiemposResumen.value.push(time);
-}
-
-async function resumenesTopten() {
-    let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/mysql/resumenes/topten', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        onRequestError({ request, options, error }) {
-            erroresConsulta.value++
-        },
-    })
-    let end = new Date().getTime();
-    let time = end - start;
-    tiemposResumen.value.push(time);
-}
-
 
 </script>

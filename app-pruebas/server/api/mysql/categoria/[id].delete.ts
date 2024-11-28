@@ -1,5 +1,5 @@
 //Endpoint para eliminar una categoria de la base de datos
-import {categorias} from "../../../utils/mysql";
+import {categorias} from "../../../utils/mysql/mysql";
 
 export default defineEventHandler(async (event) => {   
     try {

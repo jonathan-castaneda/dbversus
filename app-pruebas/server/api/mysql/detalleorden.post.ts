@@ -1,4 +1,4 @@
-import { detalleordenes } from '../../utils/mysql';
+import { detalleordenes } from '../../utils/mysql/mysql';
 export default defineEventHandler(async (event) => {
     // imprimimos en consola la data que recibimos
     const body = await readBody(event);
