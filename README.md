@@ -22,3 +22,5 @@ para levantar los gestores se debe de ejecutar el siguiente comando:
 ```bash
 docker compose -f ./mysql/docker-compose.yml up -d
 ```
+
+#PARA PRODUCCION 

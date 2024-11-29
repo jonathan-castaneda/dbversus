@@ -1,28 +1,30 @@
 import { Sequelize, DataTypes } from "sequelize";
 
-//const sequelize = new Sequelize('');
-//declaro sequelize configurada para conectarse a una base de datos de mysql con usuario root y sin contraseña
-
-//PARA DEVELOPER
-/*
-const sequelize = new Sequelize({
+//declaro la variable dependiendo el entorno si es produccion o desarrollo
+if (process.env.NODE_ENV === 'production') {
+  //PARA PRODUCCION
+  //PARA PRODUCCION EN DOCKER
+  const sequelize = new Sequelize({
     dialect: 'mysql',
     database: 'cafeteria',
     username: 'root',
     password: '',
-    host: 'localhost',
+    host: 'mysql', //nombre del servicio en docker-compose.yml
     port: 3306
-}); */
+  });
+} else {
+  const sequelize = new Sequelize({
+    dialect: 'mysql',
+    database: 'cafeteria',
+    username: 'root',
+    password: '',
+    host: 'localhost', //en desarrollo se accede como localhost
+    port: 3306
+  }); 
+}
 
-//PARA PRODUCCION EN DOCKER
-const sequelize = new Sequelize({
-  dialect: 'mysql',
-  database: 'cafeteria',
-  username: 'root',
-  password: '',
-  host: 'mysql',
-  port: 3306
-});
+
+
 
 
 // Tabla Categorias

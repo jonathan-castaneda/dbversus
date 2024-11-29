@@ -57,20 +57,23 @@ yarn build
 bun run build
 ```
 
-Locally preview production build:
+# PRODUCCION EJECUTANDO LA APP:
+Primero se debe dockerizar la apps, para ello se debe ejecutar el siguiente comando:
 
 ```bash
 # npm
-npm run preview
+docker build -t eltag:1.1.1 .
+```
+Luego se sube la imagen a docker hub, y por ultimo se utiliza docker-compose y ahi se definen los recursos asignados a los dos contenedores para correr las pruebas.
 
-# pnpm
-pnpm run preview
+Lo ideal seria correr las pruebas para utilizando tres computadoras de forma simultanea, y que las reciba un solo contenedor de base de datos, debemos probar como hacer esa redireccion, o editar una variable de entorno.
 
-# yarn
-yarn preview
 
-# bun
-bun run preview
+## 
+
+```bash
+# npm
+docker compose up -d
+
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
