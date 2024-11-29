@@ -3,6 +3,8 @@ import { Sequelize, DataTypes } from "sequelize";
 //const sequelize = new Sequelize('');
 //declaro sequelize configurada para conectarse a una base de datos de mysql con usuario root y sin contraseña
 
+//PARA DEVELOPER
+/*
 const sequelize = new Sequelize({
     dialect: 'mysql',
     database: 'cafeteria',
@@ -10,7 +12,19 @@ const sequelize = new Sequelize({
     password: '',
     host: 'localhost',
     port: 3306
+}); */
+
+//PARA PRODUCCION EN DOCKER
+const sequelize = new Sequelize({
+  dialect: 'mysql',
+  database: 'cafeteria',
+  username: 'root',
+  password: '',
+  host: 'mysql',
+  port: 3306
 });
+
+
 // Tabla Categorias
 const categorias = sequelize.define('categorias', 
 {
