@@ -1,30 +1,15 @@
 import { Sequelize, DataTypes } from "sequelize";
+//variable de entornos HOSTDB indica la ip o el nombre del servidor DB mysql
+let hostdb = process.env.HOST_DB || 'localhost';
 
-//declaro la variable dependiendo el entorno si es produccion o desarrollo
-if (process.env.NODE_ENV === 'production') {
-  //PARA PRODUCCION
-  //PARA PRODUCCION EN DOCKER
-  const sequelize = new Sequelize({
+const sequelize = new Sequelize({
     dialect: 'mysql',
     database: 'cafeteria',
     username: 'root',
     password: '',
-    host: 'mysql', //nombre del servicio en docker-compose.yml
+    host: hostdb,
     port: 3306
-  });
-} else {
-  const sequelize = new Sequelize({
-    dialect: 'mysql',
-    database: 'cafeteria',
-    username: 'root',
-    password: '',
-    host: 'localhost', //en desarrollo se accede como localhost
-    port: 3306
-  }); 
-}
-
-
-
+}); 
 
 
 // Tabla Categorias

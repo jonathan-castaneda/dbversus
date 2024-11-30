@@ -77,3 +77,5 @@ docker compose up -d
 
 ```
 
+# Variables de entorno en DOCKER
+HOST_DB para indicar el host de la base de datos

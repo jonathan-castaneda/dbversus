@@ -1,16 +1,18 @@
-#primero va la imagen de la apps
-#segundo va la imagen de la base de datos
+#debes usar una variable de entorno para la direccion de la base de datos
+#lee la documentacion de la imagen calderonperaza/dbversusapp
 #esto es para produccion dockerizado
 #para correr ejecuta
 #docker-compose up -d
 version: '3.1'
 services:
   appversus:
-    image: calderonperaza/dbversusapp:0.2.0
+    image: calderonperaza/dbversusapp:1.0
     container_name: appversus
     restart: unless-stopped    
     ports:
-      - "3000:3000"    
+      - "3000:3000"
+    environment:
+      - HOST_DB=mysql
     deploy:
           resources:
             limits:
