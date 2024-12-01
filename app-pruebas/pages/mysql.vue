@@ -33,7 +33,7 @@
             
                 </div>
                 <div class="col-3 q-ml-lg">
-                <q-btn size="lg" :loading="cargando" @click="realizarPruebas" color="primary">Iniciar Pruebas</q-btn>
+                <q-btn :disable="errorConexion" size="lg" :loading="cargando" @click="realizarPruebas" color="primary">Iniciar Pruebas</q-btn>
                 <q-circular-progress
                 show-value
                 font-size="12px"
@@ -46,6 +46,7 @@
                 >
                 {{ avance }}%
                 </q-circular-progress>
+                <div v-show="errorConexion" class="text-caption text-red">Error de conexion, No es posible conectar con la base de datos revise el host, la ip o si el servicio esta levantado.</div>
             </div>
 
             </div>
@@ -101,8 +102,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed} from 'vue'
-import { exportFile } from 'quasar'
+import { ref, computed, onMounted} from 'vue'
+
 
 import pruebas from '../server/utils/pruebas.json'
 import { categoriasInsertar, categoriasConsultar, categoriasConsultarAzar, categoriasActualizar, categoriasEliminar } from '../server/utils/mysql/categorias'
@@ -110,6 +111,7 @@ import { productosInsertar, productosConsultar, productosConsultarAzar, producto
 import { ordenesInsertar, ordenesConsultarAzar, ordenesActualizar, ordenesEliminar } from '../server/utils/mysql/ordenes'
 import { resumenesContarOrdenes, resumenesProductos, resumenesProductosFecha, resumenesTotalDiario, resumenesTopten } from '../server/utils/mysql/resumenes'
 
+const errorConexion= ref(false)
 
 const tiemposInsercion= ref([])
 const tiemposConsulta= ref([ ])
@@ -282,5 +284,18 @@ async function realizarPruebas() {
         console.error(error)
     }    
 }
+
+async function probarConexion(){
+    try {
+        await categoriasConsultar()
+        errorConexion.value=false
+    } catch (error) {
+        errorConexion.value=true
+    }
+}
+
+onMounted(()=>{
+    probarConexion()
+})
 
 </script>
