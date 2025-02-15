@@ -33,6 +33,7 @@
             
                 </div>
                 <div class="col-3 q-ml-lg">
+                    <q-input dense style="width: 150px;" type="number" outlined v-model="contaInicial" label="Contador Inicial en:" />
                 <q-btn :disable="errorConexion" size="lg" :loading="cargando" @click="realizarPruebas" color="primary">Iniciar Pruebas</q-btn>
                 <q-circular-progress
                 show-value
@@ -112,6 +113,7 @@ import { ordenesInsertar, ordenesConsultarAzar, ordenesActualizar, ordenesElimin
 import { resumenesContarOrdenes, resumenesProductos, resumenesProductosFecha, resumenesTotalDiario, resumenesTopten } from '../server/utils/mysql/resumenes'
 
 const errorConexion= ref(false)
+const contaInicial= ref(1)
 
 const tiemposInsercion= ref([])
 const tiemposConsulta= ref([ ])
@@ -215,12 +217,13 @@ async function realizarPruebas() {
     
     //INSERTANDO DATOS
     mensajes.value.push("Iniciando pruebas de inserción")    
-    tiempo=await categoriasInsertar(pruebas.categorias.insertar)
+    tiempo=await categoriasInsertar(pruebas.categorias.insertar, contaInicial.value)
     tiempo==-1? erroresInsercion.value++: tiemposInsercion.value.push(tiempo);   
     
-    tiempo=await productosInsertar(pruebas.productos.insertar)
+    
+    tiempo=await productosInsertar(pruebas.productos.insertar, contaInicial.value)
     tiempo==-1? erroresInsercion.value++: tiemposInsercion.value.push(tiempo);   
-    tiempo=await ordenesInsertar(pruebas.ordenes.insertar, pruebas.ordenes.detalleoden)
+    tiempo=await ordenesInsertar(pruebas.ordenes.insertar, pruebas.ordenes.detalleoden, contaInicial.value)
     tiempo==-1? erroresInsercion.value++: tiemposInsercion.value.push(tiempo);
     
     mensajes.value.push("Iniciando pruebas de consultas")
@@ -229,28 +232,28 @@ async function realizarPruebas() {
     tiempo=await categoriasConsultar()
     tiempo==-1? erroresConsulta.value++: tiemposConsulta.value.push(tiempo);
     
-    tiempo=await categoriasConsultarAzar(pruebas.categorias.aleatorio)
+    tiempo=await categoriasConsultarAzar(pruebas.categorias.aleatorio, contaInicial.value)
     tiempo==-1? erroresConsulta.value++: tiemposConsulta.value.push(tiempo);
     
     tiempo=await productosConsultar()
     tiempo==-1? erroresConsulta.value++: tiemposConsulta.value.push(tiempo);
 
-    tiempo=await productosConsultarAzar(pruebas.productos.aleatorio)
+    tiempo=await productosConsultarAzar(pruebas.productos.aleatorio,contaInicial.value)
     tiempo==-1? erroresConsulta.value++: tiemposConsulta.value.push(tiempo);
 
     // CONSULTAMOS ORDENES AL AZAR DEBEMOS TRAER LOS DATOS DE ORDEN Y SUS DETALLES    
-    tiempo=await ordenesConsultarAzar(pruebas.ordenes.aleatorio)
+    tiempo=await ordenesConsultarAzar(pruebas.ordenes.aleatorio, contaInicial.value)
     tiempo==-1? erroresConsulta.value++: tiemposConsulta.value.push(tiempo);
 
     //ACTUALIZACION DE DATOS
     mensajes.value.push("Iniciando pruebas de actualización")
     
-    tiempo=await categoriasActualizar(pruebas.categorias.actualizar)
+    tiempo=await categoriasActualizar(pruebas.categorias.actualizar, contaInicial.value)
     tiempo==-1? erroresActualizacion.value++: tiemposActualizacion.value.push(tiempo);
     
-    tiempo=await productosActualizar(pruebas.productos.actualizar)
+    tiempo=await productosActualizar(pruebas.productos.actualizar, contaInicial.value)
     tiempo==-1? erroresActualizacion.value++: tiemposActualizacion.value.push(tiempo);
-    tiempo=await ordenesActualizar(pruebas.ordenes.actualizar)
+    tiempo=await ordenesActualizar(pruebas.ordenes.actualizar, contaInicial.value)
     tiempo==-1? erroresActualizacion.value++: tiemposActualizacion.value.push(tiempo);
     
     //Consultas de Resumentes o Totales -Avanzadas
@@ -267,13 +270,14 @@ async function realizarPruebas() {
     tiempo==-1? erroresConsulta.value++: tiemposResumen.value.push(tiempo);
 
     //Eliminacion de datos
+    
     mensajes.value.push("Iniciando pruebas de eliminación")
-    tiempo=await ordenesEliminar(pruebas.ordenes.insertar)
+    tiempo=await ordenesEliminar(pruebas.ordenes.insertar, contaInicial.value)
     tiempo==-1? erroresEliminacion.value++: tiemposEliminacion.value.push(tiempo);
-    tiempo=await productosEliminar(pruebas.productos.insertar)
+    tiempo=await productosEliminar(pruebas.productos.insertar, contaInicial.value)
     tiempo==-1? erroresEliminacion.value++: tiemposEliminacion.value.push(tiempo);
     
-    tiempo=await categoriasEliminar(pruebas.categorias.insertar)
+    tiempo=await categoriasEliminar(pruebas.categorias.insertar, contaInicial.value)
     tiempo==-1? erroresEliminacion.value++: tiemposEliminacion.value.push(tiempo);
 
     console.log("Terminaron las pruebas realizadas")

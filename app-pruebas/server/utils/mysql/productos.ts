@@ -1,14 +1,15 @@
 import pruebas from '../pruebas.json'
 
-async function productosInsertar(total: number): Promise<number>  { 
+async function productosInsertar(total: number, contaInicial:number): Promise<number>  { 
     console.log("Iniciando insercion de productos")   
-    let start = new Date().getTime();    
-    for (let i = 1; i <= total; i++) {
+    let start = new Date().getTime();
+
+    for (let i = contaInicial; i <= Number(total) + Number(contaInicial); i++) {
         const ldata = {
             id: i,
             nombre: "Producto " + i,
             precio: Math.floor(Math.random() * 100) + 1,
-            idCategoria: Math.floor(Math.random() * pruebas.categorias.insertar) + 1,
+            idCategoria: Math.floor(Math.random() * pruebas.categorias.insertar) + Number(contaInicial),
         }
         //agrego usando $fetch        
         await $fetch('http://localhost:3000/api/mysql/producto', {
@@ -44,10 +45,10 @@ async function productosConsultar(): Promise<number>  {
     return time;       
 }
 
-async function productosConsultarAzar(total:number): Promise<number>  {    
+async function productosConsultarAzar(total:number, contaInicial:number): Promise<number>  {    
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
-        let id = Math.floor(Math.random() * pruebas.productos.insertar) + 1;
+        let id = Math.floor(Math.random() * pruebas.productos.insertar) + Number(contaInicial);
         await $fetch('http://localhost:3000/api/mysql/producto/' + id, {
             method: 'GET',
             headers: {
@@ -63,9 +64,9 @@ async function productosConsultarAzar(total:number): Promise<number>  {
     return time; 
 }
 
-async function productosActualizar(total:number): Promise<number>  {
+async function productosActualizar(total:number, contaInicial:number): Promise<number>  {
     let start = new Date().getTime();
-    for (let i = 1; i <= total; i++) {
+    for (let i = contaInicial; i <= Number(total) + Number(contaInicial); i++) {
         const ldata = {
             id: i,
             nombre: "Producto " + i + " Actualizado",
@@ -89,9 +90,9 @@ async function productosActualizar(total:number): Promise<number>  {
     return time;
 }
 
-async function productosEliminar(total:number): Promise<number>  {
+async function productosEliminar(total:number, contaInicial:number): Promise<number>  {
     let start = new Date().getTime();
-    for (let i = 1; i <= total; i++) {
+    for (let i = contaInicial; i <= Number(total) + Number(contaInicial); i++) {
         await $fetch('http://localhost:3000/api/mysql/producto/'+i, {
         method: 'DELETE',
         headers: {

@@ -1,9 +1,10 @@
 import pruebas from '../pruebas.json'
 //insertando nuevas categorias
-async function categoriasInsertar(total: number): Promise<number> {
+async function categoriasInsertar(total: number, contaInicial:number): Promise<number> {
     console.log("Iniciando insercion de categorias")
     let start = new Date().getTime();    
-    for (let i = 1; i <= total; i++) {
+      
+    for (let i = contaInicial; i <= Number(total) + Number(contaInicial); i++) {
         const ldata = {
             id: i,
             nombre: "Categoria " + i,
@@ -43,10 +44,10 @@ async function categoriasConsultar(): Promise<number> {
 }
 
 //Consultamos categorias al azar
-async function categoriasConsultarAzar(total:number): Promise<number> {    
+async function categoriasConsultarAzar(total:number, contaInicial:number): Promise<number> {    
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
-        let id = Math.floor(Math.random() * pruebas.categorias.insertar) + 1;
+        let id = Math.floor(Math.random() * pruebas.categorias.insertar) + Number(contaInicial);
         await $fetch('http://localhost:3000/api/mysql/categoria/' + id, {
             method: 'GET',
             headers: {
@@ -62,9 +63,9 @@ async function categoriasConsultarAzar(total:number): Promise<number> {
     return time;
 }
 
-async function categoriasActualizar(total:number): Promise<number> {
+async function categoriasActualizar(total:number, contaInicial:number): Promise<number> {
     let start = new Date().getTime();
-    for (let i = 1; i <= total; i++) {
+    for (let i = contaInicial; i <= Number(total) + Number(contaInicial); i++) {
         const ldata = {
             id: i,
             nombre: "Categoria " + i + " Actualizada",
@@ -86,9 +87,9 @@ async function categoriasActualizar(total:number): Promise<number> {
 }
 
 //eliminando las categorias
-async function categoriasEliminar(total:number): Promise<number> {
+async function categoriasEliminar(total:number, contaInicial:number): Promise<number> {
     let start = new Date().getTime();
-    for (let i = 1; i <= total; i++) {
+    for (let i = contaInicial; i <= Number(total) + Number(contaInicial); i++) {
         await $fetch('http://localhost:3000/api/mysql/categoria/'+i, {
         method: 'DELETE',
         headers: {
