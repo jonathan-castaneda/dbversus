@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  firebird:
+    image: jacobalberty/firebird:latest
+    container_name: firebird
+    restart: unless-stopped
+    environment:
+      ISC_PASSWORD: "masterkey"  # Contraseña para SYSDBA
+    ports:
+      - "3051:3050"  # Mapea el puerto 3051 del host al puerto 3050 del contenedor
+    volumes:
+      - ./cafeteria.fdb:/firebird/data/cafeteria.fdb  # Monta tu base de datos
+      - ./create_db.sql:/docker-entrypoint-initdb.d/create_db.sql  # Inicializa la base de datos
+      - ./cafeteria.sql:/docker-entrypoint-initdb.d/cafeteria.sql  # Inserta datos iniciales
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '1'
+          memory: 1G
