@@ -50,3 +50,4 @@ CREATE TABLE detalleordenes (
     ON UPDATE CASCADE
 );
 
+ALTER ROLE admin SET search_path TO cafeteria;
