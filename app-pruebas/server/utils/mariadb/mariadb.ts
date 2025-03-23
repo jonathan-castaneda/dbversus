@@ -10,7 +10,8 @@ const sequelize = new Sequelize({
     password: 'root',
     host: hostdb,
     port: 3306
-  
+});
+
 // Tabla Categorias
 const categorias = sequelize.define('categorias', 
 {

@@ -13,9 +13,9 @@ services:
     restart: unless-stopped
     environment:
     MYSQL_ROOT_PASSWORD: 'root'    
-      MMYSQL_USER: 'admin'
-      MYSQL_PASSWORD: 'admin'
-      MYSQL_DATABASE: 'cafeteria'     
+    MMYSQL_USER: 'admin'
+    MYSQL_PASSWORD: 'admin'
+    MYSQL_DATABASE: 'cafeteria'     
     ports:
       - "3306:3306"
     volumes:
