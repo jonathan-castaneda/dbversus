@@ -1,17 +1,16 @@
 import { Sequelize, DataTypes } from "sequelize";
-//variable de entornos HOSTDB indica la ip o el nombre del servidor DB mysql
+
+// Variable de entornos HOSTDB indica la ip o el nombre del servidor DB mariadb
 let hostdb = process.env.HOST_DB || 'localhost';
 
 const sequelize = new Sequelize({
     dialect: 'mariadb',
     database: 'cafeteria',
     username: 'root',
-    password: '',
+    password: 'root',
     host: hostdb,
-    port: 8080
-}); 
-
-
+    port: 3306
+  
 // Tabla Categorias
 const categorias = sequelize.define('categorias', 
 {
