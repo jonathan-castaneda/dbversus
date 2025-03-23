@@ -12,10 +12,10 @@ services:
     container_name: mariadb
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: root      
-      MMYSQL_USER: admin
-      MYSQL_PASSWORD: 1234
-      MYSQL_DATABASE: cafeteria     
+      MYSQL_ROOT_PASSWORD: 'root'    
+      MMYSQL_USER: 'admin'
+      MYSQL_PASSWORD: 'admin'
+      MYSQL_DATABASE: 'cafeteria'     
     ports:
       - "3306:3306"
     volumes:

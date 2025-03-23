@@ -1,12 +1,10 @@
-//Endpoint para eliminar una categoria de la base de datos
-import {categorias} from "../../../utils/mariadb/mariadb";
-
+import { detalleordenes} from "../../../utils/mariadb/mariadb";
 export default defineEventHandler(async (event) => {   
     try {
         //eliminamos de la base de datos
-        const data = await categorias.destroy({
+        const data = await detalleordenes.destroy({
                         where: {
-                            id: event.context.params.id
+                            idorden: event.context.params.idorden
                         }
                     });
         return { statusCode:200, "message":"eliminado" };

@@ -1,5 +1,5 @@
 import { Sequelize, DataTypes } from "sequelize";
-//variable de entornos HOSTDB indica la ip o el nombre del servidor DB mysql
+//variable de entornos HOSTDB indica la ip o el nombre del servidor DB mariadb
 let hostdb = process.env.HOST_DB || 'localhost';
 
 const sequelize = new Sequelize({

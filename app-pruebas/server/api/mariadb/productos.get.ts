@@ -1,11 +1,10 @@
-import {categorias} from "../../utils/mariadb/mariadb";
-
+import {productos} from "../../utils/mariadb/mariadb";
 export default defineEventHandler(async (event) => {      
     try {        
-        const data = await categorias.findAll();
+        const data = await productos.findAll();
         return data;
       } catch (error) {
         console.error('Unable to connect to the database:', error);
         return(error)
       }    
-})
+  })

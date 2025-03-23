@@ -108,9 +108,9 @@ import { ref, computed, onMounted} from 'vue'
 
 import pruebas from '../server/utils/pruebas.json'
 import { categoriasInsertar, categoriasConsultar, categoriasConsultarAzar, categoriasActualizar, categoriasEliminar } from '../server/utils/mariadb/categorias'
-// import { productosInsertar, productosConsultar, productosConsultarAzar, productosActualizar, productosEliminar } from '../server/utils/mysql/productos'
-// import { ordenesInsertar, ordenesConsultarAzar, ordenesActualizar, ordenesEliminar } from '../server/utils/mysql/ordenes'
-// import { resumenesContarOrdenes, resumenesProductos, resumenesProductosFecha, resumenesTotalDiario, resumenesTopten } from '../server/utils/mysql/resumenes'
+import { productosInsertar, productosConsultar, productosConsultarAzar, productosActualizar, productosEliminar } from '../server/utils/mariadb/productos'
+import { ordenesInsertar, ordenesConsultarAzar, ordenesActualizar, ordenesEliminar } from '../server/utils/mariadb/ordenes'
+import { resumenesContarOrdenes, resumenesProductos, resumenesProductosFecha, resumenesTotalDiario, resumenesTopten } from '../server/utils/mariadb/resumenes'
 
 const errorConexion= ref(false)
 const contaInicial= ref(1)
@@ -270,7 +270,6 @@ async function realizarPruebas() {
     tiempo==-1? erroresConsulta.value++: tiemposResumen.value.push(tiempo);
 
     //Eliminacion de datos
-    
     mensajes.value.push("Iniciando pruebas de eliminación")
     tiempo=await ordenesEliminar(pruebas.ordenes.insertar, contaInicial.value)
     tiempo==-1? erroresEliminacion.value++: tiemposEliminacion.value.push(tiempo);
