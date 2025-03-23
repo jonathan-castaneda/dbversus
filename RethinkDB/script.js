@@ -1,5 +1,5 @@
+import r from 'rethinkdb';
 
-const r = require('rethinkdb');
 
 export async function initializeDatabase() {
     let conn;
