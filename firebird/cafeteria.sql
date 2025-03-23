@@ -1,56 +1,73 @@
 -- -----------------------------------------------------
 -- Schema cafeteria
 -- -----------------------------------------------------
--- Firebird no utiliza `CREATE SCHEMA`. Los objetos de base de datos
--- se crean directamente en la base de datos actual, por lo que no es necesario.
--- Asumimos que la base de datos llamada "cafeteria" ya está creada.
 
-SET TERM ^ ;
+-- En Firebird, no es necesario definir un esquema como en MySQL
+-- simplemente usamos las tablas dentro de la base de datos
+
 -- -----------------------------------------------------
--- Table `cafeteria`.`categorias`
+-- Table cafeteria.categorias
 -- -----------------------------------------------------
+CREATE SEQUENCE seq_categorias_id; -- Crear secuencia para la tabla categorias
+
 CREATE TABLE categorias (
-  id INT NOT NULL,
-  nombre VARCHAR(145) NOT NULL,
-  CONSTRAINT PK_Categorias PRIMARY KEY (id)
+  id INTEGER NOT NULL PRIMARY KEY, -- Quitamos el DEFAULT
+  nombre VARCHAR(145) NOT NULL
 );
 
 -- -----------------------------------------------------
--- Table `cafeteria`.`ordenes`
+-- Table cafeteria.ordenes
 -- -----------------------------------------------------
+CREATE SEQUENCE seq_ordenes_id; -- Crear secuencia para la tabla ordenes
+
 CREATE TABLE ordenes (
-  id INT NOT NULL,
+  id INTEGER NOT NULL PRIMARY KEY, -- Quitamos el DEFAULT
   fecha DATE NOT NULL,
-  total DECIMAL(8,2) NOT NULL DEFAULT 0.00,
-  CONSTRAINT PK_Ordenes PRIMARY KEY (id)
+  total NUMERIC(8,2) NOT NULL
 );
 
 -- -----------------------------------------------------
--- Table `cafeteria`.`productos`
+-- Table cafeteria.productos
 -- -----------------------------------------------------
+CREATE SEQUENCE seq_productos_id; -- Crear secuencia para la tabla productos
+
 CREATE TABLE productos (
-  id INT NOT NULL,
+  id INTEGER NOT NULL PRIMARY KEY, -- Quitamos el DEFAULT
   nombre VARCHAR(145) NOT NULL,
-  precio DECIMAL(8,2) DEFAULT 0.00,
-  idCategoria INT NOT NULL,
-  CONSTRAINT PK_Productos PRIMARY KEY (id),
-  CONSTRAINT FK_Categoria FOREIGN KEY (idCategoria)
-    REFERENCES categorias (id) ON DELETE CASCADE ON UPDATE CASCADE
+  precio NUMERIC(8,2),
+  idCategoria INTEGER NOT NULL,
+  CONSTRAINT fk_categoria FOREIGN KEY (idCategoria) REFERENCES categorias(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- -----------------------------------------------------
--- Table `cafeteria`.`detalleordenes`
+-- Table cafeteria.detalleordenes
 -- -----------------------------------------------------
 CREATE TABLE detalleordenes (
-  idorden INT NOT NULL,
-  idproducto INT NOT NULL,
-  cantidad INT NOT NULL,
-  precio DECIMAL(8,2) NOT NULL,
-  CONSTRAINT PK_DetalleOrdenes PRIMARY KEY (idorden, idproducto),
-  CONSTRAINT FK_Ordenes FOREIGN KEY (idorden)
-    REFERENCES ordenes (id) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT FK_Productos FOREIGN KEY (idproducto)
-    REFERENCES productos (id) ON DELETE CASCADE ON UPDATE CASCADE
+  idorden INTEGER NOT NULL,
+  idproducto INTEGER NOT NULL,
+  cantidad INTEGER NOT NULL,
+  precio NUMERIC(8,2) NOT NULL,
+  CONSTRAINT pk_detalleordenes PRIMARY KEY (idorden, idproducto),
+  CONSTRAINT fk_orden FOREIGN KEY (idorden) REFERENCES ordenes(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT fk_producto FOREIGN KEY (idproducto) REFERENCES productos(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-SET TERM ; ^
+-- -----------------------------------------------------
+-- Insertar datos de ejemplo
+-- -----------------------------------------------------
+
+-- Insertar una categoría
+-- -----------------------------------------------------
+INSERT INTO categorias (id, nombre) VALUES (1, 'Bebidas');
+
+-- Insertar productos con valores explícitos de id
+-- Aquí, estamos insertando productos con id explícitos (1 y 2)
+INSERT INTO productos (id, nombre, precio, idCategoria) VALUES (1, 'Café', 2.50, 1);
+INSERT INTO productos (id, nombre, precio, idCategoria) VALUES (2, 'Té', 1.75, 1);
+
+-- Insertar una orden
+INSERT INTO ordenes (id, fecha, total) VALUES (1, '2025-03-23', 50.75);
+
+-- Insertar detalles de orden con valores que ahora existen en productos
+INSERT INTO detalleordenes (idorden, idproducto, cantidad, precio) VALUES (1, 1, 2, 5.00);
+INSERT INTO detalleordenes (idorden, idproducto, cantidad, precio) VALUES (1, 2, 3, 1.75);

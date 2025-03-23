@@ -1,3 +1,0 @@
-CREATE DATABASE '/firebird/data/cafeteria.fdb'
-USER 'SYSDBA' PASSWORD 'masterkey'
-DEFAULT CHARACTER SET UTF8;
