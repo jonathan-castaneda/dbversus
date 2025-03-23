@@ -1,7 +1,7 @@
 services:
   mongodb:
     image: mongo:6.0
-    container_name: mongodb
+    container_name: mongo
     restart: unless-stopped
     environment:
       MONGO_INITDB_DATABASE: cafeteria
