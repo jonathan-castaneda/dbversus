@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS `detalleordenes` (
     ON UPDATE CASCADE,
   CONSTRAINT `fkproductos`
     FOREIGN KEY (`idproducto`)
-    REFERENCES `productos` (`id`)
+  REFERENCES `productos` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 ) ENGINE = InnoDB
