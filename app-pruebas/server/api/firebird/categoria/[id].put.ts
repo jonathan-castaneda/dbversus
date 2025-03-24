@@ -1,13 +1,20 @@
-//se va actualizar la categoria con el id que viene en el get y el json de la data
-import {categorias} from "../../../utils/firebird/firebird";
-export default defineEventHandler(async (event) => {  
+import { categorias } from "../../../utils/firebird/firebird";
+
+export default defineEventHandler(async (event) => {
     try {
-      const body = await readBody(event);
-        const data = await categorias.update(body, {where: {id: event.context.params.id}});
-        return data;
-      } catch (error) {
-        console.error('Unable to connect to the database:', error);
-        return(error)
-      }    
-  })
-  
+        const id = event.context.params.id; // ID desde la URL
+        const body = await readBody(event); // Datos enviados en la solicitud
+
+        if (!id || !body.nombre) {
+            return { statusCode: 400, message: "ID y nombre son obligatorios" };
+        }
+
+        // Llamamos al método update
+        const result = await categorias.update(id, body.nombre);
+
+        return { statusCode: 200, message: "Categoría actualizada correctamente", data: result };
+    } catch (error) {
+        console.error("Error al actualizar la categoría:", error);
+        return { statusCode: 500, message: "Error interno del servidor" };
+    }
+});
