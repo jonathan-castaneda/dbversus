@@ -67,6 +67,30 @@ class categorias {
       throw error;
     }
   }
+
+  static async create(id, nombre) {
+    try {
+      const db = await withConnection();
+      return new Promise((resolve, reject) => {
+        db.query(
+          'INSERT INTO CATEGORIAS (ID, NOMBRE) VALUES (?, ?)',
+          [id, nombre],
+          (err, result) => {
+            db.detach();
+            if (err) {
+              reject(err);
+            } else {
+              resolve({ id, nombre });
+            }
+          }
+        );
+      });
+    } catch (error) {
+      console.error("Error al insertar la categoría:", error);
+      throw error;
+    }
+  }
+
 }
 
 export { categorias };
