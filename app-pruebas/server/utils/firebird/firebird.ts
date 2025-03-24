@@ -12,46 +12,61 @@ const options = {
   retryConnectionInterval: 1000,
   blobAsText: false,
   encoding: 'UTF8',
-  wireCrypt: true,  // Agregar esta línea para habilitar el cifrado
+  wireCrypt: true, 
 };
-
-//quiero probar la coneccion ahora 
 
 // Función auxiliar para conectarse a la base de datos y ejecutar una consulta
 function withConnection() {
   return new Promise((resolve, reject) => {
     Firebird.attach(options, (err, db) => {
       if (err) {
-        reject('Error al conectarrrrr: ' + err);  // Si hay un error de conexión, lo rechazamos
+        reject('Error al conectar: ' + err);
       } else {
-        resolve(db);  // Si la conexión es exitosa, la pasamos al siguiente paso
+        resolve(db);
       }
     });
   });
 }
 
-// Clase Categorias con método findAll que obtiene todas las categorías
+// Clase Categorias con métodos findAll y findOne
 class categorias {
   static async findAll() {
     try {
-      const db = await withConnection();  // Esperamos la conexión
+      const db = await withConnection();
       return new Promise((resolve, reject) => {
-        db.query('SELECT * FROM CATEGORIAS', (err, results) => {  // Ejecutamos la consulta para obtener las categorías
-          db.detach();  // Desconectamos la base de datos después de la consulta
+        db.query('SELECT * FROM CATEGORIAS', (err, results) => {
+          db.detach();
           if (err) {
-            reject(err);  // Si hay un error con la consulta, lo rechazamos
+            reject(err);
           } else {
-            resolve(results);  // Si la consulta es exitosa, devolvemos los resultados
+            resolve(results);
           }
         });
       });
     } catch (error) {
-      console.error('Error al obtener las categorías:', error);  // Si hay algún error en la conexión, lo capturamos
-      throw error;  // Lanza el error para que lo maneje el código que llama a findAll
+      console.error('Error al obtener las categorías:', error);
+      throw error;
+    }
+  }
+
+  static async findOne(id) {
+    try {
+      const db = await withConnection();
+      return new Promise((resolve, reject) => {
+        db.query('SELECT * FROM CATEGORIAS WHERE ID = ?', [id], (err, results) => {
+          db.detach();
+          if (err) {
+            reject(err);
+          } else {
+            resolve(results.length > 0 ? results[0] : null);
+          }
+        });
+      });
+    } catch (error) {
+      console.error('Error al obtener la categoría:', error);
+      throw error;
     }
   }
 }
 
-// Exportamos la clase categorias para usarla en otros archivos
 export { categorias };
-
