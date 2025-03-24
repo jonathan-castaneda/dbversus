@@ -3,13 +3,18 @@ import { Sequelize, DataTypes } from "sequelize";
 let hostdb = process.env.HOST_DB || 'localhost';
 
 const sequelize = new Sequelize({
-    dialect: 'oracle',
-    database: 'cafeteria',
-    username: 'SYSTEM',
-    password: 'oracle',
-    host: hostdb,
-    port: 1521
-}); 
+  dialect: "oracle",
+  username: "SYSTEM",
+  password: "cafe123",
+  database: "XEPDB1",  // ← Cambiado de XE a XEPDB1
+  host: "localhost",
+  port: 1521,
+  dialectOptions: {
+    connectString: "localhost:1521/XEPDB1"
+  },
+  logging: false,
+});
+
 
 
 // Tabla Categorias
