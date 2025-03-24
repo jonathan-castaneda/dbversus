@@ -6,15 +6,23 @@ const options = {
   database: '/var/lib/firebird/data/cafeteria.fdb',
   user: 'SYSDBA',
   password: 'masterkey',
-  authPlugins: ['Legacy_Auth'], // 👈 Forzamos autenticación heredada
+  lowercase_keys: false,
+  role: null,
+  pageSize: 4096,
+  retryConnectionInterval: 1000,
+  blobAsText: false,
+  encoding: 'UTF8',
+  wireCrypt: true,  // Agregar esta línea para habilitar el cifrado
 };
+
+//quiero probar la coneccion ahora 
 
 // Función auxiliar para conectarse a la base de datos y ejecutar una consulta
 function withConnection() {
   return new Promise((resolve, reject) => {
     Firebird.attach(options, (err, db) => {
       if (err) {
-        reject('Error al conectar: ' + err);  // Si hay un error de conexión, lo rechazamos
+        reject('Error al conectarrrrr: ' + err);  // Si hay un error de conexión, lo rechazamos
       } else {
         resolve(db);  // Si la conexión es exitosa, la pasamos al siguiente paso
       }
