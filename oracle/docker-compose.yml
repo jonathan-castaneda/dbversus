@@ -1,0 +1,32 @@
+# Docker Compose para Oracle Database
+# Se levanta un contenedor de Oracle Database con usuario y base de datos preconfigurados
+# Versión de Oracle: 21c Express Edition (oracle/database:21.3.0-xe)
+# Base de datos temporal solo para pruebas
+# Se importa el esquema desde cafeteria.sql al iniciar
+# Levantar con: docker-compose up -d
+
+services:
+  oracle:
+    image: container-registry.oracle.com/database/express:21.3.0-xe
+    container_name: oracle
+    restart: unless-stopped
+    environment:
+      ORACLE_SID: XE
+      ORACLE_PDB: XEPDB1
+      ORACLE_PWD: oracle
+    ports:
+      - "1521:1521"
+      - "5500:5500"
+    volumes:
+      - ./cafeteria.sql:/docker-entrypoint-initdb.d/cafeteria.sql
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 2G
+    
+
+    
