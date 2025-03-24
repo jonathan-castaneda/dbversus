@@ -1,122 +1,142 @@
-import pruebas from '../pruebas.json'
-//insertando nuevas categorias
-async function categoriasInsertar(total: number): Promise<number> {
-    console.log("Iniciando insercion de categorias")
-    let start = new Date().getTime();    
-    for (let i = 1; i <= total; i++) {
-        const ldata = {
-            id: i,
-            nombre: "Categoria " + i,
-        }
-        //agrego usando $fetch        
-        await $fetch('http://localhost:3000/api/firebird/categoria', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(ldata),            
-            onRequestError({ request, options, error }) {
-                return -1;
-            },
-        })        
-    }
-    let end = new Date().getTime();
-    let time = end - start;
-    return time;
+import Firebird from 'node-firebird';
+
+const options = {
+  host: 'localhost',
+  port: 3051,
+  database: '/var/lib/firebird/data/cafeteria.fdb',
+  user: 'SYSDBA',
+  password: 'masterkey',
+  lowercase_keys: false,
+  role: null,
+  pageSize: 4096,
+  retryConnectionInterval: 1000,
+  blobAsText: false,
+  encoding: 'UTF8',
+  wireCrypt: true, 
+};
+
+// Función auxiliar para conectarse a la base de datos y ejecutar una consulta
+function withConnection() {
+  return new Promise((resolve, reject) => {
+    Firebird.attach(options, (err, db) => {
+      if (err) {
+        reject('Error al conectar: ' + err);
+      } else {
+        resolve(db);
+      }
+    });
+  });
 }
 
-//Consultando todas las categorias
-async function categoriasConsultar(): Promise<number> {
-    let start = new Date().getTime();
-    
+// Clase Categorias con métodos findAll y findOne
+class categorias {
+  static async findAll() {
     try {
-        // Realizar la solicitud GET
-        const response = await $fetch('http://localhost:3000/api/firebird/categorias', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+      const db = await withConnection();
+      return new Promise((resolve, reject) => {
+        db.query('SELECT * FROM CATEGORIAS', (err, results) => {
+          db.detach();
+          if (err) {
+            reject(err);
+          } else {
+            resolve(results);
+          }
         });
-
-        // Verificar si la respuesta fue exitosa (código 200)
-        if (!response || response.error) {
-            console.error('Error en la respuesta:', response ? response.error : 'Sin respuesta');
-            return -1; // Si hay un error, retorna -1
-        }
-
+      });
     } catch (error) {
-        // Captura cualquier error relacionado con la solicitud
-        console.error('Error en la solicitud fetch:', error);
-        return -1; // Si ocurre un error, retorna -1
+      console.error('Error al obtener las categorías:', error);
+      throw error;
     }
+  }
 
-    let end = new Date().getTime();
-    let time = end - start; // Calcula el tiempo de la solicitud en milisegundos
-    return time; // Devuelve el tiempo de la consulta en milisegundos
+  static async findOne(id) {
+    try {
+      const db = await withConnection();
+      return new Promise((resolve, reject) => {
+        db.query('SELECT * FROM CATEGORIAS WHERE ID = ?', [id], (err, results) => {
+          db.detach();
+          if (err) {
+            reject(err);
+          } else {
+            resolve(results.length > 0 ? results[0] : null);
+          }
+        });
+      });
+    } catch (error) {
+      console.error('Error al obtener la categoría:', error);
+      throw error;
+    }
+  }
+
+  static async create(id, nombre) {
+    try {
+      const db = await withConnection();
+      return new Promise((resolve, reject) => {
+        db.query(
+          'INSERT INTO CATEGORIAS (ID, NOMBRE) VALUES (?, ?)',
+          [id, nombre],
+          (err, result) => {
+            db.detach();
+            if (err) {
+              reject(err);
+            } else {
+              resolve({ id, nombre });
+            }
+          }
+        );
+      });
+    } catch (error) {
+      console.error("Error al insertar la categoría:", error);
+      throw error;
+    }
+  }
+
+  static async delete(id) {
+    try {
+      const db = await withConnection();
+      return new Promise((resolve, reject) => {
+        db.query(
+          'DELETE FROM CATEGORIAS WHERE ID = ?',
+          [id],
+          (err, result) => {
+            db.detach();
+            if (err) {
+              reject(err);
+            } else {
+              resolve({ message: `Categoría con ID ${id} eliminada` });
+            }
+          }
+        );
+      });
+    } catch (error) {
+      console.error("Error al eliminar la categoría:", error);
+      throw error;
+    }
+  }
+
+  static async update(id, nombre) {
+    try {
+        const db = await withConnection();
+        return new Promise((resolve, reject) => {
+            db.query(
+                'UPDATE CATEGORIAS SET NOMBRE = ? WHERE ID = ?',
+                [nombre, id],
+                (err, result) => {
+                    db.detach();
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve({ message: `Categoría con ID ${id} actualizada` });
+                    }
+                }
+            );
+        });
+    } catch (error) {
+        console.error("Error al actualizar la categoría:", error);
+        throw error;
+    }
 }
 
-
-//Consultamos categorias al azar
-async function categoriasConsultarAzar(total:number): Promise<number> {    
-    let start = new Date().getTime();
-    for (let i = 1; i <= total; i++) {
-        let id = Math.floor(Math.random() * pruebas.categorias.insertar) + 1;
-        await $fetch('http://localhost:3000/api/firebird/categoria/' + id, {
-            method: 'GET',
-            headers: {
-                    'Content-Type': 'application/json',
-            },
-            onRequestError({ request, options, error }) {
-                return -1;
-            },
-        })        
-    }
-    let end = new Date().getTime();
-    let time = end - start;
-    return time;
 }
 
-async function categoriasActualizar(total:number): Promise<number> {
-    let start = new Date().getTime();
-    for (let i = 1; i <= total; i++) {
-        const ldata = {
-            id: i,
-            nombre: "Categoria " + i + " Actualizada",
-        }
-        await $fetch('http://localhost:3000/api/firebird/categoria/'+i, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(ldata),
-            onRequestError({ request, options, error }) {
-                return -1;
-            },
-        })        
-    }
-    let end = new Date().getTime();
-    let time = end - start;
-    return time;
-}
-
-//eliminando las categorias
-async function categoriasEliminar(total:number): Promise<number> {
-    let start = new Date().getTime();
-    for (let i = 1; i <= total; i++) {
-        await $fetch('http://localhost:3000/api/firebird/categoria/'+i, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: i }),
-        onRequestError({ request, options, error }) {
-            return -1;
-        }
-        })  
-    }
-    let end = new Date().getTime();
-    let time = end - start;
-    return time;
-}
-
-export { categoriasInsertar, categoriasConsultar, categoriasConsultarAzar, categoriasActualizar, categoriasEliminar }
+export { categorias };
