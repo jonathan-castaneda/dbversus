@@ -1,18 +1,19 @@
-//Endpoint para eliminar una categoria de la base de datos
-import {categorias} from "../../../utils/firebird/firebird";
+import { categorias } from "../../../utils/firebird/firebird";
 
-export default defineEventHandler(async (event) => {   
+export default defineEventHandler(async (event) => {
     try {
-        //eliminamos de la base de datos
-        const data = await categorias.destroy({
-                        where: {
-                            id: event.context.params.id
-                        }
-                    });
-        return { statusCode:200, "message":"eliminado" };
-      } catch (error) {
-        console.error('Unable to connect to the database:', error);
-        return(error)
-      }
-    
-  })
+        const id = event.context.params.id; // Obtener el ID de la URL
+
+        if (!id) {
+            return { statusCode: 400, message: "ID es obligatorio" };
+        }
+
+        // Eliminar la categoría
+        const result = await categorias.delete(id);
+
+        return { statusCode: 200, message: "Categoría eliminada correctamente", data: result };
+    } catch (error) {
+        console.error("Error al eliminar la categoría:", error);
+        return { statusCode: 500, message: "Error interno del servidor" };
+    }
+});

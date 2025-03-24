@@ -91,6 +91,29 @@ class categorias {
     }
   }
 
+  static async delete(id) {
+    try {
+      const db = await withConnection();
+      return new Promise((resolve, reject) => {
+        db.query(
+          'DELETE FROM CATEGORIAS WHERE ID = ?',
+          [id],
+          (err, result) => {
+            db.detach();
+            if (err) {
+              reject(err);
+            } else {
+              resolve({ message: `Categoría con ID ${id} eliminada` });
+            }
+          }
+        );
+      });
+    } catch (error) {
+      console.error("Error al eliminar la categoría:", error);
+      throw error;
+    }
+  }
+
 }
 
 export { categorias };
