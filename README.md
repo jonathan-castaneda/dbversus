@@ -24,3 +24,25 @@ docker compose -f ./mysql/docker-compose.yml up -d
 ```
 
 #PARA PRODUCCION 
+
+## Indicaciones para correr el gestor de mongo y el proyecto:
+
+* Siempre se debe usar la version 21.7.3 de node
+* Hacer un npm install siempre en la carpeta app-pruebas, ya que se han actualizdo las dependencias
+    ```
+    cd app-pruebas
+    npm install
+    ```
+* Para levantar el gestor:
+
+```
+cd mongo
+docker-compose up -d
+
+
+```
+* Para apagarlo
+```
+docker-compose down
+``` 
+
