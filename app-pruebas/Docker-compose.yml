@@ -12,7 +12,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - HOST_DB=mysql
+      - HOST_DB=oracle
     deploy:
           resources:
             limits:
@@ -22,9 +22,9 @@ services:
               cpus: '1'
               memory: 1G
 #SI LA BASE DE DATOS ES MYSQL
-  mysql:
-    image: mysql:8.0-debian
-    container_name: mysql
+  oracle:
+    image: oracle:8.0-debian
+    container_name: oracle
     restart: unless-stopped
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"      
@@ -32,7 +32,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ../mysql/cafeteria.sql:/docker-entrypoint-initdb.d/cafeteria.sql
+      - ../oracle/cafeteria.sql:/docker-entrypoint-initdb.d/cafeteria.sql
     deploy:
           resources:
             limits:

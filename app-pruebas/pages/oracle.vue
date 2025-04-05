@@ -1,15 +1,15 @@
 <template>
     <div>
         <div class="row flex flex-center q-mt-md">
-            <div class="text-h4">Pruebas para MySQL</div>
+            <div class="text-h4">Pruebas para oracle</div>
             
         </div>
         <div class="row">
             <div class="text-caption col-12 q-ml-md">
-                Recuerda que debes tener arrancado el contenedor de MYSQL levantado con docker y no debe tener datos, solo debe tener la estructura de las tablas.
+                Recuerda que debes tener arrancado el contenedor de oracle levantado con docker y no debe tener datos, solo debe tener la estructura de las tablas.
                 Haz clic en iniciar y comenzamos las pruebas, primero insertando, luego actualizando, consultando y eliminando.
                 Si vuelves ha hacer pruebas se recomienda que ejecutes docker compose down y luego <strong>docker compose up -d</strong> 
-                <p>Recuerda que en el archivo <strong>/mysql/docker-compose.yml</strong> defines la memoria y el CPU asignado al contenedor para las pruebas</p>
+                <p>Recuerda que en el archivo <strong>/oracle/docker-compose.yml</strong> defines la memoria y el CPU asignado al contenedor para las pruebas</p>
             </div>
             <div class="col-12 row q-ml-md">
                 <div class="col-2">
@@ -56,7 +56,7 @@
         <div class="row q-ml-lg q-mt-md">
             <q-table
             flat bordered
-            title="Pruebas sobre Gestor MySQL"
+            title="Pruebas sobre Gestor oracle"
             :rows="rows"
             :columns="columns"
             color="primary"
@@ -108,9 +108,9 @@ import { ref, computed, onMounted} from 'vue'
 
 import pruebas from '../server/utils/pruebas.json'
 import { categoriasInsertar, categoriasConsultar, categoriasConsultarAzar, categoriasActualizar, categoriasEliminar } from '../server/utils/oracle/categorias'
-import { productosInsertar, productosConsultar, productosConsultarAzar, productosActualizar, productosEliminar } from '../server/utils/mysql/productos'
-import { ordenesInsertar, ordenesConsultarAzar, ordenesActualizar, ordenesEliminar } from '../server/utils/mysql/ordenes'
-import { resumenesContarOrdenes, resumenesProductos, resumenesProductosFecha, resumenesTotalDiario, resumenesTopten } from '../server/utils/mysql/resumenes'
+import { productosInsertar, productosConsultar, productosConsultarAzar, productosActualizar, productosEliminar } from '../server/utils/oracle/productos'
+import { ordenesInsertar, ordenesConsultarAzar, ordenesActualizar, ordenesEliminar } from '../server/utils/oracle/ordenes'
+import { resumenesContarOrdenes, resumenesProductos, resumenesProductosFecha, resumenesTotalDiario, resumenesTopten } from '../server/utils/oracle/resumenes'
 
 const errorConexion= ref(false)
 const contaInicial= ref(1)
@@ -217,6 +217,7 @@ async function realizarPruebas() {
     
     //INSERTANDO DATOS
     mensajes.value.push("Iniciando pruebas de inserción")    
+    
     tiempo=await categoriasInsertar(pruebas.categorias.insertar, contaInicial.value)
     tiempo==-1? erroresInsercion.value++: tiemposInsercion.value.push(tiempo);   
     

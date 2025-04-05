@@ -1,20 +1,18 @@
 import pruebas from '../pruebas.json'
-//insertando nuevas categorias
-async function categoriasInsertar(total: number, contaInicial:number): Promise<number> {
-    console.log("Iniciando insercion de categorias")
-    let start = new Date().getTime();    
-      
+
+async function productosInsertar(total: number, contaInicial:number): Promise<number>  { 
+    console.log("Iniciando insercion de productos")   
+    let start = new Date().getTime();
+
     for (let i = contaInicial; i <= Number(total) + Number(contaInicial); i++) {
         const ldata = {
             id: i,
-            nombre: "Categoria " + i,
+            nombre: "Producto " + i,
+            precio: Math.floor(Math.random() * 100) + 1,
+            idCategoria: Math.floor(Math.random() * pruebas.categorias.insertar) + Number(contaInicial),
         }
-
-        console.log("Simon este es el objeto que se manda")
-        console.log(ldata)
-
         //agrego usando $fetch        
-        await $fetch('http://localhost:3000/api/oracle/categoria', {
+        await $fetch('http://localhost:3000/api/oracle/producto', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -27,19 +25,19 @@ async function categoriasInsertar(total: number, contaInicial:number): Promise<n
     }
     let end = new Date().getTime();
     let time = end - start;
-    return time;
+   return time;
+    
 }
 
-//Consultando todas las categorias
-async function categoriasConsultar(): Promise<number> {    
+async function productosConsultar(): Promise<number>  {    
     let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/oracle/categorias', {
+    await $fetch('http://localhost:3000/api/oracle/productos', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
         },
         onRequestError({ request, options, error }) {
-            return -1;
+            return -1
         },
     })
     let end = new Date().getTime();
@@ -47,15 +45,14 @@ async function categoriasConsultar(): Promise<number> {
     return time;       
 }
 
-//Consultamos categorias al azar
-async function categoriasConsultarAzar(total:number, contaInicial:number): Promise<number> {    
+async function productosConsultarAzar(total:number, contaInicial:number): Promise<number>  {    
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
-        let id = Math.floor(Math.random() * pruebas.categorias.insertar) + Number(contaInicial);
-        await $fetch('http://localhost:3000/api/oracle/categoria/' + id, {
+        let id = Math.floor(Math.random() * pruebas.productos.insertar) + Number(contaInicial);
+        await $fetch('http://localhost:3000/api/oracle/producto/' + id, {
             method: 'GET',
             headers: {
-                    'Content-Type': 'application/json',
+                'Content-Type': 'application/json',
             },
             onRequestError({ request, options, error }) {
                 return -1;
@@ -64,17 +61,20 @@ async function categoriasConsultarAzar(total:number, contaInicial:number): Promi
     }
     let end = new Date().getTime();
     let time = end - start;
-    return time;
+    return time; 
 }
 
-async function categoriasActualizar(total:number, contaInicial:number): Promise<number> {
+async function productosActualizar(total:number, contaInicial:number): Promise<number>  {
     let start = new Date().getTime();
     for (let i = contaInicial; i <= Number(total) + Number(contaInicial); i++) {
         const ldata = {
             id: i,
-            nombre: "Categoria " + i + " Actualizada",
+            nombre: "Producto " + i + " Actualizado",
+            precio: Math.floor(Math.random() * 100) + 1,
+            categoria: Math.floor(Math.random() * pruebas.categorias.insertar) + 1,
         }
-        await $fetch('http://localhost:3000/api/oracle/categoria/'+i, {
+
+        await $fetch('http://localhost:3000/api/oracle/producto/'+i, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -90,11 +90,10 @@ async function categoriasActualizar(total:number, contaInicial:number): Promise<
     return time;
 }
 
-//eliminando las categorias
-async function categoriasEliminar(total:number, contaInicial:number): Promise<number> {
+async function productosEliminar(total:number, contaInicial:number): Promise<number>  {
     let start = new Date().getTime();
     for (let i = contaInicial; i <= Number(total) + Number(contaInicial); i++) {
-        await $fetch('http://localhost:3000/api/oracle/categoria/'+i, {
+        await $fetch('http://localhost:3000/api/oracle/producto/'+i, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -107,7 +106,7 @@ async function categoriasEliminar(total:number, contaInicial:number): Promise<nu
     }
     let end = new Date().getTime();
     let time = end - start;
-    return time;
+    return time; 
 }
 
-export { categoriasInsertar, categoriasConsultar, categoriasConsultarAzar, categoriasActualizar, categoriasEliminar }
+export { productosInsertar, productosConsultar, productosConsultarAzar, productosActualizar, productosEliminar }

@@ -7,11 +7,11 @@
           <q-tabs inline-label
         class="text-white shadow-2" align="justify" >
         <!--
-        <q-tab @click="navigateTo('/mysql')" label="Mysql" class="text-capitalize" />
+        <q-tab @click="navigateTo('/oracle')" label="Mysql" class="text-capitalize" />
         -->
         <q-btn-dropdown color="secondary text-black" label="Gestores Relacionales">
           <q-list>
-            <q-item clickable v-close-popup @click="navigateTo('/mysql')" >
+            <q-item clickable v-close-popup @click="navigateTo('/oracle')" >
               <q-item-section>
                 <q-item-label>MySQL</q-item-label>
               </q-item-section>

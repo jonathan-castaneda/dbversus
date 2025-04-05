@@ -20,7 +20,7 @@ para cada gestor de base de base se tiene el script inicial del esquema y se tie
 para levantar los gestores se debe de ejecutar el siguiente comando:
 
 ```bash
-docker compose -f ./mysql/docker-compose.yml up -d
+docker compose -f ./oracle/docker-compose.yml up -d
 ```
 
 #PARA PRODUCCION 
