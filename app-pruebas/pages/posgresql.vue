@@ -15,6 +15,16 @@
                 Si vuelves ha hacer pruebas se recomienda que ejecutes docker compose down y luego <strong>docker compose up -d</strong> 
                 <p>Recuerda que en el archivo <strong>/postgres/docker-compose.yml</strong> defines la memoria y el CPU asignado al contenedor para las pruebas</p>
             </div>
+            <q-input
+                v-model="inicioId"
+                label="ID inicial"
+                type="number"
+                outlined
+                dense
+                class="q-mt-sm"
+                style="margin-bottom: 20px;margin-left: 16%;"
+            />
+            <br/>
             <div class="col-12 row q-ml-md">
                 <div class="col-2">
                     <div class="text-bold">Pruebas en Categorias</div>
@@ -55,7 +65,7 @@
             <div class="percentage-counter">
                 <div class="logo-container">
                 <div class="fill" :style="{ height: fillHeight }"></div>
-                <img src="/home/gochez/Documentos/GitHub/dbversus-postgressql/postgressql/pngegg.png" alt="PostgreSQL Logo" class="logo" />
+                <img src="/postgresql.png" alt="PostgreSQL Logo" class="logo" />
                 </div>
                 <div class="percentage">{{ avance }}%</div>
             </div>
@@ -134,6 +144,8 @@ const erroresEliminacion= ref(0)
 const cargando= ref(false)
 const totalPruebas= ref(19)
 const mensajes= ref([])
+
+const inicioId=ref(0)
 
 //propiedad computada del porcentaje de pruebas realizadas
 const avance = computed(() => {
@@ -225,12 +237,12 @@ async function realizarPruebas() {
     
     //INSERTANDO DATOS
     mensajes.value.push("Iniciando pruebas de inserción")    
-    tiempo=await categoriasInsertar(pruebas.categorias.insertar)
+    tiempo=await categoriasInsertar(pruebas.categorias.insertar,inicioId.value)
     tiempo==-1? erroresInsercion.value++: tiemposInsercion.value.push(tiempo);   
     
-    tiempo=await productosInsertar(pruebas.productos.insertar)
+    tiempo=await productosInsertar(pruebas.productos.insertar,inicioId.value)
     tiempo==-1? erroresInsercion.value++: tiemposInsercion.value.push(tiempo);   
-    tiempo=await ordenesInsertar(pruebas.ordenes.insertar, pruebas.ordenes.detalleoden)
+    tiempo=await ordenesInsertar(pruebas.ordenes.insertar, pruebas.ordenes.detalleoden,inicioId.value)
     tiempo==-1? erroresInsercion.value++: tiemposInsercion.value.push(tiempo);
     
     mensajes.value.push("Iniciando pruebas de consultas")

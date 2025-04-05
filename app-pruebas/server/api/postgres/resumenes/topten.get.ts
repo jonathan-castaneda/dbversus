@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
                     attributes: ['nombre'],
                 }
             ],
-            group: ['idproducto', 'nombre'],
+            group: ['detalleordenes.idproducto', 'producto.id', 'producto.nombre'],
             order: [[sequelize.fn('sum', sequelize.col('cantidad')), 'DESC']],
             limit: 10
         });

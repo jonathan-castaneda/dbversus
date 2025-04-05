@@ -1,13 +1,19 @@
 import pruebas from '../pruebas.json'
 //insertando nuevas categorias
-async function categoriasInsertar(total: number): Promise<number> {
-    console.log("Iniciando insercion de categorias")
+async function categoriasInsertar(total: number, inicioId:number): Promise<number> {
+    console.log("Iniciando insercion de categorias desde "+inicioId)
     let start = new Date().getTime();    
     for (let i = 1; i <= total; i++) {
+        console.log("Tipo de inicioId: ", typeof inicioId);
+        console.log("Tipo de i: ", typeof i);
+        console.log("Tipo de id: ", typeof (inicioId + i));
+
         const ldata = {
-            id: i,
-            nombre: "Categoria " + i,
+            id: Number(inicioId) + i,
+            nombre: "Categoria " + (Number(inicioId) + i),
         }
+        console.log(`Insertando categoria con id: ${ldata.id}`)
+        console.log('Datos del categoria:', JSON.stringify(ldata, null, 2));
         //agrego usando $fetch        
         await $fetch('http://localhost:3000/api/postgres/categoria', {
             method: 'POST',

@@ -1,6 +1,6 @@
 import pruebas from '../pruebas.json'
-async function ordenesInsertar(total:number, totaldetalle:number): Promise<number> {
-    console.log("Iniciando insercion de ordenes")
+async function ordenesInsertar(total:number, totaldetalle:number,inicioId:number): Promise<number> {
+    console.log("Iniciando insercion de ordenes desde "+inicioId)
     let start = new Date().getTime();
     for (let conta=1; conta<=total; conta ++){
         let anio = new Date().getFullYear();
@@ -8,10 +8,12 @@ async function ordenesInsertar(total:number, totaldetalle:number): Promise<numbe
         let mes = Math.floor(Math.random() * 12)+1;
         let lfecha: string = anio +","+ mes + "," + Math.floor(Math.random() * 28 + 1);
         const ldata = {
-                id: conta,
+                id: Number(inicioId) + conta,
                 fecha:lfecha,
                 total: Math.floor(Math.random() * 100) + 1,
         }
+        console.log(`Insertando ordenes con id: ${ldata.id}`)
+        console.log('Datos del ordenes:', JSON.stringify(ldata, null, 2));
         //agrego usando $fetch        
         await $fetch('http://localhost:3000/api/postgres/orden', {
                 method: 'POST',
@@ -29,7 +31,7 @@ async function ordenesInsertar(total:number, totaldetalle:number): Promise<numbe
             })
             
         //ahora vienen los detalles de cada orden
-        await detalleOrdenInsertar(conta, totaldetalle)
+        await detalleOrdenInsertar(conta+Number(inicioId), totaldetalle)
     }//fin del for del conta de las ordenes
    
     let end = new Date().getTime();
