@@ -11,34 +11,48 @@
 // SE DEBE INVOCAR ASI
 //http://localhost:3000/api/oracle/resumenes/productosdiariosfecha?fecha=2024-01-02
 
-import { ordenes, detalleordenes, productos } from "../../../utils/oracle/oracle";
-export default defineEventHandler(async (event) => {   
-    
-    //return { statusCode:200, "hola": getQuery(event) };
-    const { fecha } = getQuery(event);
-    try {               
-        const data = await ordenes.findAll({
-            attributes: ['FECHA'],
-            include: [
-                {
-                    model: detalleordenes,
-                    attributes: ['CANTIDAD'],
-                    include: [
-                        {
-                            model: productos,
-                            attributes: ['ID','NOMBRE'],
-                        }
-                    ]
-                }
-            ],
-            where: { FECHA: fecha },            
-            group: ['FECHA','ID', 'DETALLEORDENES.IDPRODUCTO', 'NOMBRE'],
-            order: ['FECHA']
-        });
-        return { statusCode:200, data };
-    } catch (error) {
-        console.error('Error productosdiarios:', error);
-        return(error)
-    }    
-})
+import { Sequelize, QueryTypes } from 'sequelize'; // Asegúrate de importar QueryTypes
+import { sequelize, ordenes, detalleordenes, productos } from "../../../utils/oracle/oracle";
 
+export default defineEventHandler(async (event) => {   
+    const { fecha } = getQuery(event);
+
+    if (!fecha) {
+        return {
+            statusCode: 400,
+            message: "El parámetro 'fecha' es requerido. Ejemplo: ?fecha=2024-01-02"
+        };
+    }
+
+    try {               
+        const data = await sequelize.query(`
+            SELECT 
+                d.IDPRODUCTO, 
+                SUM(d.CANTIDAD) AS CANTIDAD, 
+                p.ID AS "PRODUCTOS.ID", 
+                p.NOMBRE AS "PRODUCTOS.NOMBRE"
+            FROM 
+                CAFETERIA.DETALLEORDENES d
+            INNER JOIN 
+                CAFETERIA.PRODUCTOS p ON d.IDPRODUCTO = p.ID
+            INNER JOIN 
+                CAFETERIA.ORDENES o ON d.IDORDEN = o.ID
+            WHERE 
+                o.FECHA = :fecha
+            GROUP BY 
+                d.IDPRODUCTO, 
+                p.ID, 
+                p.NOMBRE
+            ORDER BY 
+                SUM(d.CANTIDAD) DESC
+            FETCH NEXT 10 ROWS ONLY
+        `, {
+            replacements: { fecha: fecha },
+            type: QueryTypes.SELECT // Usar QueryTypes.SELECT en lugar de sequelize.QueryTypes.SELECT
+        });
+        return { statusCode: 200, data };
+    } catch (error) {
+        console.error('Error productosdiariosfecha:', error);
+        return error;
+    }    
+});

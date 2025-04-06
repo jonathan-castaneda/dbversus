@@ -6,30 +6,22 @@
 //join productos on detalleordenes.idproducto = productos.ID 
 //group by ordenes.FECHA, detalleordenes.idproducto, productos.NOMBRE order by ordenes.FECHA
 //implementamos esta consulta sql en sequelize
-import { ordenes, detalleordenes, productos } from "../../../utils/oracle/oracle";
+import { Sequelize, QueryTypes } from 'sequelize';
+import { sequelize } from "../../../utils/oracle/oracle";
+
 export default defineEventHandler(async (event) => {      
     try {
-        const data = await ordenes.findAll({
-            attributes: ['FECHA'],
-            include: [
-                {
-                    model: detalleordenes,
-                    attributes: ['CANTIDAD'],
-                    include: [
-                        {
-                            model: productos,
-                            attributes: ['ID','NOMBRE'],
-                        }
-                    ]
-                }
-            ],
-            group: ['FECHA','ID', 'DETALLEORDENES.IDPRODUCTO', 'NOMBRE'],
-            order: ['FECHA']
-        });
-        return { statusCode:200, data };
+        const data = await sequelize.query(`
+            SELECT o.FECHA, do.CANTIDAD, p.ID, p.NOMBRE
+            FROM ORDENES o
+            JOIN DETALLEORDENES do ON o.ID = do.IDORDEN
+            JOIN PRODUCTOS p ON do.IDPRODUCTO = p.ID
+            GROUP BY o.FECHA, o.ID, do.IDPRODUCTO, do.CANTIDAD, p.ID, p.NOMBRE
+            ORDER BY o.FECHA
+        `, { type: QueryTypes.SELECT });
+        return { statusCode: 200, data };
     } catch (error) {
         console.error('Error productosdiarios:', error);
-        return(error)
+        return error;
     }    
-})
-
+});

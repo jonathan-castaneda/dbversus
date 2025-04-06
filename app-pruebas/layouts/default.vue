@@ -11,7 +11,7 @@
         -->
         <q-btn-dropdown color="secondary text-black" label="Gestores Relacionales">
           <q-list>
-            <q-item clickable v-close-popup @click="navigateTo('/oracle')" >
+            <q-item clickable v-close-popup @click="navigateTo('/mysql')" >
               <q-item-section>
                 <q-item-label>MySQL</q-item-label>
               </q-item-section>
