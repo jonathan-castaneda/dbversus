@@ -3,9 +3,14 @@ import { Orden } from "../../../utils/mongo/mongo";
 export default defineEventHandler(async (event) => {
   try {
     const id = event.context.params.id;
-    const data = await readBody(event);
+    const body = await readBody(event);
 
-    const ordenActualizada = await Orden.findByIdAndUpdate(id, data, {
+    // Validar que haya datos en el body
+    if (!body || Object.keys(body).length === 0) {
+      return { statusCode: 400, message: "No se enviaron datos para actualizar" };
+    }
+
+    const ordenActualizada = await Orden.findByIdAndUpdate(id, body, {
       new: true
     });
 
