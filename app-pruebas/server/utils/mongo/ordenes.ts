@@ -60,7 +60,7 @@ async function ordenesConsultarAzarMongo(total: number): Promise<number> {
   let start = new Date().getTime();
   for (let i = 1; i <= total; i++) {
     let id = Math.floor(Math.random() * pruebas.ordenes.insertar) + 1;
-    await $fetch(`http://localhost:3000/api/mongo/orden/${id}`, {
+    await $fetch(`http://localhost:3000/api/mongo/ordenes/`+id, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ async function ordenesActualizarMongo(total: number): Promise<number> {
 
   for (let i = 1; i <= total; i++) {
     // Simular traer el documento (necesario para modificar)
-    const orden = await $fetch(`http://localhost:3000/api/mongo/orden/${i}`, {
+    const orden = await $fetch(`http://localhost:3000/api/mongo/ordenes/${i}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -113,7 +113,7 @@ async function ordenesActualizarMongo(total: number): Promise<number> {
       fecha: new Date()
     };
 
-    await $fetch(`http://localhost:3000/api/mongo/orden/${orden._id}`, {
+    await $fetch(`http://localhost:3000/api/mongo/ordenes/${orden._id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -134,7 +134,7 @@ async function ordenesEliminarMongo(total: number): Promise<number> {
   let start = new Date().getTime();
 
   for (let i = 1; i <= total; i++) {
-    await $fetch(`http://localhost:3000/api/mongo/orden/${i}`, {
+    await $fetch(`http://localhost:3000/api/mongo/ordenes/${i}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
