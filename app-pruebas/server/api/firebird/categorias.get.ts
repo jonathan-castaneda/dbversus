@@ -1,13 +1,24 @@
-//obtenemos todas las categorias de la base de datos
-import {categorias} from "../../utils/firebird/firebird";
+import { withConnection } from "../../utils/firebird/firebird";
 
-export default defineEventHandler(async (event) => {      
-    try {        
-        const data = await categorias.findAll();
-        return data;
-      } catch (error) {
-        console.error('Unableee to connect to the database:', error);
-        return(error)
-      }
-    
-  })
+// obtenemos todas las categorías de la base de datos
+export default defineEventHandler(async (event) => {
+  try {
+    const db: any = await withConnection();
+
+    const data = await new Promise((resolve, reject) => {
+      db.query('SELECT * FROM CATEGORIAS', (err, results) => {
+        db.detach();
+        if (err) {
+          reject(err);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+
+    return { statusCode: 200, data };
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+    return { statusCode: 500, message: "Error interno del servidor" };
+  }
+});
