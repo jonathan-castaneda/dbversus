@@ -12,14 +12,27 @@ import { sequelize } from "../../../utils/oracle/oracle";
 export default defineEventHandler(async (event) => {      
     try {
         const data = await sequelize.query(`
-            SELECT o.FECHA, do.CANTIDAD, p.ID, p.NOMBRE
+            SELECT 
+                o.FECHA,
+                do.IDPRODUCTO,
+                p.NOMBRE,
+                SUM(do.CANTIDAD) as total_cantidad
             FROM ORDENES o
             JOIN DETALLEORDENES do ON o.ID = do.IDORDEN
             JOIN PRODUCTOS p ON do.IDPRODUCTO = p.ID
-            GROUP BY o.FECHA, o.ID, do.IDPRODUCTO, do.CANTIDAD, p.ID, p.NOMBRE
+            GROUP BY 
+                o.FECHA,
+                do.IDPRODUCTO,
+                p.NOMBRE
             ORDER BY o.FECHA
-        `, { type: QueryTypes.SELECT });
-        return { statusCode: 200, data };
+        `, { 
+            type: QueryTypes.SELECT 
+        });
+        
+        return { 
+            statusCode: 200, 
+            data 
+        };
     } catch (error) {
         console.error('Error productosdiarios:', error);
         return error;
