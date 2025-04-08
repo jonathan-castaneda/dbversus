@@ -1,4 +1,4 @@
-import { connect, r } from '~/server/utils/rethinkdb/rethinkdb';
+import { connect, rethink } from '~/server/utils/rethinkdb/rethinkdb';
 
 	import { defineEventHandler } from 'h3';
 
@@ -12,7 +12,7 @@ import { connect, r } from '~/server/utils/rethinkdb/rethinkdb';
 	    console.log('Conexión a RethinkDB establecida.');
 
 	    console.log('Ejecutando consulta RethinkDB con id:', id);
-	    const orden = await r.table('ordenes').get(id).run(conn);
+	    const orden = await rethink.table('ordenes').get(id).run(conn);
 	    console.log('Resultado de la consulta RethinkDB:', orden);
 
 	    conn.close();

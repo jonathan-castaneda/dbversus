@@ -1,4 +1,4 @@
-import { connect, r } from '~/server/utils/rethinkdb/rethinkdb';
+import { connect, rethink } from '~/server/utils/rethinkdb/rethinkdb';
 
 	export default defineEventHandler(async (event) => {
 	  const id = parseInt(event.context.params.id); // Asegúrate de que id sea un número
@@ -7,7 +7,7 @@ import { connect, r } from '~/server/utils/rethinkdb/rethinkdb';
 	  try {
 	    const conn = await connect();
 
-	    const producto = await r.table('productos').get(id).run(conn);
+	    const producto = await rethink.table('productos').get(id).run(conn);
 
 	    conn.close();
 	    if (!producto) {

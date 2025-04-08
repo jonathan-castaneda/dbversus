@@ -1,4 +1,4 @@
-import { connect, r } from '~/server/utils/rethinkdb/rethinkdb';
+import { connect, rethink } from '~/server/utils/rethinkdb/rethinkdb';
 
 
 	export default defineEventHandler(async (event) => { // <--- Importante: export default
@@ -10,7 +10,7 @@ import { connect, r } from '~/server/utils/rethinkdb/rethinkdb';
 
 	  try {
 	    const conn = await connect();
-	    const result = await r.table('ordenes').get(id).update(body).run(conn);
+	    const result = await rethink.table('ordenes').get(id).update(body).run(conn);
 	    conn.close();
 
 	    console.log('Resultado de RethinkDB:', result); // <--- Log para depurar
