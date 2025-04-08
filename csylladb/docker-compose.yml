@@ -1,0 +1,46 @@
+services:
+  scylla:
+    image: scylladb/scylla:latest
+    container_name: scylla
+    restart: unless-stopped
+    environment:
+      - SCYLLA_CLUSTER_NAME=TestCluster
+      - SCYLLA_SEEDS=scylla
+    ports:
+      - "9042:9042"
+    volumes:
+      - ./init.cql:/init.cql
+      - ./init.sh:/init.sh
+    entrypoint: ["/bin/bash", "/init.sh"]
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '1'
+          memory: 1G
+
+
+# services:
+#   cassandra:
+#     image: cassandra:latest
+#     container_name: cassandra
+#     restart: unless-stopped
+#     environment:
+#       - CASSANDRA_CLUSTER_NAME=TestCluster
+#       - CASSANDRA_SEEDS=cassandra
+#     ports:
+#       - "9042:9042"
+#     volumes:
+#       - ./init.cql:/init.cql
+#       - ./init.sh:/init.sh
+#     entrypoint: ["/bin/bash", "/init.sh"]
+#     deploy:
+#       resources:
+#         limits:
+#           cpus: '1'
+#           memory: 3G
+#         reservations:
+#           cpus: '1'
+#           memory: 1G
