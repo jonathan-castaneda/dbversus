@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
 
         // Creamos la orden con el detalle ya embebido
         const nuevaOrden = await Orden.create({
-            fecha: new Date(), // Puedes usar el valor de body.fecha si lo envían
+            fecha: body.fecha ? new Date(body.fecha) : new Date(),
             mesero: body.mesero,
             mesa: body.mesa,
             cliente: body.cliente,
