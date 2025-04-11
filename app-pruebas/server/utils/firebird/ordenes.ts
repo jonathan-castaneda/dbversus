@@ -95,67 +95,94 @@ async function ordenesConsultarAzar(total:number): Promise<number> {
     return time;
 }
 
-async function ordenesActualizar(total:number): Promise<number> {
+async function ordenesActualizar(total: number): Promise<number> {
     let start = new Date().getTime();
+
     for (let i = 1; i <= total; i++) {
         const ldata = {
             id: i,
             fecha: new Date().toISOString(),
             total: Math.floor(Math.random() * 100) + 1,
-        }
-        await $fetch('http://localhost:3000/api/firebird/orden/'+i, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(ldata),
-            onRequestError({ request, options, error }) {
-                return -1;
-            },
-        })
-        //ahora actualizamos los detalles de la orden, primero hacemos GET y traemos todos los detalles
-        // luego le multiplicamos por dos la cantidad y enviamos las actualizaciones de cada detalle
-        let datos = await $fetch('http://localhost:3000/api/firebird/detalleorden/' + i, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },           
-            onRequestError({ request, options, error }) {
-                erroresConsulta.value++
-            },
-        })
-        //console.log (datos.data)
-        //return       
-        //convertir a json datos.data
-        let ldatos = datos.data
-        //console.log(ldatos)
-        for (let j = 0; j < ldatos.length; j++) {
-            const ldatadetalle = {                        
-                idorden: i,
-                idproducto: ldatos[j].idproducto,
-                cantidad: ldatos[j].cantidad * 2,
-                precio: ldatos[j].precio,
-            }
-            //console.log(ldatadetalle)
-            //ahora invocamos PUT detalleorden para enviar los cambios
-            await $fetch('http://localhost:3000/api/firebird/detalleorden/' + ldatos[j].idorden + '/'+  ldatos[j].idproducto  , {
+        };
+
+        try {
+            await $fetch('http://localhost:3000/api/firebird/orden/' + i, {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(ldatadetalle),            
+                body: JSON.stringify(ldata),
                 onRequestError({ request, options, error }) {
+                    console.error("Error al actualizar orden", i, error);
                     return -1;
                 },
-            })     
-        } //fin del for de los detalles        
+            });
+        } catch (error) {
+            console.error("Error inesperado al actualizar orden:", error);
+        }
 
-        
+        // Traemos los detalles de la orden
+        let datos;
+        try {
+            datos = await $fetch('http://localhost:3000/api/firebird/detalleorden/' + i, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                onRequestError({ request, options, error }) {
+                    console.error("Error al obtener detalles de orden", i, error);
+                    erroresConsulta.value++;
+                },
+            });
+        } catch (error) {
+            console.error("Error inesperado al obtener detalles de orden:", error);
+            continue;
+        }
+
+        let ldatos = datos?.data || [];
+
+        for (let j = 0; j < ldatos.length; j++) {
+            const detalle = ldatos[j];
+
+            // Validación de campos necesarios
+            if (!detalle.idproducto) {
+                console.warn("Detalle con datos incompletos:", detalle);
+                continue;
+            }
+
+            const ldatadetalle = {
+                idorden: i,
+                idproducto: detalle.idproducto,
+                cantidad: detalle.cantidad * 2,
+                precio: detalle.precio,
+            };
+
+            try {
+                await $fetch(
+                    'http://localhost:3000/api/firebird/detalleorden/' + i + '/' + detalle.idproducto,
+                    {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(ldatadetalle),
+                        onRequestError({ request, options, error }) {
+                            console.error("Error al actualizar detalle", detalle, error);
+                            return -1;
+                        },
+                    }
+                );
+            } catch (error) {
+                console.error("Error inesperado al actualizar detalle:", error);
+            }
+        }
     }
+
     let end = new Date().getTime();
     let time = end - start;
     return time;
 }
+
 
 async function ordenesEliminar(total:number) : Promise<number>{
     let start = new Date().getTime();
