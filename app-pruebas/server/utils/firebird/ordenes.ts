@@ -146,7 +146,7 @@ async function ordenesActualizar(total: number): Promise<number> {
 
             // Validación de campos necesarios
             if (!detalle.idproducto) {
-                console.warn("Detalle con datos incompletos:", detalle);
+                //console.warn("Detalle con datos incompletos:", detalle);
                 continue;
             }
 
