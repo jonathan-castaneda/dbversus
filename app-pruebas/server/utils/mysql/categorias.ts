@@ -16,7 +16,7 @@ async function categoriasInsertar(total: number): Promise<number> {
             },
             body: JSON.stringify(ldata),            
             onRequestError({ request, options, error }) {
-                return -1;
+                console.error("Error en la solicitud:", error); // Manejo de errores con un log
             },
         })        
     }
@@ -34,7 +34,7 @@ async function categoriasConsultar(): Promise<number> {
             'Content-Type': 'application/json',
         },
         onRequestError({ request, options, error }) {
-            return -1;
+            console.error("Error en la solicitud:", error); // Manejo de errores con un log
         },
     })
     let end = new Date().getTime();
@@ -53,7 +53,7 @@ async function categoriasConsultarAzar(total:number): Promise<number> {
                     'Content-Type': 'application/json',
             },
             onRequestError({ request, options, error }) {
-                return -1;
+                console.error("Error en la solicitud:", error); // Manejo de errores con un log
             },
         })        
     }
@@ -76,7 +76,7 @@ async function categoriasActualizar(total:number): Promise<number> {
             },
             body: JSON.stringify(ldata),
             onRequestError({ request, options, error }) {
-                return -1;
+                console.error("Error en la solicitud:", error); // Manejo de errores con un log
             },
         })        
     }
@@ -96,7 +96,7 @@ async function categoriasEliminar(total:number): Promise<number> {
         },
         body: JSON.stringify({ id: i }),
         onRequestError({ request, options, error }) {
-            return -1;
+            console.error("Error en la solicitud:", error); // Manejo de errores con un log
         }
         })  
     }

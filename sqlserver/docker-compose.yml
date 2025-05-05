@@ -1,0 +1,25 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sqlserver
+    restart: unless-stopped
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "TuPasswordFuerte123"
+    ports:
+      - "1433:1433"
+    volumes:
+      - ./cafeteria.sql:/tmp/cafeteria.sql
+    entrypoint: >
+      /bin/bash -c "echo 'Iniciando SQL Server...' && \
+      /opt/mssql/bin/sqlservr & \
+      sleep 20 && \
+      until /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P TuPasswordFuerte123 -Q 'SELECT 1' > /dev/null 2>&1; \
+      do echo 'Esperando que SQL Server esté listo...'; sleep 2; done; \
+      if [ -f /tmp/cafeteria.sql ]; then \
+        echo 'SQL Server está listo. Ejecutando script...' && \
+        /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P TuPasswordFuerte123 -d master -i /tmp/cafeteria.sql; \
+      else \
+        echo 'Error: No se encontró el archivo SQL.'; \
+      fi && \
+      tail -f /dev/null"
