@@ -1,24 +1,28 @@
-import { detalleordenesSqlServer, productosSqlServer } from "../../../utils/sqlserver/sqlserver"; // Cambié MySQL por SQL Server
+import { detalleordenesSqlServer, productosSqlServer } from "../../../utils/sqlserver/sqlserver";
 import { Sequelize } from "sequelize";
 
 export default defineEventHandler(async (event) => {
     try {
-        // Obtener el top 10 de productos vendidos
         const data = await detalleordenesSqlServer.findAll({
             attributes: [
                 "idproducto",
-                [Sequelize.fn("SUM", Sequelize.col("cantidad")), "cantidad_vendida"]
+                [Sequelize.fn("SUM", Sequelize.col("cantidad")), "cantidad_vendida"],
+                [Sequelize.col("producto.nombre"), "producto_nombre"]
             ],
             include: [
                 {
                     model: productosSqlServer,
-                    attributes: ["nombre"]
+                    as: "producto",
+                    attributes: []
                 }
             ],
-            group: ["detalleordenes.idproducto", "productos.nombre"],
-            order: [[Sequelize.fn("SUM", Sequelize.col("cantidad")), "DESC"]],
+            group: [
+                "detalleordenes.idproducto", // ✅ Corrección para que coincida con GROUP BY
+                "producto.nombre"
+            ],
+            order: [[Sequelize.fn("SUM", Sequelize.col("cantidad")), "DESC"]], // ✅ Eliminamos `detalleordenes.idorden` del ORDER BY
             limit: 10,
-            raw: true
+            subQuery: false // ✅ Evita que Sequelize genere un subquery incorrecto
         });
 
         if (!data.length) {
@@ -28,6 +32,6 @@ export default defineEventHandler(async (event) => {
         return { statusCode: 200, data };
     } catch (error) {
         console.error("Error al consultar el top de productos vendidos en SQL Server:", error);
-        return { statusCode: 500, error: "Error en la base de datos", details: error };
+        return { statusCode: 500, error: "Error en la base de datos", details: error.message };
     }
 });

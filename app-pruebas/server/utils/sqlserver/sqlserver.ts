@@ -1,77 +1,68 @@
 import { Sequelize, DataTypes } from "sequelize";
 
 // Variable de entorno HOST_DB indica la IP o el nombre del servidor DB SQL Server
-let hostdb = process.env.HOST_DB || 'localhost';
+let hostdb = process.env.HOST_DB || "localhost";
 
 // Configuración de Sequelize para SQL Server
 const sequelizeSqlServer = new Sequelize({
-  dialect: 'mssql', // Dialecto para SQL Server
-  database: 'cafeteria', // Nombre de la base de datos
-  username: 'sa', // Usuario de SQL Server
-  password: 'TuPasswordFuerte123', // Contraseña de SQL Server
-  host: hostdb, // Host del servidor (localhost por defecto)
-  port: 1433, // Puerto predeterminado para SQL Server
+  dialect: "mssql",
+  database: "cafeteria",
+  username: "sa",
+  password: "TuPasswordFuerte123",
+  host: hostdb,
+  port: 1433,
   dialectOptions: {
-      encrypt: true, // Encriptar conexión (útil para Azure SQL)
-      enableArithAbort: true // Control de abortos aritméticos
+    encrypt: true,
+    trustServerCertificate: true // Evita problemas de certificados en conexiones locales
   }
 });
 
-
 // Tabla Categorías
-const categoriasSqlServer = sequelize.define('categorias', {
-    id: { type: DataTypes.INTEGER, primaryKey: true }, // Cambiado a INTEGER para SQL Server
-    nombre: { type: DataTypes.STRING, allowNull: false },
-}, {
-    timestamps: false // No se crean campos createdAt ni updateAt
-});
+const categoriasSqlServer = sequelizeSqlServer.define("categorias", {
+  id: { type: DataTypes.INTEGER, primaryKey: true },
+  nombre: { type: DataTypes.STRING, allowNull: false },
+}, { timestamps: false });
 
 // Tabla Productos
-const productosSqlServer = sequelize.define('productos', {
-    id: { type: DataTypes.INTEGER, primaryKey: true }, // Cambiado a INTEGER
-    nombre: { type: DataTypes.STRING, allowNull: false },
-    precio: { type: DataTypes.DECIMAL(10, 2), allowNull: false }, // Cambiado a DECIMAL con precisión
-    idCategoria: { type: DataTypes.INTEGER, allowNull: false },
-}, {
-    timestamps: false // No se crean campos createdAt ni updateAt
-});
+const productosSqlServer = sequelizeSqlServer.define("productos", {
+  id: { type: DataTypes.INTEGER, primaryKey: true },
+  nombre: { type: DataTypes.STRING, allowNull: false },
+  precio: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
+  idCategoria: { type: DataTypes.INTEGER, allowNull: false },
+}, { timestamps: false });
 
 // Tabla Órdenes
-const ordenesSqlServer = sequelize.define('ordenes', {
-    id: { type: DataTypes.INTEGER, primaryKey: true }, // Cambiado a INTEGER
-    fecha: { type: DataTypes.DATEONLY, allowNull: false }, // DATEONLY es compatible con SQL Server
-    total: { type: DataTypes.DECIMAL(10, 2), allowNull: false }, // Cambiado a DECIMAL con precisión
-}, {
-    timestamps: false // No se crean campos createdAt ni updateAt
-});
+const ordenesSqlServer = sequelizeSqlServer.define("ordenes", {
+  id: { type: DataTypes.INTEGER, primaryKey: true },
+  fecha: { type: DataTypes.DATE, allowNull: false }, // Se usa `DATE` en vez de `DATEONLY` para SQL Server
+  total: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
+}, { timestamps: false });
 
 // Tabla Detalle Órdenes
-const detalleordenesSqlServer = sequelize.define('detalleordenes', {
-    idorden: { type: DataTypes.INTEGER, primaryKey: true }, // Cambiado a INTEGER
-    idproducto: { type: DataTypes.INTEGER, primaryKey: true }, // Cambiado a INTEGER
-    cantidad: { type: DataTypes.INTEGER, allowNull: false }, // Cambiado a INTEGER
-    precio: { type: DataTypes.DECIMAL(10, 2), allowNull: false }, // Cambiado a DECIMAL con precisión
-}, {
-    timestamps: false // No se crean campos createdAt ni updateAt
-});
+const detalleordenesSqlServer = sequelizeSqlServer.define("detalleordenes", {
+  idorden: { type: DataTypes.INTEGER, primaryKey: true },
+  idproducto: { type: DataTypes.INTEGER, primaryKey: true },
+  cantidad: { type: DataTypes.INTEGER, allowNull: false },
+  precio: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
+}, { timestamps: false });
 
-// Asociaciones o Relaciones entre las tablas
-ordenesSqlServer.hasMany(detalleordenesSqlServer, { foreignKey: 'idorden' });
-detalleordenesSqlServer.belongsTo(ordenesSqlServer, { foreignKey: 'idorden' });
+// Asociaciones entre tablas
+ordenesSqlServer.hasMany(detalleordenesSqlServer, { foreignKey: "idorden" });
+detalleordenesSqlServer.belongsTo(ordenesSqlServer, { foreignKey: "idorden" });
 
-productosSqlServer.hasMany(detalleordenesSqlServer, { foreignKey: 'idproducto' });
-detalleordenesSqlServer.belongsTo(productosSqlServer, { foreignKey: 'idproducto' });
+productosSqlServer.hasMany(detalleordenesSqlServer, { foreignKey: "idproducto" });
+detalleordenesSqlServer.belongsTo(productosSqlServer, { foreignKey: "idproducto" });
 
-categoriasSqlServer.hasMany(productosSqlServer, { foreignKey: 'idCategoria' });
-productosSqlServer.belongsTo(categoriasSqlServer, { foreignKey: 'idCategoria' });
+categoriasSqlServer.hasMany(productosSqlServer, { foreignKey: "idCategoria" });
+productosSqlServer.belongsTo(categoriasSqlServer, { foreignKey: "idCategoria" });
 
-// Exportamos los modelos y Sequelize
+// Exportación corregida
 const db = {
-    sequelizeSqlServer,
-    categoriasSqlServer,
-    productosSqlServer,
-    ordenesSqlServer,
-    detalleordenesSqlServer
+  sequelizeSqlServer,
+  categoriasSqlServer,
+  productosSqlServer,
+  ordenesSqlServer,
+  detalleordenesSqlServer
 };
 
 export { sequelizeSqlServer, categoriasSqlServer, productosSqlServer, ordenesSqlServer, detalleordenesSqlServer };

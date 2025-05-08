@@ -1,4 +1,4 @@
-import { ordenesSqlServer } from "../../../utils/sqlserver/sqlserver"; // Cambié MySQL por SQL Server
+import { ordenesSqlServer } from "../../../utils/sqlserver/sqlserver";
 import { Sequelize } from "sequelize";
 
 export default defineEventHandler(async (event) => {
@@ -6,11 +6,11 @@ export default defineEventHandler(async (event) => {
         // Obtener la suma total de órdenes por fecha
         const data = await ordenesSqlServer.findAll({
             attributes: [
-                [Sequelize.fn("CAST", Sequelize.col("fecha") + " AS DATE"), "fecha"], 
+                [Sequelize.literal("CAST(fecha AS DATE)"), "fecha"],
                 [Sequelize.fn("SUM", Sequelize.col("total")), "total"]
             ],
-            group: [Sequelize.fn("CAST", Sequelize.col("fecha") + " AS DATE")],
-            order: [[Sequelize.fn("CAST", Sequelize.col("fecha") + " AS DATE"), "ASC"]],
+            group: [Sequelize.literal("CAST(fecha AS DATE)")],
+            order: [Sequelize.literal("CAST(fecha AS DATE)")],
             raw: true
         });
 

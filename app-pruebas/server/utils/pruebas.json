@@ -1,18 +1,18 @@
 {
     "categorias":{
-        "insertar":50,
-        "aleatorio":25,
-        "actualizar":25        
+        "insertar":1,
+        "aleatorio":1,
+        "actualizar":1        
     },
     "productos":{
-        "insertar":250,
-        "aleatorio":100,
-        "actualizar":100        
+        "insertar":1,
+        "aleatorio":1,
+        "actualizar":1        
     },
     "ordenes":{
-        "insertar":100,
-        "aleatorio":50,
-        "actualizar":50,
-        "detalleoden":15      
+        "insertar":1,
+        "aleatorio":1,
+        "actualizar":1,
+        "detalleoden":1      
     }    
 }

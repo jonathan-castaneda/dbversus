@@ -37,7 +37,7 @@ async function resumenesProductosFechaSqlServer(): Promise<number>  {
     let anio = new Date().getFullYear();        
     let mes = Math.floor(Math.random() * 12)+1;
     let dia = Math.floor(Math.random() * 28 + 1);
-    let fecha= anio + "-" + mes + "-" + dia;
+    let fecha= anio + "," + mes + "," + dia;
 
     await $fetch('http://localhost:3000/api/sqlserver/resumenes/productosdiariosfecha?fecha=' + fecha, {
         method: 'GET',

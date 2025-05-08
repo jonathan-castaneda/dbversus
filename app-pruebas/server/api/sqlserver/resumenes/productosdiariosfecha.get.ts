@@ -1,23 +1,23 @@
-import { ordenesSqlServer, detalleordenesSqlServer, productosSqlServer} from "../../../utils/sqlserver/sqlserver"; // Migración de MySQL a SQL Server
+import { ordenesSqlServer, detalleordenesSqlServer, productosSqlServer } from "../../../utils/sqlserver/sqlserver";
 import { Sequelize } from "sequelize";
 
 export default defineEventHandler(async (event) => {
     try {
-        // Obtener la fecha desde la consulta
         const { fecha } = getQuery(event);
         if (!fecha) {
             return { statusCode: 400, message: "Fecha requerida para la consulta" };
         }
 
-        // Consultar la cantidad de productos vendidos en una fecha específica
         const data = await ordenesSqlServer.findAll({
             attributes: [
-                [Sequelize.fn("CAST", Sequelize.col("fecha") + " AS DATE"), "fecha"]
+                [Sequelize.literal("CAST(ordenes.fecha AS DATE)"), "fecha"]
             ],
             include: [
                 {
                     model: detalleordenesSqlServer,
-                    attributes: [[Sequelize.fn("SUM", Sequelize.col("cantidad")), "cantidad_vendida"]],
+                    attributes: [
+                        [Sequelize.fn("SUM", Sequelize.col("detalleordenes.cantidad")), "cantidad_vendida"]
+                    ],
                     include: [
                         {
                             model: productosSqlServer,
@@ -26,13 +26,16 @@ export default defineEventHandler(async (event) => {
                     ]
                 }
             ],
-            where: { fecha },
+            where: {
+                fecha
+            },
             group: [
-                Sequelize.fn("CAST", Sequelize.col("fecha") + " AS DATE"),
+                Sequelize.literal("CAST(ordenes.fecha AS DATE)"),
                 "detalleordenes.idproducto",
-                "productos.nombre"
+                "detalleordenes->producto.nombre",
+                "detalleordenes->producto.id"
             ],
-            order: [[Sequelize.fn("CAST", Sequelize.col("fecha") + " AS DATE"), "ASC"]],
+            order: [Sequelize.literal("CAST(ordenes.fecha AS DATE)")],
             raw: true
         });
 

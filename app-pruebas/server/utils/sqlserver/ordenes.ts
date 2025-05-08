@@ -5,8 +5,10 @@ async function ordenesInsertarSqlServer(total: number, totaldetalle: number): Pr
     let start = new Date().getTime();
     for (let conta = 1; conta <= total; conta++) {
         let anio = new Date().getFullYear();
-        let mes = Math.floor(Math.random() * 12) + 1; // Mes aleatorio del 1 al 12
-        let lfecha: string = `${anio}-${mes}-${Math.floor(Math.random() * 28) + 1}`; // Fecha en formato SQL
+        let mes = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
+        let dia = String(Math.floor(Math.random() * 28) + 1).padStart(2, '0');
+        let lfecha: string = `${anio},${mes},${dia}`;
+
         const ldata = {
             id: conta,
             fecha: lfecha,

@@ -1,31 +1,36 @@
-import { ordenesSqlServer, detalleordenesSqlServer, productosSqlServer } from "../../../utils/sqlserver/sqlserver"; // Cambié MySQL por SQL Server
+import { ordenesSqlServer, detalleordenesSqlServer, productosSqlServer } from "../../../utils/sqlserver/sqlserver";
 import { Sequelize } from "sequelize";
+import moment from "moment";
 
 export default defineEventHandler(async (event) => {
     try {
-        // Obtener la fecha, el nombre del producto y la cantidad vendida en esa fecha
+        const fecha = moment().format("YYYY-MM-DD"); 
+        console.log("Fecha antes de la consulta:", fecha);
+
         const data = await ordenesSqlServer.findAll({
             attributes: [
-                [Sequelize.fn("CAST", Sequelize.col("fecha") + " AS DATE"), "fecha"]
+                [Sequelize.literal("CAST(ordenes.fecha AS DATE)"), "fecha"],
+                [Sequelize.fn("SUM", Sequelize.col("detalleordenes.cantidad")), "cantidad_vendida"],
+                [Sequelize.col("detalleordenes->producto.nombre"), "producto_nombre"]
             ],
             include: [
                 {
                     model: detalleordenesSqlServer,
-                    attributes: [[Sequelize.fn("SUM", Sequelize.col("cantidad")), "cantidad_vendida"]],
+                    attributes: [],
                     include: [
                         {
                             model: productosSqlServer,
-                            attributes: ["id", "nombre"]
+                            attributes: []
                         }
                     ]
                 }
             ],
             group: [
-                Sequelize.fn("CAST", Sequelize.col("fecha") + " AS DATE"),
+                Sequelize.literal("CAST(ordenes.fecha AS DATE)"),
                 "detalleordenes.idproducto",
-                "productos.nombre"
+                "detalleordenes->producto.nombre"
             ],
-            order: [[Sequelize.fn("CAST", Sequelize.col("fecha") + " AS DATE"), "ASC"]],
+            order: [Sequelize.literal("CAST(ordenes.fecha AS DATE)")],
             raw: true
         });
 
