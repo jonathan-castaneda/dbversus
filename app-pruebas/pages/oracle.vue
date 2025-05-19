@@ -192,7 +192,7 @@ const columns = [
     sortable: true
   },
   { name: 'total', label: 'Total', field: 'total' },
-  { name: 'a', align: 'center', label: 'A', field: 'a' },
+  { name: 'a', label: 'A', field: 'a' },
   { name: 'b', label: 'B', field: 'b' },
   { name: 'c', label: 'C', field: 'c' },
   { name: 'd', label: 'D', field: 'd' },
