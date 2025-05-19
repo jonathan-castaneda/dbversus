@@ -1,17 +1,17 @@
 <template>
-    <div>
+    <div class="princiapl" >
         <div class="row flex flex-center q-mt-md">
             <div class="text-h4">Pruebas para MariaDB</div>
             
         </div>
-        <div class="row">
-            <div class="text-caption col-12 q-ml-md">
+        <div class="row" >
+            <div class="text-caption col-12 q-ml-md " style="font-size: large;">
                 Recuerda que debes tener arrancado el contenedor de MYSQL levantado con docker y no debe tener datos, solo debe tener la estructura de las tablas.
                 Haz clic en iniciar y comenzamos las pruebas, primero insertando, luego actualizando, consultando y eliminando.
                 Si vuelves ha hacer pruebas se recomienda que ejecutes docker compose down y luego <strong>docker compose up -d</strong> 
                 <p>Recuerda que en el archivo <strong>/mysql/docker-compose.yml</strong> defines la memoria y el CPU asignado al contenedor para las pruebas</p>
             </div>
-            <div class="col-12 row q-ml-md">
+            <div class="col-12 row q-ml-md" >
                 <div class="col-2">
                     <div class="text-bold">Pruebas en Categorias</div>
                     Insercion: <strong>{{ pruebas.categorias.insertar }}</strong><br>
@@ -102,9 +102,152 @@
     </div>
 </template>
 
+<style scoped>
+:root {
+  --mariadb-deep: #0f272e;       
+  --mariadb-teal: #4F8A94;        
+  --mariadb-cream: #E8D5B5;      
+  --mariadb-muted-orange: #D9A05B; 
+  --mariadb-smoke: #2C4A52;      
+}
+
+/* Fondo principal modifique estos para el fondo  */
+.princiapl {
+  background: linear-gradient(135deg, #43accf, #300505);
+  padding: 25px;
+  min-height: 100vh;
+}
+
+/* Título  */
+.text-h4 {
+  color: var(--mariadb-cream);
+  background: linear-gradient(to right, var(--mariadb-deep), var(--mariadb-smoke));
+  padding: 18px;
+  border-radius: 14px;
+  text-align: center;
+  /*Modifique para la sombra del titulo*/
+  box-shadow: 
+    0 6px 18px rgba(243, 84, 84, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  border-bottom: 2px solid var(--mariadb-muted-orange);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/*Aqui se cambia el color del fonde de las intrucciones*/
+.row:has(.text-caption) {
+  background: rgba(26, 58, 67, 0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(79, 138, 148, 0.3);
+  border-radius: 16px;
+  padding: 22px;
+  margin-top: 25px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+/*Aqui el color del texto de las instrucciones*/ 
+.text-caption {
+  color: rgba(226, 164, 58, 0.9);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* Colores y sombras de los bloques de prueba */
+[class*="col-"]:has(.text-bold) {
+  background: linear-gradient(145deg, #f38609, #e70707);
+  border-radius: 18px;
+  padding: 28px;
+  margin: 18px;
+  color: var(--mariadb-cream);
+  box-shadow: 
+    8px 8px 16px rgba(230, 19, 19, 0.3),
+    -4px -4px 8px rgba(79, 138, 148, 0.1);
+  border-top: 1px solid rgba(79, 138, 148, 0.4);
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+[class*="col-"]:has(.text-bold):hover {
+  transform: translateY(-6px);
+  box-shadow: 
+    12px 12px 28px rgba(24, 8, 241, 0.4),
+    -6px -6px 12px rgba(79, 138, 148, 0.15);
+}
+
+.text-bold {
+  font-size: 19px;
+  margin-bottom: 18px;
+  color: var(--mariadb-muted-orange);
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.text-bold::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(to right, var(--mariadb-muted-orange), transparent);
+}
+
+/* Colores del contenedor de iniciar prueba */
+.col-3:has(.q-btn) {
+  background: rgba(30, 170, 212, 0.9);
+  border-radius: 18px;
+  padding: 22px;
+  border: 1px solid var(--mariadb-teal);
+  box-shadow: 
+    0 10px 20px rgba(0, 0, 0, 0.2),
+    inset 0 0 15px rgba(79, 138, 148, 0.2);
+}
+
+.q-btn {
+  background: linear-gradient(135deg, var(--mariadb-muted-orange), #C38D4D) !important;
+  border-radius: 10px !important;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  box-shadow: 0 4px 12px rgba(55, 206, 9, 0.3);
+}
+
+/* Tabla (Como se la trae de otro lado creo que no furula xd) */
+.q-table {
+  background: linear-gradient(to bottom, #ff12d7, #223D46);
+  border-radius: 16px;
+  border: 1px solid var(--mariadb-teal);
+  color: var(--mariadb-cream);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* Sección errores */
+.q-input {
+  background: rgba(28, 50, 58, 0.8) !important;
+  border-radius: 10px;
+  border: 1px solid var(--mariadb-muted-orange) !important;
+  color: var(--mariadb-cream) !important;
+}
+
+.q-icon[name="warning"] {
+  color: var(--mariadb-muted-orange);
+  filter: drop-shadow(0 0 4px rgba(217, 160, 91, 0.5));
+}
+
+/* Área mensajes */
+.q-scroll-area {
+  background: rgba(26, 58, 67, 0.8);
+  border-radius: 14px;
+  padding: 18px;
+  border-left: 5px solid var(--mariadb-teal);
+  box-shadow: 
+    inset 0 0 20px rgba(0, 0, 0, 0.3),
+    0 6px 12px rgba(0, 0, 0, 0.2);
+  font-family: 'Courier New', monospace;
+  color: rgba(232, 213, 181, 0.9);
+  line-height: 1.8;
+}
+</style>
+
 <script setup lang="ts">
 import { ref, computed, onMounted} from 'vue'
-
 
 import pruebas from '../server/utils/pruebas.json'
 import { categoriasInsertar, categoriasConsultar, categoriasConsultarAzar, categoriasActualizar, categoriasEliminar } from '../server/utils/mariadb/categorias'
@@ -302,3 +445,4 @@ onMounted(()=>{
 })
 
 </script>
+
