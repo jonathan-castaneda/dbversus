@@ -1,106 +1,153 @@
 <template>
-    <div>
-        <div class="row flex flex-center q-mt-md">
-            <div class="text-h4">Pruebas para oracle</div>
-            
+    <div class="q-pa-md" style="background-color: #f5f5f5">
+      <!-- Banner Oracle -->
+      <q-banner class="bg-red-10 text-white q-pa-md" rounded>
+        <template v-slot:avatar>
+          <q-icon name="storage" size="md" />
+        </template>
+        <div class="text-h5">Pruebas para Oracle</div>
+      </q-banner>
+  
+      <!-- Instrucciones -->
+      <q-card class="q-mt-md q-pa-md">
+        <div class="text-subtitle1 q-mb-sm">Instrucciones</div>
+        <div class="text-body2">
+          Asegúrate de que el contenedor Docker de Oracle esté activo y con solo la estructura de las tablas.
+          Haz clic en <strong>Iniciar</strong> para comenzar las pruebas de inserción, actualización, consulta y eliminación.
+          <br><br>
+          Si deseas repetir las pruebas, ejecuta: 
+          <code>docker compose down</code> y luego <code>docker compose up -d</code>.
+          <p>Configura la memoria y CPU en <strong>/oracle/docker-compose.yml</strong>.</p>
         </div>
-        <div class="row">
-            <div class="text-caption col-12 q-ml-md">
-                Recuerda que debes tener arrancado el contenedor de oracle levantado con docker y no debe tener datos, solo debe tener la estructura de las tablas.
-                Haz clic en iniciar y comenzamos las pruebas, primero insertando, luego actualizando, consultando y eliminando.
-                Si vuelves ha hacer pruebas se recomienda que ejecutes docker compose down y luego <strong>docker compose up -d</strong> 
-                <p>Recuerda que en el archivo <strong>/oracle/docker-compose.yml</strong> defines la memoria y el CPU asignado al contenedor para las pruebas</p>
+      </q-card>
+  
+      <!-- Estado de pruebas -->
+      <q-card class="q-mt-md q-pa-md">
+        <div class="row q-col-gutter-md">
+          <div class="col-12 col-md-3">
+            <div class="text-bold text-primary">Pruebas en Categorías</div>
+            <div>Inserción: <strong>{{ pruebas.categorias.insertar }}</strong></div>
+            <div>Actualización: <strong>{{ pruebas.categorias.actualizar }}</strong></div>
+            <div>Consulta: <strong>{{ pruebas.categorias.aleatorio }}</strong></div>
+          </div>
+          <div class="col-12 col-md-3">
+            <div class="text-bold text-primary">Pruebas en Productos</div>
+            <div>Inserción: <strong>{{ pruebas.productos.insertar }}</strong></div>
+            <div>Actualización: <strong>{{ pruebas.productos.actualizar }}</strong></div>
+            <div>Consulta: <strong>{{ pruebas.productos.aleatorio }}</strong></div>
+          </div>
+          <div class="col-12 col-md-3">
+            <div class="text-bold text-primary">Pruebas en Órdenes</div>
+            <div>Inserción: <strong>{{ pruebas.ordenes.insertar }}</strong></div>
+            <div>Actualización: <strong>{{ pruebas.ordenes.actualizar }}</strong></div>
+            <div>Consulta: <strong>{{ pruebas.ordenes.aleatorio }}</strong></div>
+            <div>Detalle: <strong>{{ pruebas.ordenes.detalleoden }}</strong></div>
+          </div>
+          <div class="col-12 col-md-3">
+            <q-input dense type="number" outlined v-model="contaInicial" label="Contador Inicial" />
+            <q-btn
+              :disable="errorConexion"
+              color="red-10"
+              size="md"
+              class="q-mt-sm full-width"
+              :loading="cargando"
+              @click="realizarPruebas"
+              icon="play_arrow"
+              label="Iniciar Pruebas"
+            />
+            <q-circular-progress
+              show-value
+              font-size="12px"
+              :value="avance"
+              size="50px"
+              :thickness="0.22"
+              color="teal"
+              track-color="grey-3"
+              class="q-mt-sm"
+            >
+              {{ avance }}%
+            </q-circular-progress>
+  
+            <div v-show="errorConexion" class="text-caption text-red q-mt-sm">
+              Error de conexión. Verifica el host, IP o si el servicio Oracle está activo.
             </div>
-            <div class="col-12 row q-ml-md">
-                <div class="col-2">
-                    <div class="text-bold">Pruebas en Categorias</div>
-                    Insercion: <strong>{{ pruebas.categorias.insertar }}</strong><br>
-                    Actualizacion: <strong>{{ pruebas.categorias.actualizar }}</strong><br>
-                    Consulta: <strong>{{ pruebas.categorias.aleatorio }}</strong><br>
-                </div>
-                <div class="col-2">
-                    <div class="text-bold">Pruebas en Productos</div>
-                    Insercion: <strong>{{ pruebas.productos.insertar }}</strong><br>
-                    Actualizacion: <strong>{{ pruebas.productos.actualizar }}</strong><br>
-                    Consulta: <strong>{{ pruebas.productos.aleatorio }}</strong><br>
-                </div>
-                <div class="col-2">
-                    <div class="text-bold">Pruebas en Ordenes</div>
-                    Insercion: <strong>{{ pruebas.ordenes.insertar }}</strong><br>
-                    Actualizacion: <strong>{{ pruebas.ordenes.actualizar }}</strong><br>
-                    Consulta: <strong>{{ pruebas.ordenes.aleatorio }}</strong><br>
-                    Detalle Ordenes: <strong>{{ pruebas.ordenes.detalleoden }}</strong><br>
-            
-                </div>
-                <div class="col-3 q-ml-lg">
-                    <q-input dense style="width: 150px;" type="number" outlined v-model="contaInicial" label="Contador Inicial en:" />
-                <q-btn :disable="errorConexion" size="lg" :loading="cargando" @click="realizarPruebas" color="primary">Iniciar Pruebas</q-btn>
-                <q-circular-progress
-                show-value
-                font-size="12px"
-                :value="avance"
-                size="50px"
-                :thickness="0.22"
-                color="teal"
-                track-color="grey-3"
-                class="q-ma-md"
-                >
-                {{ avance }}%
-                </q-circular-progress>
-                <div v-show="errorConexion" class="text-caption text-red">Error de conexion, No es posible conectar con la base de datos revise el host, la ip o si el servicio esta levantado.</div>
-            </div>
-
-            </div>
+          </div>
         </div>
-        
-        <div class="row q-ml-lg q-mt-md">
+      </q-card>
+  
+      <!-- Resultados -->
+      <div class="row q-mt-lg">
+        <!-- Tabla -->
+        <div class="col-12 col-md-7">
+          <q-card>
             <q-table
-            flat bordered
-            title="Pruebas sobre Gestor oracle"
-            :rows="rows"
-            :columns="columns"
-            color="primary"
-            row-key="name"
-            class="col-6"
-            
-            >            
-            </q-table>
-           
-            <div class="col-2 q-ml-md">
-                <div class="text-h6">Errores</div>
-                <q-input class="q-my-sm" label="Errores Inserción" outlined v-model="erroresInsercion"  dense>
-                    <template v-slot:prepend>
-                    <q-icon name="warning" />
-                    </template>
-                </q-input>
-                <q-input class="q-my-sm" label="Errores Consulta" outlined v-model="erroresConsulta"  dense>
-                    <template v-slot:prepend>
-                    <q-icon name="warning" />
-                    </template>
-                </q-input>
-                <q-input class="q-my-sm" label="Errores Actualización" outlined v-model="erroresActualizacion"  dense>
-                    <template v-slot:prepend>
-                    <q-icon name="warning" />
-                    </template>
-                </q-input>
-                <q-input class="q-my-sm" label="Errores Eliminación" outlined v-model="erroresEliminacion"  dense>
-                    <template v-slot:prepend>
-                    <q-icon name="warning" />
-                    </template>
-                </q-input>
-            </div>
-            <div class="col-2 q-ml-md">                
-                <q-scroll-area style="height: 300px;">
-                    <div v-for="n in mensajes" :key="n" class="q-py-xs">
-                        {{ n }}
-                    </div>
-                </q-scroll-area>   
-                
-            </div>
+              flat
+              bordered
+              title="Pruebas sobre Oracle DB"
+              :rows="rows"
+              :columns="columns"
+              row-key="name"
+              color="red-10"
+              dense
+            />
+          </q-card>
         </div>
-        
+  
+        <!-- Errores -->
+        <div class="col-12 col-md-2 q-ml-md">
+          <q-card class="q-pa-sm">
+            <div class="text-h6 text-negative">Errores</div>
+            <q-input class="q-my-xs" label="Inserción" outlined v-model="erroresInsercion" dense>
+              <template v-slot:prepend>
+                <q-icon name="warning" />
+              </template>
+            </q-input>
+            <q-input class="q-my-xs" label="Consulta" outlined v-model="erroresConsulta" dense>
+              <template v-slot:prepend>
+                <q-icon name="search" />
+              </template>
+            </q-input>
+            <q-input class="q-my-xs" label="Actualización" outlined v-model="erroresActualizacion" dense>
+              <template v-slot:prepend>
+                <q-icon name="update" />
+              </template>
+            </q-input>
+            <q-input class="q-my-xs" label="Eliminación" outlined v-model="erroresEliminacion" dense>
+              <template v-slot:prepend>
+                <q-icon name="delete" />
+              </template>
+            </q-input>
+          </q-card>
+        </div>
+
+  
+        <!-- Mensajes -->
+        <div class="col-12 col-md-2 q-ml-md">
+          <q-card class="q-pa-sm">
+            <div class="text-h6">Mensajes</div>
+            <q-scroll-area style="height: 180px;">
+              <div v-for="n in mensajes" :key="n" class="q-py-xs">
+                {{ n }}
+              </div>
+            </q-scroll-area>
+          </q-card>
+        </div>
+      </div>
+      <div class="row q-mt-lg">
+  <div class="col-12">
+    <q-card class="flex flex-center q-pa-lg" style="height: 100px;">
+      <q-img
+        src="https://upload.wikimedia.org/wikipedia/commons/5/50/Oracle_logo.svg"
+        alt="Oracle"
+        style="max-width: 300px; max-height: 100px;"
+        fit="contain"
+      />
+    </q-card>
+  </div>
+</div>
     </div>
-</template>
+  </template>
+  
 
 <script setup lang="ts">
 import { ref, computed, onMounted} from 'vue'
