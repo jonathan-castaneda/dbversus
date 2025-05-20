@@ -7,10 +7,7 @@ export default defineEventHandler(async (event) => {
         // Obtener el ID desde la URL
         const { id } = event.context.params;
 
-        // Validar si el ID es un ObjectId válido
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            return { statusCode: 400, message: "ID inválido" };
-        }
+        
 
         // Eliminar la categoría usando el ID
         const categoria = await Categoria.findByIdAndDelete(id);

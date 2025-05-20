@@ -6,12 +6,13 @@ export default defineEventHandler(async (event) => {
 
     try {
         
-        if (!body.nombre || !body.precio || body.precio < 0 || !body.idCategoria) {
+        if (!body._id||!body.nombre || !body.precio || body.precio < 0 || !body.idCategoria) {
             return { statusCode: 400, message: "Faltan campos requeridos" };
         }
 
        
         const data = await Producto.create({
+            _id:body._id,
             nombre: body.nombre,
             precio: body.precio,
             idCategoria: body.idCategoria,

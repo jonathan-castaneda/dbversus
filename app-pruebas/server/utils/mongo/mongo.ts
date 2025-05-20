@@ -17,20 +17,23 @@ db.once("open", () => {
 
 // Definición del esquema de Categorías
 const categoriaSchema = new mongoose.Schema({
+  _id: { type: Number, required: true },
   nombre: { type: String, required: true },
 });
 const Categoria = mongoose.model("Categoria", categoriaSchema);
 
 // Definición del esquema de Productos
 const productoSchema = new mongoose.Schema({
-  nombre: { type: String, required: true },
+  _id: { type: Number, required: true }, // Definimos _id como número
+  // nombre: { type: String, required: true },
   precio: { type: Number, required: true },
-  idCategoria: { type: mongoose.Schema.Types.ObjectId, ref: "Categoria", required: true },
-});
+  idCategoria: { type: Number, ref: "Categoria", required: true }, // idCategoria también es un número
+}, { _id: false });
 const Producto = mongoose.model("Producto", productoSchema);
 
 // Definición del esquema de Órdenes
 const ordenSchema = new mongoose.Schema({
+  _id: { type: Number, required: true }, // Definimos _id como número
   fecha: { type: Date, required: true },
   mesero: { type: String, required: true },
   mesa: { type: String, required: true },

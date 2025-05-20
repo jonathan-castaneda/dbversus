@@ -5,7 +5,7 @@ async function productosInsertar(total: number): Promise<number> {
     let start = new Date().getTime();    
     for (let i = 1; i <= total; i++) {
         const ldata = {
-            id: i,
+            _id: i,
             nombre: "Producto " + i,
             precio: Math.floor(Math.random() * 100) + 1,
             idCategoria: Math.floor(Math.random() * pruebas.categorias.insertar) + 1,
@@ -66,7 +66,7 @@ async function productosActualizar(total:number): Promise<number>  {
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
         const ldata = {
-            id: i,
+            _id: i,
             nombre: "Producto " + i + " Actualizado",
             precio: Math.floor(Math.random() * 100) + 1,
             idCategoria: Math.floor(Math.random() * pruebas.categorias.insertar) + 1,

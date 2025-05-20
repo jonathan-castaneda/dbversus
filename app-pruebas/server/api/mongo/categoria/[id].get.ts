@@ -6,10 +6,7 @@ export default defineEventHandler(async (event) => {
     try {
         const { id } = event.context.params; // Obtener el ID de la URL
 
-        // Verificar si el ID es un ObjectId válido
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            return { statusCode: 400, message: "ID inválido" };
-        }
+        
 
         // Buscar la categoría por su ObjectId
         const data = await Categoria.findOne({ _id: id });

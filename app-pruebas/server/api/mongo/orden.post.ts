@@ -5,12 +5,13 @@ export default defineEventHandler(async (event) => {
 
     try {
         // Validación básica de campos requeridos
-        if (!body.mesero || !body.mesa || !body.cliente || !body.total || !Array.isArray(body.detalleOrden)) {
+        if (!body.mesero || !body.mesa || !body.cliente || !body.total || !Array.isArray(body.detalleOrden)||!body._id) {
             return { statusCode: 400, message: "Faltan campos requeridos o detalleOrden inválido" };
         }
 
         // Creamos la orden con el detalle ya embebido
         const nuevaOrden = await Orden.create({
+            _id:body._id,
             fecha: body.fecha ? new Date(body.fecha) : new Date(),
             mesero: body.mesero,
             mesa: body.mesa,

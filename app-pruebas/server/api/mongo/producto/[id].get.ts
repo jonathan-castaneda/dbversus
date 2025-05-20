@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
     try {
         const id = event.context.params.id; // Obtener el ID del producto
 
-        // Buscamos el producto en MongoDB por su ObjectId
+        // Buscamos el producto en MongoDB por el ID
         const data = await Producto.findById(id);
 
         if (!data) {

@@ -5,7 +5,7 @@ async function categoriasInsertar(total: number): Promise<number> {
     let start = new Date().getTime();    
     for (let i = 1; i <= total; i++) {
         const ldata = {
-            id: i,
+            _id: i,// el ID AHORA SI ES NUMERICO
             nombre: "Categoria " + i,
         }
         //agrego usando $fetch        
@@ -66,7 +66,7 @@ async function categoriasActualizar(total:number): Promise<number> {
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
         const ldata = {
-            id: i,
+            _id: i,
             nombre: "Categoria " + i + " Actualizada",
         }
         await $fetch('http://localhost:3000/api/mongo/categoria/'+i, {

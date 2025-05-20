@@ -7,10 +7,7 @@ export default defineEventHandler(async (event) => {
         const { id } = event.context.params;  // Obtener el ID de la URL
         const body = await readBody(event);   // Obtener los datos del cuerpo de la solicitud
 
-        // Verificar si el ID es un ObjectId válido
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            return { statusCode: 400, message: "ID inválido" };
-        }
+        
 
         // Actualizar la categoría en MongoDB
         const data = await Categoria.findByIdAndUpdate(id, body, { new: true });

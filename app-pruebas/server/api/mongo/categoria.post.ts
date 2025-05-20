@@ -5,13 +5,10 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event);
 
     try {
-        // Verificamos si el ID es válido, si no, generamos uno nuevo
-        const objectId = mongoose.Types.ObjectId.isValid(body.id)
-            ? new mongoose.Types.ObjectId(body.id)
-            : new mongoose.Types.ObjectId();
+        
 
         const data = await Categoria.create({
-            _id: objectId,
+            _id: body._id,
             nombre: body.nombre,
         });
 

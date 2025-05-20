@@ -29,6 +29,7 @@ async function ordenesInsertar(total: number, totaldetalle: number): Promise<num
     const totalOrden = detalleOrden.reduce((acc, item) => acc + item.subtotal, 0);
 
     const ldata = {
+      _id:conta,
       fecha: lfecha,
       mesero: "AutoInsert",
       mesa: `${Math.floor(Math.random() * 10) + 1}`,
