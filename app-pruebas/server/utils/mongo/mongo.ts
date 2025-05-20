@@ -31,6 +31,16 @@ const productoSchema = new mongoose.Schema({
 }, { _id: false });
 const Producto = mongoose.model("Producto", productoSchema);
 
+const DetalleSchema = new mongoose.Schema({
+  cantidad: { type: Number, required: true },
+  nombre: { type: String, required: true },
+  precio: { type: Number, required: true },
+  categoria: {
+    nombre: { type: String, required: true },
+  },
+  subtotal: { type: Number, required: true },
+}, { _id: false }); // <- evitar que Mongoose agregue un _id por cada item
+
 // Definición del esquema de Órdenes
 const ordenSchema = new mongoose.Schema({
   _id: { type: Number, required: true }, // Definimos _id como número
@@ -41,19 +51,11 @@ const ordenSchema = new mongoose.Schema({
   estado: { type: String, required: true },
   total: { type: Number, required: true },
   observacion: { type: String },
-  detalleOrden: [
-    {
-      cantidad: { type: Number, required: true },
-      nombre: { type: String, required: true },
-      precio: { type: Number, required: true },
-      categoria: {
-        nombre: { type: String, required: true },
-      },
-      subtotal: { type: Number, required: true },
-    },
-  ],
+  detalleOrden: { type: [DetalleSchema], default: [] },
 });
 const Orden = mongoose.model("Orden", ordenSchema);
+
+
 
 export { db, Categoria, Producto, Orden };
 

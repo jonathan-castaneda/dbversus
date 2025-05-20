@@ -78,7 +78,8 @@ async function categoriasActualizar(total:number): Promise<number> {
             onRequestError({ request, options, error }) {
                 return -1;
             },
-        })        
+        })  
+        console.log(ldata.nombre)      
     }
     let end = new Date().getTime();
     let time = end - start;

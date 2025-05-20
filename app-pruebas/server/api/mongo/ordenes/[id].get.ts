@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
   try {
     const id = event.context.params.id;
 
-    const data = await Orden.findById(id);
+    const data = await Orden.findById(id).lean();
 
     if (!data) {
       return { statusCode: 404, message: "Orden no encontrada" };
@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
 
     return {
       statusCode: 200,
-      orden: data 
+      orden1: data 
     };
   } catch (error) {
     console.error("Error al obtener orden de MongoDB:", error);

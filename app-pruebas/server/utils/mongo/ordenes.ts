@@ -29,7 +29,7 @@ async function ordenesInsertar(total: number, totaldetalle: number): Promise<num
     const totalOrden = detalleOrden.reduce((acc, item) => acc + item.subtotal, 0);
 
     const ldata = {
-      _id:conta,
+      _id: conta,
       fecha: lfecha,
       mesero: "AutoInsert",
       mesa: `${Math.floor(Math.random() * 10) + 1}`,
@@ -61,7 +61,7 @@ async function ordenesConsultarAzar(total: number): Promise<number> {
   let start = new Date().getTime();
   for (let i = 1; i <= total; i++) {
     let id = Math.floor(Math.random() * pruebas.ordenes.insertar) + 1;
-    await $fetch(`http://localhost:3000/api/mongo/ordenes/`+id, {
+    await $fetch(`http://localhost:3000/api/mongo/ordenes/` + id, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -80,56 +80,55 @@ async function ordenesActualizar(total: number): Promise<number> {
   let start = new Date().getTime();
 
   for (let i = 1; i <= total; i++) {
-    // Simular traer el documento (necesario para modificar)
-    const orden = await $fetch(`http://localhost:3000/api/mongo/ordenes/${i}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      onRequestError({ request, options, error }) {
-        console.error("Error consultando orden antes de actualizar:", error);
-        return null;
-      },
-    });
+    // Simular detalles nuevos
+    let nuevosDetalles = [];
+    for (let j = 1; j <= 5; j++) {
+      let cantidad = Math.floor(Math.random() * 10 + 1) * 2; // Duplicamos
+      let precio = Math.floor(Math.random() * 100 + 1);
+      nuevosDetalles.push({
+        cantidad,
+        nombre: `Producto ${j} actualizado`,
+        precio,
+        categoria: {
+          nombre: Math.random() > 0.5 ? "Platos" : "Bebidas",
+        },
+        subtotal: cantidad * precio,
+      });
+    }
 
-    if (!orden) continue;
-
-    // Modificar los detalles (ej: duplicar cantidades)
-    const detalleModificado = orden.detalleOrden.map((item: any) => {
-      const nuevaCantidad = item.cantidad * 2;
-      const nuevoSubtotal = nuevaCantidad * item.precio;
-      return {
-        ...item,
-        cantidad: nuevaCantidad,
-        subtotal: nuevoSubtotal
-      };
-    });
-
-    const nuevoTotal = detalleModificado.reduce((acc: number, item: any) => acc + item.subtotal, 0);
+    const totalOrden = nuevosDetalles.reduce((acc, item) => acc + item.subtotal, 0);
 
     const ldata = {
-      ...orden,
-      detalleOrden: detalleModificado,
-      total: nuevoTotal,
-      fecha: new Date()
+      _id: i,
+      fecha: new Date(),
+      mesero: "Mesero Actualizado",
+      mesa: `${Math.floor(Math.random() * 10) + 1}`,
+      cliente: `Cliente ${i} Actualizado`,
+      estado: "A", // Actualizado
+      observacion: "Actualizada automáticamente",
+      total: totalOrden,
+      detalleOrden: nuevosDetalles,
     };
 
-    await $fetch(`http://localhost:3000/api/mongo/ordenes/${orden._id}`, {
+    await $fetch(`http://localhost:3000/api/mongo/ordenes/${i}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(ldata),
       onRequestError({ request, options, error }) {
-        console.error("Error actualizando orden Mongo:", error);
+        console.error("Error actualizando orden:", error);
         return -1;
       },
     });
+
+    console.log(ldata.cliente); // Confirmación por consola
   }
 
   let end = new Date().getTime();
   return end - start;
 }
+
 
 async function ordenesEliminar(total: number): Promise<number> {
   let start = new Date().getTime();

@@ -4,7 +4,7 @@ import mongoose from "mongoose"; // Importar mongoose para trabajar con ObjectId
 
 export default defineEventHandler(async (event) => {
     try {
-        const { id } = event.context.params;  // Obtener el ID de la URL
+        const id = event.context.params.id;  // Obtener el ID de la URL
         const body = await readBody(event);   // Obtener los datos del cuerpo de la solicitud
 
         
