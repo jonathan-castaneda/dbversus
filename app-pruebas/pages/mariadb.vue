@@ -106,39 +106,39 @@
 :root {
   --mariadb-deep: #0f272e;       
   --mariadb-teal: #4F8A94;        
-  --mariadb-cream: #E8D5B5;      
-  --mariadb-muted-orange: #D9A05B; 
+  --mariadb-cream: #f0e7d7;      
+  --mariadb-muted-orange: #b18245; 
   --mariadb-smoke: #2C4A52;      
 }
 
 /* Fondo principal modifique estos para el fondo  */
 .princiapl {
-  background: linear-gradient(135deg, #43accf, #300505);
+  background: linear-gradient(135deg, #1e805a, #6feee3);
   padding: 25px;
   min-height: 100vh;
 }
 
 /* Título  */
 .text-h4 {
-  color: var(--mariadb-cream);
+  color: var(--mariadb-deep);
   background: linear-gradient(to right, var(--mariadb-deep), var(--mariadb-smoke));
   padding: 18px;
   border-radius: 14px;
   text-align: center;
   /*Modifique para la sombra del titulo*/
   box-shadow: 
-    0 6px 18px rgba(243, 84, 84, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    0 6px 18px rgba(7, 75, 75, 0.25),
+    inset 0 1px 0 rgba(32, 143, 22, 0.08);
   border-bottom: 2px solid var(--mariadb-muted-orange);
   font-weight: 600;
   letter-spacing: 0.5px;
 }
 
-/*Aqui se cambia el color del fonde de las intrucciones*/
+/*Aqui se cambia el color del fondo de las intrucciones*/
 .row:has(.text-caption) {
-  background: rgba(26, 58, 67, 0.7);
+  background: rgba(45, 167, 156, 0.7);
   backdrop-filter: blur(8px);
-  border: 1px solid rgba(79, 138, 148, 0.3);
+  border: 1px solid rgba(51, 143, 155, 0.3);
   border-radius: 16px;
   padding: 22px;
   margin-top: 25px;
@@ -146,20 +146,20 @@
 }
 /*Aqui el color del texto de las instrucciones*/ 
 .text-caption {
-  color: rgba(226, 164, 58, 0.9);
+  color: rgba(255, 255, 255, 0.9);
   font-size: 16px;
   line-height: 1.7;
 }
 
 /* Colores y sombras de los bloques de prueba */
 [class*="col-"]:has(.text-bold) {
-  background: linear-gradient(145deg, #f38609, #e70707);
+  background: linear-gradient(145deg, #10746b, #1edfe6);
   border-radius: 18px;
   padding: 28px;
   margin: 18px;
   color: var(--mariadb-cream);
   box-shadow: 
-    8px 8px 16px rgba(230, 19, 19, 0.3),
+    8px 8px 16px rgba(7, 133, 133, 0.3),
     -4px -4px 8px rgba(79, 138, 148, 0.1);
   border-top: 1px solid rgba(79, 138, 148, 0.4);
   transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -168,14 +168,14 @@
 [class*="col-"]:has(.text-bold):hover {
   transform: translateY(-6px);
   box-shadow: 
-    12px 12px 28px rgba(24, 8, 241, 0.4),
-    -6px -6px 12px rgba(79, 138, 148, 0.15);
+    12px 12px 28px rgba(7, 87, 124, 0.4),
+    -6px -6px 12px rgba(13, 102, 117, 0.15);
 }
 
 .text-bold {
   font-size: 19px;
   margin-bottom: 18px;
-  color: var(--mariadb-muted-orange);
+  color: var(--mariadb-cream);
   position: relative;
   padding-bottom: 10px;
 }
@@ -187,22 +187,22 @@
   left: 0;
   width: 50px;
   height: 3px;
-  background: linear-gradient(to right, var(--mariadb-muted-orange), transparent);
+  background: linear-gradient(to right, var(--mariadb-cream), transparent);
 }
 
 /* Colores del contenedor de iniciar prueba */
 .col-3:has(.q-btn) {
-  background: rgba(30, 170, 212, 0.9);
+  background: rgba(30, 206, 212, 0.9);
   border-radius: 18px;
   padding: 22px;
   border: 1px solid var(--mariadb-teal);
   box-shadow: 
-    0 10px 20px rgba(0, 0, 0, 0.2),
+    0 10px 20px rgba(5, 87, 80, 0.2),
     inset 0 0 15px rgba(79, 138, 148, 0.2);
 }
 
 .q-btn {
-  background: linear-gradient(135deg, var(--mariadb-muted-orange), #C38D4D) !important;
+  background: linear-gradient(135deg, var(--mariadb-muted-orange), #000000) !important;
   border-radius: 10px !important;
   font-weight: 600;
   letter-spacing: 0.8px;
@@ -220,7 +220,7 @@
 
 /* Sección errores */
 .q-input {
-  background: rgba(28, 50, 58, 0.8) !important;
+  background: rgba(48, 175, 184, 0.8) !important;
   border-radius: 10px;
   border: 1px solid var(--mariadb-muted-orange) !important;
   color: var(--mariadb-cream) !important;
@@ -228,7 +228,7 @@
 
 .q-icon[name="warning"] {
   color: var(--mariadb-muted-orange);
-  filter: drop-shadow(0 0 4px rgba(217, 160, 91, 0.5));
+  filter: drop-shadow(0 0 4px rgba(236, 232, 227, 0.5));
 }
 
 /* Área mensajes */
@@ -241,7 +241,7 @@
     inset 0 0 20px rgba(0, 0, 0, 0.3),
     0 6px 12px rgba(0, 0, 0, 0.2);
   font-family: 'Courier New', monospace;
-  color: rgba(232, 213, 181, 0.9);
+  color: rgba(255, 255, 255, 0.9);
   line-height: 1.8;
 }
 </style>
