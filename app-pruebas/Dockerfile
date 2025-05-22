@@ -6,7 +6,7 @@ RUN npm ci
 #copiamos todos los archivos de la carpeta actual excepto node_modules
 # que se excluye por el archivo .dockerignore
 COPY . .
-RUN npm run build
+RUN  npx nuxt build
 FROM node:21.7.3-alpine as production
 WORKDIR /app
 COPY ["package.json", "package-lock.json*", "./"]

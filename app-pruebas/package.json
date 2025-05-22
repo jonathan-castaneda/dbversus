@@ -12,6 +12,7 @@
   "dependencies": {
     "@quasar/extras": "^1.16.11",
     "mongoose": "^8.12.2",
+    "@quasar/extras": "^1.16.11",    
     "mysql2": "^3.10.0",
     "nuxt": "^3.11.2",
     "nuxt-quasar-ui": "^2.1.2",

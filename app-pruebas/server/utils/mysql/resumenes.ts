@@ -1,8 +1,8 @@
 
 //consultas de resumenes o totales
-async function resumenesContarOrdenes(): Promise<number>  {
+async function resumenesContarOrdenes(ipServer:string): Promise<number>  {
     let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/mysql/resumenes/countordenes', {
+    await $fetch('http://'+ipServer+':3000/api/mysql/resumenes/countordenes', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -16,9 +16,9 @@ async function resumenesContarOrdenes(): Promise<number>  {
     return time;
 }
 
-async function resumenesProductos(): Promise<number>  {
+async function resumenesProductos(ipServer:string): Promise<number>  {
     let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/mysql/resumenes/productosdiarios', {
+    await $fetch('http://'+ipServer+':3000/api/mysql/resumenes/productosdiarios', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -32,14 +32,14 @@ async function resumenesProductos(): Promise<number>  {
     return time;
 }
 
-async function resumenesProductosFecha(): Promise<number>  {
+async function resumenesProductosFecha(ipServer:string): Promise<number>  {
     let start = new Date().getTime();
     let anio = new Date().getFullYear();        
     let mes = Math.floor(Math.random() * 12)+1;
     let dia = Math.floor(Math.random() * 28 + 1);
     let fecha= anio + "-" + mes + "-" + dia;
 
-    await $fetch('http://localhost:3000/api/mysql/resumenes/productosdiariosfecha?fecha=' + fecha, {
+    await $fetch('http://'+ipServer+':3000/api/mysql/resumenes/productosdiariosfecha?fecha=' + fecha, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -53,9 +53,9 @@ async function resumenesProductosFecha(): Promise<number>  {
     return time;
 }
 
-async function resumenesTotalDiario() : Promise<number> {
+async function resumenesTotalDiario(ipServer:string) : Promise<number> {
     let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/mysql/resumenes/totaldiario', {
+    await $fetch('http://'+ipServer+':3000/api/mysql/resumenes/totaldiario', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -69,9 +69,9 @@ async function resumenesTotalDiario() : Promise<number> {
     return time;
 }
 
-async function resumenesTopten(): Promise<number>  {
+async function resumenesTopten(ipServer:string): Promise<number>  {
     let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/mysql/resumenes/topten', {
+    await $fetch('http://'+ipServer+':3000/api/mysql/resumenes/topten', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
