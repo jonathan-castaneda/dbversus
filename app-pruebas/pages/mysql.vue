@@ -208,11 +208,10 @@ const rows=computed(() => {
     
 })
 
-
 async function probando(){
     try {
         console.log("probando")
-        let tiempo:number;
+        let tiempo:number
         tiempo=await categoriasConsultar( )
         tiempo==-1? erroresConsulta.value++: tiemposConsulta.value.push(tiempo);
         
@@ -312,8 +311,7 @@ async function probarConexion(){
     }
 }
 
-onMounted(()=>{
-     =window.location.hostname
+onMounted(()=>{     
     probarConexion()
 })
 
