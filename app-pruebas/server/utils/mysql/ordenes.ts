@@ -1,5 +1,5 @@
 import pruebas from '../pruebas.json'
-async function ordenesInsertar(total:number, totaldetalle:number, contaInicial:number, ipServer:string): Promise<number> {
+async function ordenesInsertar(total:number, totaldetalle:number, contaInicial:number): Promise<number> {
     console.log("Iniciando insercion de ordenes")
     let start = new Date().getTime();
     for (let conta=contaInicial; conta<=Number(total) + Number(contaInicial); conta ++){
@@ -13,7 +13,7 @@ async function ordenesInsertar(total:number, totaldetalle:number, contaInicial:n
                 total: Math.floor(Math.random() * 100) + 1,
         }
         //agrego usando $fetch        
-        await $fetch('http://'+ ipServer +':3000/api/mysql/orden', {
+        await $fetch('/api/mysql/orden', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -29,7 +29,7 @@ async function ordenesInsertar(total:number, totaldetalle:number, contaInicial:n
             })
             
         //ahora vienen los detalles de cada orden
-        await detalleOrdenInsertar(conta, totaldetalle, contaInicial, ipServer)
+        await detalleOrdenInsertar(conta, totaldetalle, contaInicial)
     }//fin del for del conta de las ordenes
    
     let end = new Date().getTime();
@@ -37,7 +37,7 @@ async function ordenesInsertar(total:number, totaldetalle:number, contaInicial:n
     return time;
 }
 
-async function detalleOrdenInsertar(idOrden: number, totaldetalle: number, contaInicial:number, ipServer:string) {   
+async function detalleOrdenInsertar(idOrden: number, totaldetalle: number, contaInicial:number) {   
                 //Ahora Agregamos los detalles de la orden los cuales serán segun el totaldetalle
                 for (let j = contaInicial; j <= Number(totaldetalle) + Number(contaInicial) ; j++) {
                     const ldatadetalle = {                        
@@ -48,7 +48,7 @@ async function detalleOrdenInsertar(idOrden: number, totaldetalle: number, conta
                         precio: Math.floor(Math.random() * 100) + 1,
                     }
                     //agrego usando $fetch        
-                    await $fetch('http://'+ ipServer +':3000/api/mysql/detalleorden', {
+                    await $fetch('/api/mysql/detalleorden', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -66,11 +66,11 @@ async function detalleOrdenInsertar(idOrden: number, totaldetalle: number, conta
 
 }
 
-async function ordenesConsultarAzar(total:number, contaInicial:number, ipServer:string): Promise<number> {    
+async function ordenesConsultarAzar(total:number, contaInicial:number): Promise<number> {    
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
         let id = Math.floor(Math.random() * pruebas.ordenes.insertar) + Number(contaInicial);
-        await $fetch('http://'+ipServer +':3000/api/mysql/orden/' + id, {
+        await $fetch('/api/mysql/orden/' + id, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ async function ordenesConsultarAzar(total:number, contaInicial:number, ipServer:
             },
         })
         //ahora consultamos los detalles de la orden
-        await $fetch('http://'+ ipServer +':3000/api/mysql/detalleorden/' + id, {
+        await $fetch('/api/mysql/detalleorden/' + id, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ async function ordenesConsultarAzar(total:number, contaInicial:number, ipServer:
     return time;
 }
 
-async function ordenesActualizar(total:number,contaInicial:number, ipServer:string): Promise<number> {
+async function ordenesActualizar(total:number,contaInicial:number): Promise<number> {
     let start = new Date().getTime();
     for (let i = contaInicial; i <= Number(total) + Number(contaInicial); i++) {
         const ldata = {
@@ -103,7 +103,7 @@ async function ordenesActualizar(total:number,contaInicial:number, ipServer:stri
             fecha: new Date().toISOString(),
             total: Math.floor(Math.random() * 100) + 1,
         }
-        await $fetch('http://'+ ipServer +':3000/api/mysql/orden/'+i, {
+        await $fetch('/api/mysql/orden/'+i, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -115,7 +115,7 @@ async function ordenesActualizar(total:number,contaInicial:number, ipServer:stri
         })
         //ahora actualizamos los detalles de la orden, primero hacemos GET y traemos todos los detalles
         // luego le multiplicamos por dos la cantidad y enviamos las actualizaciones de cada detalle
-        let datos = await $fetch('http://'+ ipServer +':3000/api/mysql/detalleorden/' + i, {
+        let datos = await $fetch('/api/mysql/detalleorden/' + i, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -138,7 +138,7 @@ async function ordenesActualizar(total:number,contaInicial:number, ipServer:stri
             }
             //console.log(ldatadetalle)
             //ahora invocamos PUT detalleorden para enviar los cambios
-            await $fetch('http://'+ ipServer +':3000/api/mysql/detalleorden/' + ldatos[j].idorden + '/'+  ldatos[j].idproducto  , {
+            await $fetch('/api/mysql/detalleorden/' + ldatos[j].idorden + '/'+  ldatos[j].idproducto  , {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -157,11 +157,11 @@ async function ordenesActualizar(total:number,contaInicial:number, ipServer:stri
     return time;
 }
 
-async function ordenesEliminar(total:number, contaInicial:number, ipServer:string) : Promise<number>{
+async function ordenesEliminar(total:number, contaInicial:number) : Promise<number>{
     let start = new Date().getTime();
     for (let i = contaInicial; i <= Number(total) + Number(contaInicial); i++) {
         
-        await $fetch('http://'+ ipServer +':3000/api/mysql/orden/'+i, {
+        await $fetch('/api/mysql/orden/'+i, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
