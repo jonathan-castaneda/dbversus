@@ -2,7 +2,7 @@
 //consultas de resumenes o totales
 async function resumenesContarOrdenes(): Promise<number>  {
     let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/oracle/resumenes/countordenes', {
+    await $fetch('/api/oracle/resumenes/countordenes', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -18,7 +18,7 @@ async function resumenesContarOrdenes(): Promise<number>  {
 
 async function resumenesProductos(): Promise<number>  {
     let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/oracle/resumenes/productosdiarios', {
+    await $fetch('/api/oracle/resumenes/productosdiarios', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -39,7 +39,7 @@ async function resumenesProductosFecha(): Promise<number>  {
     let dia = Math.floor(Math.random() * 28 + 1);
     let fecha= anio + "-" + mes + "-" + dia;
 
-    await $fetch('http://localhost:3000/api/oracle/resumenes/productosdiariosfecha?FECHA=' + fecha, {
+    await $fetch('/api/oracle/resumenes/productosdiariosfecha?FECHA=' + fecha, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ async function resumenesProductosFecha(): Promise<number>  {
 
 async function resumenesTotalDiario() : Promise<number> {
     let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/oracle/resumenes/totaldiario', {
+    await $fetch('/api/oracle/resumenes/totaldiario', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ async function resumenesTotalDiario() : Promise<number> {
 
 async function resumenesTopten(): Promise<number>  {
     let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/oracle/resumenes/topten', {
+    await $fetch('/api/oracle/resumenes/topten', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

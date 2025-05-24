@@ -14,7 +14,7 @@ async function categoriasInsertar(total: number, contaInicial:number): Promise<n
         console.log(ldata)
 
         //agrego usando $fetch        
-        await $fetch('http://localhost:3000/api/oracle/categoria', {
+        await $fetch('/api/oracle/categoria', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -33,7 +33,7 @@ async function categoriasInsertar(total: number, contaInicial:number): Promise<n
 //Consultando todas las categorias
 async function categoriasConsultar(): Promise<number> {    
     let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/oracle/categorias', {
+    await $fetch('/api/oracle/categorias', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ async function categoriasConsultarAzar(total:number, contaInicial:number): Promi
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
         let id = Math.floor(Math.random() * pruebas.categorias.insertar) + Number(contaInicial);
-        await $fetch('http://localhost:3000/api/oracle/categoria/' + id, {
+        await $fetch('/api/oracle/categoria/' + id, {
             method: 'GET',
             headers: {
                     'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ async function categoriasActualizar(total:number, contaInicial:number): Promise<
             id: i,
             nombre: "Categoria " + i + " Actualizada",
         }
-        await $fetch('http://localhost:3000/api/oracle/categoria/'+i, {
+        await $fetch('/api/oracle/categoria/'+i, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -94,7 +94,7 @@ async function categoriasActualizar(total:number, contaInicial:number): Promise<
 async function categoriasEliminar(total:number, contaInicial:number): Promise<number> {
     let start = new Date().getTime();
     for (let i = contaInicial; i <= Number(total) + Number(contaInicial); i++) {
-        await $fetch('http://localhost:3000/api/oracle/categoria/'+i, {
+        await $fetch('/api/oracle/categoria/'+i, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',

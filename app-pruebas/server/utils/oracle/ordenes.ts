@@ -13,7 +13,7 @@ async function ordenesInsertar(total:number, totaldetalle:number, contaInicial:n
                 total: Math.floor(Math.random() * 100) + 1,
         }
         //agrego usando $fetch        
-        await $fetch('http://localhost:3000/api/oracle/orden', {
+        await $fetch('/api/oracle/orden', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -48,7 +48,7 @@ async function detalleOrdenInsertar(idOrden: number, totaldetalle: number, conta
                         precio: Math.floor(Math.random() * 100) + 1,
                     }
                     //agrego usando $fetch        
-                    await $fetch('http://localhost:3000/api/oracle/detalleorden', {
+                    await $fetch('/api/oracle/detalleorden', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -65,7 +65,7 @@ async function ordenesConsultarAzar(total:number, contaInicial:number): Promise<
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
         let id = Math.floor(Math.random() * pruebas.ordenes.insertar) + Number(contaInicial);
-        await $fetch('http://localhost:3000/api/oracle/orden/' + id, {
+        await $fetch('/api/oracle/orden/' + id, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ async function ordenesConsultarAzar(total:number, contaInicial:number): Promise<
             },
         })
         //ahora consultamos los detalles de la orden
-        await $fetch('http://localhost:3000/api/oracle/detalleorden/' + id, {
+        await $fetch('/api/oracle/detalleorden/' + id, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -98,7 +98,7 @@ async function ordenesActualizar(total:number,contaInicial:number): Promise<numb
             fecha: new Date().toISOString(),
             total: Math.floor(Math.random() * 100) + 1,
         }
-        await $fetch('http://localhost:3000/api/oracle/orden/'+i, {
+        await $fetch('/api/oracle/orden/'+i, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ async function ordenesActualizar(total:number,contaInicial:number): Promise<numb
         })
         //ahora actualizamos los detalles de la orden, primero hacemos GET y traemos todos los detalles
         // luego le multiplicamos por dos la cantidad y enviamos las actualizaciones de cada detalle
-        let datos = await $fetch('http://localhost:3000/api/oracle/detalleorden/' + i, {
+        let datos = await $fetch('/api/oracle/detalleorden/' + i, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -133,7 +133,7 @@ async function ordenesActualizar(total:number,contaInicial:number): Promise<numb
             }
             //console.log(ldatadetalle)
             //ahora invocamos PUT detalleorden para enviar los cambios
-            await $fetch('http://localhost:3000/api/oracle/detalleorden/' + ldatos[j].idorden + '/'+  ldatos[j].idproducto  , {
+            await $fetch('/api/oracle/detalleorden/' + ldatos[j].idorden + '/'+  ldatos[j].idproducto  , {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -156,7 +156,7 @@ async function ordenesEliminar(total:number, contaInicial:number) : Promise<numb
     let start = new Date().getTime();
     for (let i = contaInicial; i <= Number(total) + Number(contaInicial); i++) {
         
-        await $fetch('http://localhost:3000/api/oracle/orden/'+i, {
+        await $fetch('/api/oracle/orden/'+i, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
