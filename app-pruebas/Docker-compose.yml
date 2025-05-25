@@ -23,21 +23,20 @@ services:
               memory: 1G
 #SI LA BASE DE DATOS ES MYSQL
   oracle:
-    image: oracle:8.0-debian
+    image: gvenzl/oracle-free:23.5-amd64
     container_name: oracle
     restart: unless-stopped
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"      
-      MYSQL_DATABASE: cafeteria      
+      ORACLE_PASSWORD: "oracle"  # Contraseña de SYS y SYSTEM
     ports:
-      - "3306:3306"
+      - "1521:1521"  # Puerto de Oracle
     volumes:
-      - ../oracle/cafeteria.sql:/docker-entrypoint-initdb.d/cafeteria.sql
+      - ../oracle/cafeteria.sql:/docker-entrypoint-initdb.d/cafeteria.sql  # Importación del archivo SQL
     deploy:
-          resources:
-            limits:
-              cpus: '1'
-              memory: 1G
-            reservations:
-              cpus: '1'
-              memory: 1G
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '1'
+          memory: 1G    

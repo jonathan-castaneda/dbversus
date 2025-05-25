@@ -5,15 +5,12 @@ let hostdb = process.env.HOST_DB || "localhost";
 
 const sequelize = new Sequelize({
   dialect: 'oracle', // Especificamos que usamos Oracle
-  host: 'localhost',
+  host: hostdb,
   port: 1521,
   username: 'CAFETERIA',
   password: 'oracle',
   database: 'FREE', // Nombre del servicio (en Oracle, esto es el "service name")
-  dialectOptions: {
-    connectString: 'localhost:1521/FREE', // Formato: host:port/service_name
-    autoCommit: true
-  },
+
 });
 
 // Tabla Categorias
