@@ -4,19 +4,21 @@
 #docker compose -f Docker-soloapp.yml up -d
 version: '3.1'
 services:
-  appversus2:
-    image: calderonperaza/dbversusapp:1.0
-    container_name: appversus2
-    restart: unless-stopped    
-    ports:
-      - "3000:3000"
+  oracle:
+    image: gvenzl/oracle-free:23.5-amd64
+    container_name: oracle
+    restart: unless-stopped
     environment:
-      - HOST_DB=192.168.0.14
+      ORACLE_PASSWORD: "oracle"  # Contraseña de SYS y SYSTEM
+    ports:
+      - "1521:1521"  # Puerto de Oracle
+    volumes:
+      - ./cafeteria.sql:/docker-entrypoint-initdb.d/cafeteria.sql  # Importación del archivo SQL
     deploy:
-          resources:
-            limits:
-              cpus: '1'
-              memory: 1G
-            reservations:
-              cpus: '1'
-              memory: 1G
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '1'
+          memory: 1G    
