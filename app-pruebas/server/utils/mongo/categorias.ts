@@ -9,7 +9,7 @@ async function categoriasInsertar(total: number): Promise<number> {
             nombre: "Categoria " + i,
         }
         //agrego usando $fetch        
-        await $fetch('http://localhost:3000/api/mongo/categoria', {
+        await $fetch('/api/mongo/categoria', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -28,7 +28,7 @@ async function categoriasInsertar(total: number): Promise<number> {
 //Consultando todas las categorias
 async function categoriasConsultar(): Promise<number> {    
     let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/mongo/categorias', {
+    await $fetch('/api/mongo/categorias', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ async function categoriasConsultarAzar(total:number): Promise<number> {
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
         let id = Math.floor(Math.random() * pruebas.categorias.insertar) + 1;
-        await $fetch('http://localhost:3000/api/mongo/categoria/' + id, {
+        await $fetch('/api/mongo/categoria/' + id, {
             method: 'GET',
             headers: {
                     'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ async function categoriasActualizar(total:number): Promise<number> {
             _id: i,
             nombre: "Categoria " + i + " Actualizada",
         }
-        await $fetch('http://localhost:3000/api/mongo/categoria/'+i, {
+        await $fetch('/api/mongo/categoria/'+i, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -90,7 +90,7 @@ async function categoriasActualizar(total:number): Promise<number> {
 async function categoriasEliminar(total: number): Promise<number> {
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
-        await $fetch(`http://localhost:3000/api/mongo/categoria/${i}`, {
+        await $fetch(`/api/mongo/categoria/${i}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

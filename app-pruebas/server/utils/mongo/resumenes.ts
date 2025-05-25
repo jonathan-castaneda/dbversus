@@ -2,7 +2,7 @@
 
 async function resumenesContarOrdenes(): Promise<number> {
     let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/mongo/resumenes/countordenes', {
+    await $fetch('/api/mongo/resumenes/countordenes', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
         onRequestError({ request, options, error }) {
@@ -15,7 +15,7 @@ async function resumenesContarOrdenes(): Promise<number> {
 
 async function resumenesProductos(): Promise<number> {
     let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/mongo/resumenes/productosdiarios', {
+    await $fetch('/api/mongo/resumenes/productosdiarios', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
         onRequestError({ request, options, error }) {
@@ -33,7 +33,7 @@ async function resumenesProductosFecha(): Promise<number> {
     let dia = String(Math.floor(Math.random() * 28) + 1).padStart(2, '0');
     let fecha = `${anio}-${mes}-${dia}`;
 
-    await $fetch(`http://localhost:3000/api/mongo/resumenes/productosdiariosfecha?fecha=${fecha}`, {
+    await $fetch(`/api/mongo/resumenes/productosdiariosfecha?fecha=${fecha}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
         onRequestError({ request, options, error }) {
@@ -46,7 +46,7 @@ async function resumenesProductosFecha(): Promise<number> {
 
 async function resumenesTotalDiario(): Promise<number> {
     let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/mongo/resumenes/totaldiario', {
+    await $fetch('/api/mongo/resumenes/totaldiario', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
         onRequestError({ request, options, error }) {
@@ -59,7 +59,7 @@ async function resumenesTotalDiario(): Promise<number> {
 
 async function resumenesTopten(): Promise<number> {
     let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/mongo/resumenes/topten', {
+    await $fetch('/api/mongo/resumenes/topten', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
         onRequestError({ request, options, error }) {

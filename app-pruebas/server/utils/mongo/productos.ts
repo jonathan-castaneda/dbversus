@@ -11,7 +11,7 @@ async function productosInsertar(total: number): Promise<number> {
             idCategoria: Math.floor(Math.random() * pruebas.categorias.insertar) + 1,
         }
         // Agrego usando $fetch        
-        await $fetch('http://localhost:3000/api/mongo/producto', {
+        await $fetch('/api/mongo/producto', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -29,7 +29,7 @@ async function productosInsertar(total: number): Promise<number> {
 
 async function productosConsultar(): Promise<number>  {    
     let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/mongo/productos', {
+    await $fetch('/api/mongo/productos', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ async function productosConsultarAzar(total:number): Promise<number>  {
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
         let id = Math.floor(Math.random() * pruebas.productos.insertar) + 1;
-        await $fetch('http://localhost:3000/api/mongo/producto/' + id, {
+        await $fetch('/api/mongo/producto/' + id, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -72,7 +72,7 @@ async function productosActualizar(total:number): Promise<number>  {
             idCategoria: Math.floor(Math.random() * pruebas.categorias.insertar) + 1,
         }
 
-        await $fetch('http://localhost:3000/api/mongo/producto/'+i, {
+        await $fetch('/api/mongo/producto/'+i, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ async function productosActualizar(total:number): Promise<number>  {
 async function productosEliminar(total:number): Promise<number>  {
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
-        await $fetch('http://localhost:3000/api/mongo/producto/'+i, {
+        await $fetch('/api/mongo/producto/'+i, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
