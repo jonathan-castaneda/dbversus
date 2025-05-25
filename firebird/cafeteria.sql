@@ -58,16 +58,16 @@ CREATE TABLE detalleordenes (
 
 -- Insertar una categoría
 -- -----------------------------------------------------
-INSERT INTO categorias (id, nombre) VALUES (1, 'Bebidas');
+-- INSERT INTO categorias (id, nombre) VALUES (1, 'Bebidas');
 
 -- Insertar productos con valores explícitos de id
 -- Aquí, estamos insertando productos con id explícitos (1 y 2)
-INSERT INTO productos (id, nombre, precio, idCategoria) VALUES (1, 'Café', 2.50, 1);
-INSERT INTO productos (id, nombre, precio, idCategoria) VALUES (2, 'Té', 1.75, 1);
+-- INSERT INTO productos (id, nombre, precio, idCategoria) VALUES (1, 'Café', 2.50, 1);
+-- INSERT INTO productos (id, nombre, precio, idCategoria) VALUES (2, 'Té', 1.75, 1);
 
 -- Insertar una orden
-INSERT INTO ordenes (id, fecha, total) VALUES (1, '2025-03-23', 50.75);
+-- INSERT INTO ordenes (id, fecha, total) VALUES (1, '2025-03-23', 50.75);
 
 -- Insertar detalles de orden con valores que ahora existen en productos
-INSERT INTO detalleordenes (idorden, idproducto, cantidad, precio) VALUES (1, 1, 2, 5.00);
-INSERT INTO detalleordenes (idorden, idproducto, cantidad, precio) VALUES (1, 2, 3, 1.75);
+-- INSERT INTO detalleordenes (idorden, idproducto, cantidad, precio) VALUES (1, 1, 2, 5.00);
+-- INSERT INTO detalleordenes (idorden, idproducto, cantidad, precio) VALUES (1, 2, 3, 1.75);

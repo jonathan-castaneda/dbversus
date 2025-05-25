@@ -1,8 +1,8 @@
 import pruebas from '../pruebas.json'
-async function ordenesInsertar(total:number, totaldetalle:number): Promise<number> {
+async function ordenesInsertar(total:number, totaldetalle:number, contaInicial:number): Promise<number> {
     console.log("Iniciando insercion de ordenes")
     let start = new Date().getTime();
-    for (let conta=1; conta<=total; conta ++){
+    for (let conta=contaInicial; conta<=Number(total) + Number(contaInicial); conta ++){
         let anio = new Date().getFullYear();
         //mes es un numero del 1 al 12
         let mes = Math.floor(Math.random() * 12)+1;
@@ -13,7 +13,7 @@ async function ordenesInsertar(total:number, totaldetalle:number): Promise<numbe
                 total: Math.floor(Math.random() * 100) + 1,
         }
         //agrego usando $fetch        
-        await $fetch('http://localhost:3000/api/firebird/orden', {
+        await $fetch('/api/firebird/orden', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -28,8 +28,8 @@ async function ordenesInsertar(total:number, totaldetalle:number): Promise<numbe
                 
             })
             
-        //ahora vienen los detalles de cada orden
-        await detalleOrdenInsertar(conta, totaldetalle)
+           //ahora vienen los detalles de cada orden
+        await detalleOrdenInsertar(conta, totaldetalle, contaInicial)
     }//fin del for del conta de las ordenes
    
     let end = new Date().getTime();
@@ -37,9 +37,9 @@ async function ordenesInsertar(total:number, totaldetalle:number): Promise<numbe
     return time;
 }
 
-async function detalleOrdenInsertar(idOrden: number, totaldetalle: number) {   
+async function detalleOrdenInsertar(idOrden: number, totaldetalle: number, contaInicial:number) {   
                 //Ahora Agregamos los detalles de la orden los cuales serán segun el totaldetalle
-                for (let j = 1; j <= totaldetalle; j++) {
+                for (let j = contaInicial; j <= Number(totaldetalle) + Number(contaInicial) ; j++) {
                     const ldatadetalle = {                        
                         idorden: idOrden,
                         //idproducto: Math.floor(Math.random() * (pruebas.productos.insertar/2)) + 1,
@@ -48,7 +48,7 @@ async function detalleOrdenInsertar(idOrden: number, totaldetalle: number) {
                         precio: Math.floor(Math.random() * 100) + 1,
                     }
                     //agrego usando $fetch        
-                    await $fetch('http://localhost:3000/api/firebird/detalleorden', {
+                    await $fetch('/api/firebird/detalleorden', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -66,11 +66,11 @@ async function detalleOrdenInsertar(idOrden: number, totaldetalle: number) {
 
 }
 
-async function ordenesConsultarAzar(total:number): Promise<number> {    
+async function ordenesConsultarAzar(total:number, contaInicial:number): Promise<number> {    
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
-        let id = Math.floor(Math.random() * pruebas.ordenes.insertar) + 1;
-        await $fetch('http://localhost:3000/api/firebird/orden/' + id, {
+        let id = Math.floor(Math.random() * pruebas.ordenes.insertar) + Number(contaInicial);
+        await $fetch('/api/firebird/orden/' + id, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ async function ordenesConsultarAzar(total:number): Promise<number> {
             },
         })
         //ahora consultamos los detalles de la orden
-        await $fetch('http://localhost:3000/api/firebird/detalleorden/' + id, {
+        await $fetch('/api/firebird/detalleorden/' + id, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -95,10 +95,9 @@ async function ordenesConsultarAzar(total:number): Promise<number> {
     return time;
 }
 
-async function ordenesActualizar(total: number): Promise<number> {
+async function ordenesActualizar(total:number,contaInicial:number): Promise<number> {
     let start = new Date().getTime();
-
-    for (let i = 1; i <= total; i++) {
+    for (let i = contaInicial; i <= Number(total) + Number(contaInicial); i++) {
         const ldata = {
             id: i,
             fecha: new Date().toISOString(),
@@ -106,7 +105,7 @@ async function ordenesActualizar(total: number): Promise<number> {
         };
 
         try {
-            await $fetch('http://localhost:3000/api/firebird/orden/' + i, {
+            await $fetch('/api/firebird/orden/' + i, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -124,7 +123,7 @@ async function ordenesActualizar(total: number): Promise<number> {
         // Traemos los detalles de la orden
         let datos;
         try {
-            datos = await $fetch('http://localhost:3000/api/firebird/detalleorden/' + i, {
+            datos = await $fetch('/api/firebird/detalleorden/' + i, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -159,7 +158,7 @@ async function ordenesActualizar(total: number): Promise<number> {
 
             try {
                 await $fetch(
-                    'http://localhost:3000/api/firebird/detalleorden/' + i + '/' + detalle.idproducto,
+                    '/firebird/detalleorden/' + i + '/' + detalle.idproducto,
                     {
                         method: 'PUT',
                         headers: {
@@ -184,11 +183,11 @@ async function ordenesActualizar(total: number): Promise<number> {
 }
 
 
-async function ordenesEliminar(total:number) : Promise<number>{
+async function ordenesEliminar(total:number, contaInicial:number) : Promise<number>{
     let start = new Date().getTime();
-    for (let i = 1; i <= total; i++) {
+    for (let i = contaInicial; i <= Number(total) + Number(contaInicial); i++) {
         
-        await $fetch('http://localhost:3000/api/firebird/orden/'+i, {
+        await $fetch('/api/firebird/orden/'+i, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',

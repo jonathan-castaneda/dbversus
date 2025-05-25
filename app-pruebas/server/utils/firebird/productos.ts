@@ -1,9 +1,10 @@
 import pruebas from '../pruebas.json'
 
-async function productosInsertar(total: number): Promise<number>  { 
+async function productosInsertar(total: number, contaInicial:number): Promise<number>  { 
     console.log("Iniciando insercion de productos")   
-    let start = new Date().getTime();    
-    for (let i = 1; i <= total; i++) {
+    let start = new Date().getTime();
+
+    for (let i = contaInicial; i <= Number(total) + Number(contaInicial); i++) {
         const ldata = {
             id: i,
             nombre: "Producto " + i,
@@ -11,7 +12,7 @@ async function productosInsertar(total: number): Promise<number>  {
             idCategoria: Math.floor(Math.random() * pruebas.categorias.insertar) + 1,
         }
         //agrego usando $fetch        
-        await $fetch('http://localhost:3000/api/firebird/producto', {
+        await $fetch('/api/firebird/producto', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -30,7 +31,7 @@ async function productosInsertar(total: number): Promise<number>  {
 
 async function productosConsultar(): Promise<number>  {    
     let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/firebird/productos', {
+    await $fetch('/api/firebird/productos', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -44,11 +45,11 @@ async function productosConsultar(): Promise<number>  {
     return time;       
 }
 
-async function productosConsultarAzar(total:number): Promise<number>  {    
+async function productosConsultarAzar(total:number, contaInicial:number): Promise<number>  {    
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
-        let id = Math.floor(Math.random() * pruebas.productos.insertar) + 1;
-        await $fetch('http://localhost:3000/api/firebird/producto/' + id, {
+        let id = Math.floor(Math.random() * pruebas.productos.insertar) + Number(contaInicial);
+        await $fetch('/api/firebird/producto/' + id, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -63,9 +64,9 @@ async function productosConsultarAzar(total:number): Promise<number>  {
     return time; 
 }
 
-async function productosActualizar(total:number): Promise<number>  {
+async function productosActualizar(total:number, contaInicial:number): Promise<number>  {
     let start = new Date().getTime();
-    for (let i = 1; i <= total; i++) {
+    for (let i = contaInicial; i <= Number(total) + Number(contaInicial); i++) {
         const ldata = {
             id: i,
             nombre: "Producto " + i + " Actualizado",
@@ -89,9 +90,9 @@ async function productosActualizar(total:number): Promise<number>  {
     return time;
 }
 
-async function productosEliminar(total:number): Promise<number>  {
+async function productosEliminar(total:number, contaInicial:number): Promise<number>  {
     let start = new Date().getTime();
-    for (let i = 1; i <= total; i++) {
+    for (let i = contaInicial; i <= Number(total) + Number(contaInicial); i++) {
         await $fetch('http://localhost:3000/api/firebird/producto/'+i, {
         method: 'DELETE',
         headers: {

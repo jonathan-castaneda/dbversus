@@ -6,10 +6,10 @@
         </div>
         <div class="row">
             <div class="text-caption col-12 q-ml-md">
-                Recuerda que debes tener arrancado el contenedor de Firebird levantado con docker y no debe tener datos, solo debe tener la estructura de las tablas.
+                Recuerda que debes tener arrancado el contenedor de MYSQL levantado con docker y no debe tener datos, solo debe tener la estructura de las tablas.
                 Haz clic en iniciar y comenzamos las pruebas, primero insertando, luego actualizando, consultando y eliminando.
                 Si vuelves ha hacer pruebas se recomienda que ejecutes docker compose down y luego <strong>docker compose up -d</strong> 
-                <p>Recuerda que en el archivo <strong>/firebird/docker-compose.yml</strong> defines la memoria y el CPU asignado al contenedor para las pruebas</p>
+                <p>Recuerda que en el archivo <strong>/mysql/docker-compose.yml</strong> defines la memoria y el CPU asignado al contenedor para las pruebas</p>
             </div>
             <div class="col-12 row q-ml-md">
                 <div class="col-2">
@@ -33,7 +33,9 @@
             
                 </div>
                 <div class="col-3 q-ml-lg">
-                <q-btn size="lg" :loading="cargando" @click="realizarPruebas" color="primary">Iniciar Pruebas</q-btn>
+                    <q-input dense style="width: 150px;" type="number" outlined v-model="contaInicial" label="Contador Inicial en:" />
+                    
+                    <q-btn :disable="errorConexion" size="lg" :loading="cargando" @click="realizarPruebas" color="primary">Iniciar Pruebas</q-btn>
                 <q-circular-progress
                 show-value
                 font-size="12px"
@@ -46,6 +48,7 @@
                 >
                 {{ avance }}%
                 </q-circular-progress>
+                <div v-show="errorConexion" class="text-caption text-red">Error de conexion, No es posible conectar con la base de datos revise el host, la ip o si el servicio esta levantado.</div>
             </div>
 
             </div>
@@ -54,7 +57,7 @@
         <div class="row q-ml-lg q-mt-md">
             <q-table
             flat bordered
-            title="Pruebas sobre Gestor Firebird"
+            title="Pruebas sobre Gestor MySQL"
             :rows="rows"
             :columns="columns"
             color="primary"
@@ -101,14 +104,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed} from 'vue'
-import { exportFile } from 'quasar'
+import { ref, computed, onMounted} from 'vue'
+
 
 import pruebas from '../server/utils/pruebas.json'
 import { categoriasInsertar, categoriasConsultar, categoriasConsultarAzar, categoriasActualizar, categoriasEliminar } from '../server/utils/firebird/categorias'
 import { productosInsertar, productosConsultar, productosConsultarAzar, productosActualizar, productosEliminar } from '../server/utils/firebird/productos'
 import { ordenesInsertar, ordenesConsultarAzar, ordenesActualizar, ordenesEliminar } from '../server/utils/firebird/ordenes'
 import { resumenesContarOrdenes, resumenesProductos, resumenesProductosFecha, resumenesTotalDiario, resumenesTopten } from '../server/utils/firebird/resumenes'
+
+const errorConexion= ref(false)
+const contaInicial= ref(1)
 
 
 const tiemposInsercion= ref([])
@@ -202,7 +208,18 @@ const rows=computed(() => {
     
 })
 
-
+async function probando(){
+    try {
+        console.log("probando")
+        let tiempo:number
+        tiempo=await categoriasConsultar( )
+        tiempo==-1? erroresConsulta.value++: tiemposConsulta.value.push(tiempo);
+        
+    } catch (error) {
+        console.error(error)
+        errorConexion.value=true
+    }
+}
 
 async function realizarPruebas() {
     try {
@@ -213,12 +230,13 @@ async function realizarPruebas() {
     
     //INSERTANDO DATOS
     mensajes.value.push("Iniciando pruebas de inserción")    
-    tiempo=await categoriasInsertar(pruebas.categorias.insertar)
+    tiempo=await categoriasInsertar(pruebas.categorias.insertar, contaInicial.value  )
     tiempo==-1? erroresInsercion.value++: tiemposInsercion.value.push(tiempo);   
     
-    tiempo=await productosInsertar(pruebas.productos.insertar)
+    
+    tiempo=await productosInsertar(pruebas.productos.insertar, contaInicial.value  )
     tiempo==-1? erroresInsercion.value++: tiemposInsercion.value.push(tiempo);   
-    tiempo=await ordenesInsertar(pruebas.ordenes.insertar, pruebas.ordenes.detalleoden)
+    tiempo=await ordenesInsertar(pruebas.ordenes.insertar, pruebas.ordenes.detalleoden, contaInicial.value  )
     tiempo==-1? erroresInsercion.value++: tiemposInsercion.value.push(tiempo);
     
     mensajes.value.push("Iniciando pruebas de consultas")
@@ -227,51 +245,52 @@ async function realizarPruebas() {
     tiempo=await categoriasConsultar()
     tiempo==-1? erroresConsulta.value++: tiemposConsulta.value.push(tiempo);
     
-    tiempo=await categoriasConsultarAzar(pruebas.categorias.aleatorio)
+    tiempo=await categoriasConsultarAzar(pruebas.categorias.aleatorio, contaInicial.value )
     tiempo==-1? erroresConsulta.value++: tiemposConsulta.value.push(tiempo);
     
-    tiempo=await productosConsultar()
+    tiempo=await productosConsultar(  )
     tiempo==-1? erroresConsulta.value++: tiemposConsulta.value.push(tiempo);
 
-    tiempo=await productosConsultarAzar(pruebas.productos.aleatorio)
+    tiempo=await productosConsultarAzar(pruebas.productos.aleatorio,contaInicial.value )
     tiempo==-1? erroresConsulta.value++: tiemposConsulta.value.push(tiempo);
 
     // CONSULTAMOS ORDENES AL AZAR DEBEMOS TRAER LOS DATOS DE ORDEN Y SUS DETALLES    
-    tiempo=await ordenesConsultarAzar(pruebas.ordenes.aleatorio)
+    tiempo=await ordenesConsultarAzar(pruebas.ordenes.aleatorio, contaInicial.value  )
     tiempo==-1? erroresConsulta.value++: tiemposConsulta.value.push(tiempo);
 
     //ACTUALIZACION DE DATOS
     mensajes.value.push("Iniciando pruebas de actualización")
     
-    tiempo=await categoriasActualizar(pruebas.categorias.actualizar)
+    tiempo=await categoriasActualizar(pruebas.categorias.actualizar, contaInicial.value  )
     tiempo==-1? erroresActualizacion.value++: tiemposActualizacion.value.push(tiempo);
     
-    tiempo=await productosActualizar(pruebas.productos.actualizar)
+    tiempo=await productosActualizar(pruebas.productos.actualizar, contaInicial.value )
     tiempo==-1? erroresActualizacion.value++: tiemposActualizacion.value.push(tiempo);
-    tiempo=await ordenesActualizar(pruebas.ordenes.actualizar)
+    tiempo=await ordenesActualizar(pruebas.ordenes.actualizar, contaInicial.value  )
     tiempo==-1? erroresActualizacion.value++: tiemposActualizacion.value.push(tiempo);
     
     //Consultas de Resumentes o Totales -Avanzadas
     mensajes.value.push("Iniciando pruebas de resumenes")
-    tiempo=await resumenesContarOrdenes()
+    tiempo=await resumenesContarOrdenes( )
     tiempo==-1? erroresConsulta.value++: tiemposResumen.value.push(tiempo);
-    tiempo=await resumenesProductos()
+    tiempo=await resumenesProductos( )
     tiempo==-1? erroresConsulta.value++: tiemposResumen.value.push(tiempo);
-    tiempo=await resumenesProductosFecha()
+    tiempo=await resumenesProductosFecha( )
     tiempo==-1? erroresConsulta.value++: tiemposResumen.value.push(tiempo);
-    tiempo=await resumenesTotalDiario()
+    tiempo=await resumenesTotalDiario( )
     tiempo==-1? erroresConsulta.value++: tiemposResumen.value.push(tiempo);
-    tiempo=await resumenesTopten()
+    tiempo=await resumenesTopten( )
     tiempo==-1? erroresConsulta.value++: tiemposResumen.value.push(tiempo);
 
     //Eliminacion de datos
+    
     mensajes.value.push("Iniciando pruebas de eliminación")
-    tiempo=await ordenesEliminar(pruebas.ordenes.insertar)
+    tiempo=await ordenesEliminar(pruebas.ordenes.insertar, contaInicial.value,  )
     tiempo==-1? erroresEliminacion.value++: tiemposEliminacion.value.push(tiempo);
-    tiempo=await productosEliminar(pruebas.productos.insertar)
+    tiempo=await productosEliminar(pruebas.productos.insertar, contaInicial.value  )
     tiempo==-1? erroresEliminacion.value++: tiemposEliminacion.value.push(tiempo);
     
-    tiempo=await categoriasEliminar(pruebas.categorias.insertar)
+    tiempo=await categoriasEliminar(pruebas.categorias.insertar, contaInicial.value  )
     tiempo==-1? erroresEliminacion.value++: tiemposEliminacion.value.push(tiempo);
 
     console.log("Terminaron las pruebas realizadas")
@@ -282,5 +301,18 @@ async function realizarPruebas() {
         console.error(error)
     }    
 }
+
+async function probarConexion(){
+    try {
+        await categoriasConsultar( )
+        errorConexion.value=false
+    } catch (error) {
+        errorConexion.value=true
+    }
+}
+
+onMounted(()=>{     
+    probarConexion()
+})
 
 </script>
