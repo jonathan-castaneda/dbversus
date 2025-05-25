@@ -15,15 +15,12 @@ async function ordenesInsertarSqlServer(total: number, totaldetalle: number): Pr
             total: Math.floor(Math.random() * 100) + 1,
         };
         // Insertar orden
-        await $fetch('http://localhost:3000/api/sqlserver/orden', {
+        await $fetch('/api/sqlserver/orden', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(ldata),
-            onRequestError({ request, options, error }) {
+            body: ldata,
+            onRequestError({ error }) {
                 console.error("Error al insertar orden:", error);
-            },
+            }
         });
 
         // Insertar detalles de la orden
@@ -42,15 +39,12 @@ async function detalleOrdenInsertarSqlServer(idOrden: number, totaldetalle: numb
             precio: Math.floor(Math.random() * 100) + 1,
         };
         // Insertar detalle de orden
-        await $fetch('http://localhost:3000/api/sqlserver/detalleorden', {
+        await $fetch('/api/sqlserver/detalleorden', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(ldatadetalle),
-            onRequestError({ request, options, error }) {
+            body: ldatadetalle,
+            onRequestError({ error }) {
                 console.error("Error al insertar detalle de orden:", error);
-            },
+            }
         });
     }
 }
@@ -60,24 +54,18 @@ async function ordenesConsultarAzarSqlServer(total: number): Promise<number> {
     for (let i = 1; i <= total; i++) {
         let id = Math.floor(Math.random() * pruebas.ordenes.insertar) + 1; // ID aleatorio
         // Consultar orden
-        await $fetch(`http://localhost:3000/api/sqlserver/orden/${id}`, {
+        await $fetch(`/api/sqlserver/orden/${id}`, {
             method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            onRequestError({ request, options, error }) {
+            onRequestError({ error }) {
                 console.error("Error al consultar orden:", error);
-            },
+            }
         });
         // Consultar detalles de la orden
-        await $fetch(`http://localhost:3000/api/sqlserver/detalleorden/${id}`, {
+        await $fetch(`/api/sqlserver/detalleorden/${id}`, {
             method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            onRequestError({ request, options, error }) {
+            onRequestError({ error }) {
                 console.error("Error al consultar detalles:", error);
-            },
+            }
         });
     }
     let end = new Date().getTime();
@@ -93,26 +81,20 @@ async function ordenesActualizarSqlServer(total: number): Promise<number> {
             total: Math.floor(Math.random() * 100) + 1,
         };
         // Actualizar orden
-        await $fetch(`http://localhost:3000/api/sqlserver/orden/${i}`, {
+        await $fetch(`/api/sqlserver/orden/${i}`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(ldata),
-            onRequestError({ request, options, error }) {
+            body: ldata,
+            onRequestError({ error }) {
                 console.error("Error al actualizar orden:", error);
-            },
+            }
         });
 
         // Actualizar detalles de la orden
-        let detalles = await $fetch(`http://localhost:3000/api/sqlserver/detalleorden/${i}`, {
+        let detalles = await $fetch(`/api/sqlserver/detalleorden/${i}`, {
             method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            onRequestError({ request, options, error }) {
+            onRequestError({ error }) {
                 console.error("Error al consultar detalles:", error);
-            },
+            }
         });
 
         let ldetalles = detalles.data;
@@ -124,15 +106,12 @@ async function ordenesActualizarSqlServer(total: number): Promise<number> {
                 precio: detalle.precio,
             };
             // Actualizar detalle
-            await $fetch(`http://localhost:3000/api/sqlserver/detalleorden/${detalle.idorden}/${detalle.idproducto}`, {
+            await $fetch(`/api/sqlserver/detalleorden/${detalle.idorden}/${detalle.idproducto}`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(ldatadetalle),
-                onRequestError({ request, options, error }) {
+                body: ldatadetalle,
+                onRequestError({ error }) {
                     console.error("Error al actualizar detalle:", error);
-                },
+                }
             });
         }
     }
@@ -144,15 +123,12 @@ async function ordenesEliminarSqlServer(total: number): Promise<number> {
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
         // Eliminar orden
-        await $fetch(`http://localhost:3000/api/sqlserver/orden/${i}`, {
+        await $fetch(`/api/sqlserver/orden/${i}`, {
             method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ id: i }),
-            onRequestError({ request, options, error }) {
+            body: { id: i },
+            onRequestError({ error }) {
                 console.error("Error al eliminar orden:", error);
-            },
+            }
         });
     }
     let end = new Date().getTime();

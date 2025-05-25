@@ -9,10 +9,9 @@ async function categoriasInsertarSqlServer(total: number): Promise<number> {
             nombre: "Categoría " + i,
         };
         try {
-            await fetch('http://localhost:3000/api/sqlserver/categoria', { 
+            await $fetch('/api/sqlserver/categoria', { 
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(ldata)
+                body: ldata
             });
         } catch (error) {
             console.error(`Error en la inserción de categoría ${i}:`, error);
@@ -25,9 +24,8 @@ async function categoriasInsertarSqlServer(total: number): Promise<number> {
 async function categoriasConsultarSqlServer(): Promise<number> {
     let start = new Date().getTime();
     try {
-        await fetch('http://localhost:3000/api/sqlserver/categorias', { 
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
+        await $fetch('/api/sqlserver/categoria', { 
+            method: 'POST'
         });
     } catch (error) {
         console.error("Error al consultar categorías:", error);
@@ -61,9 +59,8 @@ async function categoriasEliminarSqlServer(total: number): Promise<number> {
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
         try {
-            await fetch(`http://localhost:3000/api/sqlserver/categoria/${i}`, { 
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' }
+            await $fetch(`/api/sqlserver/categoria/${i}`, {
+                method: 'DELETE'
             });
         } catch (error) {
             console.error(`Error al eliminar categoría ${i}:`, error);
@@ -81,10 +78,9 @@ async function categoriasActualizarSqlServer(total: number): Promise<number> {
             nombre: "Categoría Actualizada " + i
         };
         try {
-            await fetch(`http://localhost:3000/api/sqlserver/categoria/${i}`, {
+            await $fetch(`/api/sqlserver/categoria/${i}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(ldata)
+                body: ldata
             });
         } catch (error) {
             console.error(`Error actualizando categoría ${i}:`, error);

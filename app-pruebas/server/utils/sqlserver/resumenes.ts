@@ -2,15 +2,12 @@
 //consultas de resumenes o totales
 async function resumenesContarOrdenesSqlServer(): Promise<number>  {
     let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/sqlserver/resumenes/countordenes', {
+    await $fetch('/api/sqlserver/resumenes/countordenes', {
         method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        onRequestError({ request, options, error }) {
+        onRequestError({ error }) {
             return -1;
-        },
-    })
+        }
+    });
     let end = new Date().getTime();
     let time = end - start;
     return time;
@@ -18,15 +15,12 @@ async function resumenesContarOrdenesSqlServer(): Promise<number>  {
 
 async function resumenesProductosSqlServer(): Promise<number>  {
     let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/sqlserver/resumenes/productosdiarios', {
+    await $fetch('/api/sqlserver/resumenes/productosdiarios', {
         method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        onRequestError({ request, options, error }) {
+        onRequestError({ error }) {
             return -1;
-        },
-    })
+        }
+    });
     let end = new Date().getTime();
     let time = end - start;
     return time;
@@ -39,15 +33,12 @@ async function resumenesProductosFechaSqlServer(): Promise<number>  {
     let dia = Math.floor(Math.random() * 28 + 1);
     let fecha= anio + "," + mes + "," + dia;
 
-    await $fetch('http://localhost:3000/api/sqlserver/resumenes/productosdiariosfecha?fecha=' + fecha, {
+    await $fetch(`/api/sqlserver/resumenes/productosdiariosfecha?fecha=${fecha}`, {
         method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        onRequestError({ request, options, error }) {
+        onRequestError({ error }) {
             return -1;
-        },
-    })
+        }
+    });
     let end = new Date().getTime();
     let time = end - start;
     return time;
@@ -55,15 +46,12 @@ async function resumenesProductosFechaSqlServer(): Promise<number>  {
 
 async function resumenesTotalDiarioSqlServer() : Promise<number> {
     let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/sqlserver/resumenes/totaldiario', {
+    await $fetch('/api/sqlserver/resumenes/totaldiario', {
         method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        onRequestError({ request, options, error }) {
+        onRequestError({ error }) {
             return -1;
-        },
-    })
+        }
+    });
     let end = new Date().getTime();
     let time = end - start;
     return time;
@@ -71,15 +59,12 @@ async function resumenesTotalDiarioSqlServer() : Promise<number> {
 
 async function resumenesToptenSqlServer(): Promise<number>  {
     let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/sqlserver/resumenes/topten', {
+    await $fetch('/api/sqlserver/resumenes/topten', {
         method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        onRequestError({ request, options, error }) {
+        onRequestError({ error }) {
             return -1;
-        },
-    })
+        }
+    });
     let end = new Date().getTime();
     let time = end - start;
     return time;

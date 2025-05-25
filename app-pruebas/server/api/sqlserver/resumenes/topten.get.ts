@@ -16,13 +16,10 @@ export default defineEventHandler(async (event) => {
                     attributes: []
                 }
             ],
-            group: [
-                "detalleordenes.idproducto", // ✅ Corrección para que coincida con GROUP BY
-                "producto.nombre"
-            ],
-            order: [[Sequelize.fn("SUM", Sequelize.col("cantidad")), "DESC"]], // ✅ Eliminamos `detalleordenes.idorden` del ORDER BY
+            group: ["idproducto", "producto.nombre"], // ✅ Incluyendo todas las columnas necesarias
+            order: [[Sequelize.fn("SUM", Sequelize.col("cantidad")), "DESC"]], // ✅ Asegurando que ORDER BY es correcto
             limit: 10,
-            subQuery: false // ✅ Evita que Sequelize genere un subquery incorrecto
+            subQuery: false // ✅ Evita que Sequelize genere una subquery incorrecta
         });
 
         if (!data.length) {
