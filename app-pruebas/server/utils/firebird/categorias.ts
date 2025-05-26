@@ -27,21 +27,24 @@ async function categoriasInsertar(total: number,contaInicial:number): Promise<nu
 }
 
 //Consultando todas las categorias
-async function categoriasConsultar( ): Promise<number> {    
-    let start = new Date().getTime();
-    await $fetch('/api/firebird/categorias', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        onRequestError({ request, options, error }) {
-            return -1;
-        },
-    })
-    let end = new Date().getTime();
-    let time = end - start;
-    return time;       
+async function categoriasConsultar(): Promise<number> {
+  let start = new Date().getTime();
+
+  const response = await $fetch('/api/firebird/categorias', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  });
+
+  if (response.statusCode !== 200) {
+    throw new Error('Conexión fallida');
+  }
+
+  let end = new Date().getTime();
+  return end - start;
 }
+
 
 
 //Consultamos categorias al azar

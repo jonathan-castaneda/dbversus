@@ -302,17 +302,18 @@ async function realizarPruebas() {
     }    
 }
 
-async function probarConexion(){
-    try {
-        await categoriasConsultar( )
-        errorConexion.value=false
-    } catch (error) {
-        errorConexion.value=true
-    }
+async function verificarConexion() {
+  const resultado = await categoriasConsultar().catch(() => {
+    errorConexion.value = true
+  })
+
+  if (resultado !== undefined) {
+    errorConexion.value = false
+  }
 }
 
-onMounted(()=>{     
-    probarConexion()
+onMounted(() => {
+  verificarConexion()
 })
 
 </script>

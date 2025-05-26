@@ -8,17 +8,15 @@ export default defineEventHandler(async (event) => {
     const data = await new Promise((resolve, reject) => {
       db.query('SELECT * FROM CATEGORIAS', (err, results) => {
         db.detach();
-        if (err) {
-          reject(err);
-        } else {
-          resolve(results);
-        }
+        if (err) reject(err);
+        else resolve(results);
       });
     });
 
     return { statusCode: 200, data };
   } catch (error) {
-    console.error('Unable to connect to the database:', error);
+    console.error('DB Error:', error);
     return { statusCode: 500, message: "Error interno del servidor" };
   }
 });
+

@@ -1,7 +1,7 @@
 import Firebird from 'node-firebird';
-
+let hostdb = process.env.HOST_DB || 'localhost';
 const options = {
-  host: 'localhost',
+  host: hostdb,
   port: 3051,
   database: '/var/lib/firebird/data/cafeteria.fdb',
   user: 'SYSDBA',
