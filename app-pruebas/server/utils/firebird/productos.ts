@@ -74,7 +74,7 @@ async function productosActualizar(total:number, contaInicial:number): Promise<n
             categoria: Math.floor(Math.random() * pruebas.categorias.insertar) + 1,
         }
 
-        await $fetch('http://localhost:3000/api/firebird/producto/'+i, {
+        await $fetch('/api/firebird/producto/'+i, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ async function productosActualizar(total:number, contaInicial:number): Promise<n
 async function productosEliminar(total:number, contaInicial:number): Promise<number>  {
     let start = new Date().getTime();
     for (let i = contaInicial; i <= Number(total) + Number(contaInicial); i++) {
-        await $fetch('http://localhost:3000/api/firebird/producto/'+i, {
+        await $fetch('/api/firebird/producto/'+i, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',

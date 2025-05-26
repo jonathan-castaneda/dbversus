@@ -1,9 +1,9 @@
 import Firebird from 'node-firebird';
-let hostdb = process.env.HOST_DB || 'localhost';
+
 const options = {
-  host: hostdb,
-  port: 3051,
-  database: '/var/lib/firebird/data/cafeteria.fdb',
+ host: process.env.HOST_DB || 'localhost', // 'firebird' en Docker
+  port: 3050, // no 3051 (eso es para acceso desde el HOST, no entre contenedores)
+  database: '/var/lib/firebird/data/cafeteria.fdb', // solo el nombre del archivo
   user: 'SYSDBA',
   password: 'masterkey',
   lowercase_keys: false,

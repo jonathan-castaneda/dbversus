@@ -6,10 +6,10 @@
         </div>
         <div class="row">
             <div class="text-caption col-12 q-ml-md">
-                Recuerda que debes tener arrancado el contenedor de MYSQL levantado con docker y no debe tener datos, solo debe tener la estructura de las tablas.
+                Recuerda que debes tener arrancado el contenedor de FIREBIRD levantado con docker y no debe tener datos, solo debe tener la estructura de las tablas.
                 Haz clic en iniciar y comenzamos las pruebas, primero insertando, luego actualizando, consultando y eliminando.
                 Si vuelves ha hacer pruebas se recomienda que ejecutes docker compose down y luego <strong>docker compose up -d</strong> 
-                <p>Recuerda que en el archivo <strong>/mysql/docker-compose.yml</strong> defines la memoria y el CPU asignado al contenedor para las pruebas</p>
+                <p>Recuerda que en el archivo <strong>/firebird/docker-compose.yml</strong> defines la memoria y el CPU asignado al contenedor para las pruebas</p>
             </div>
             <div class="col-12 row q-ml-md">
                 <div class="col-2">
