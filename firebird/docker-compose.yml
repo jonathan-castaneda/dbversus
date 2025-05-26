@@ -9,7 +9,7 @@ services:
       - FIREBIRD_USER=SYSDBA
       - FIREBIRD_PASSWORD=masterkey
     ports:
-      - "3051:3050"  # Puerto predeterminado de Firebird
+      - "3050:3050"  # Puerto predeterminado de Firebird
     volumes:
       - ./cafeteria.fdb:/firebird/data/cafeteria.fdb:Z  # Archivo de base de datos
       - ./cafeteria.sql:/docker-entrypoint-initdb.d/cafeteria.sql:Z  # Script de inicialización
