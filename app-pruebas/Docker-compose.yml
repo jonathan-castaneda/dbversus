@@ -41,3 +41,22 @@ services:
             reservations:
               cpus: '1'
               memory: 1G
+  #SI LA BASE DE DATOS ES MONGODB
+  # mongodb:
+  #   image: mongo:6.0
+  #   container_name: mongo
+  #   restart: unless-stopped
+  #   environment:
+  #     MONGO_INITDB_DATABASE: cafeteria
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - ../mongo/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '1'
+  #         memory: 1G
+  #       reservations:
+  #         cpus: '1'
+  #         memory: 1G
