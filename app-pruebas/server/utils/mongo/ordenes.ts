@@ -1,10 +1,10 @@
 import pruebas from '../pruebas.json'
 
-async function ordenesInsertar(total: number, totaldetalle: number): Promise<number> {
+async function ordenesInsertar(total: number, totaldetalle: number,contaInicial:number): Promise<number> {
   console.log("Iniciando inserción de órdenes en MongoDB")
   let start = new Date().getTime();
 
-  for (let conta = 1; conta <= total; conta++) {
+  for (let conta = contaInicial; conta <=Number(total) + Number(contaInicial); conta++) {
     let anio = new Date().getFullYear();
     let mes = Math.floor(Math.random() * 12) + 1;
     let dia = Math.floor(Math.random() * 28 + 1);
@@ -57,9 +57,9 @@ async function ordenesInsertar(total: number, totaldetalle: number): Promise<num
   return end - start;
 }
 
-async function ordenesConsultarAzar(total: number): Promise<number> {
+async function ordenesConsultarAzar(total: number,contaInicial:number): Promise<number> {
   let start = new Date().getTime();
-  for (let i = 1; i <= total; i++) {
+  for (let i = contaInicial; i <=Number(total) + Number(contaInicial); i++) {
     let id = Math.floor(Math.random() * pruebas.ordenes.insertar) + 1;
     await $fetch(`/api/mongo/ordenes/` + id, {
       method: 'GET',
@@ -76,10 +76,10 @@ async function ordenesConsultarAzar(total: number): Promise<number> {
   return end - start;
 }
 
-async function ordenesActualizar(total: number): Promise<number> {
+async function ordenesActualizar(total: number,contaInicial:number): Promise<number> {
   let start = new Date().getTime();
 
-  for (let i = 1; i <= total; i++) {
+  for (let i = contaInicial; i <=Number(total) + Number(contaInicial); i++) {
     // Simular detalles nuevos
     let nuevosDetalles = [];
     for (let j = 1; j <= 5; j++) {
@@ -130,10 +130,10 @@ async function ordenesActualizar(total: number): Promise<number> {
 }
 
 
-async function ordenesEliminar(total: number): Promise<number> {
+async function ordenesEliminar(total: number,contaInicial:number): Promise<number> {
   let start = new Date().getTime();
 
-  for (let i = 1; i <= total; i++) {
+  for (let i = contaInicial; i <=Number(total) + Number(contaInicial); i++) {
     await $fetch(`/api/mongo/ordenes/${i}`, {
       method: 'DELETE',
       headers: {

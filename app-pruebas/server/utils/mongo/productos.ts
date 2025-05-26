@@ -1,9 +1,9 @@
 import pruebas from '../pruebas.json';
 
-async function productosInsertar(total: number): Promise<number> { 
+async function productosInsertar(total: number,contaInicial:number): Promise<number> { 
     console.log("Iniciando inserción de productos en MongoDB");   
     let start = new Date().getTime();    
-    for (let i = 1; i <= total; i++) {
+    for (let i = contaInicial; i <=Number(total) + Number(contaInicial); i++) {
         const ldata = {
             _id: i,
             nombre: "Producto " + i,
@@ -43,9 +43,9 @@ async function productosConsultar(): Promise<number>  {
     return time;       
 }
 
-async function productosConsultarAzar(total:number): Promise<number>  {    
+async function productosConsultarAzar(total:number,contaInicial:number): Promise<number>  {    
     let start = new Date().getTime();
-    for (let i = 1; i <= total; i++) {
+    for (let i = contaInicial; i <=Number(total) + Number(contaInicial); i++) {
         let id = Math.floor(Math.random() * pruebas.productos.insertar) + 1;
         await $fetch('/api/mongo/producto/' + id, {
             method: 'GET',
@@ -62,9 +62,9 @@ async function productosConsultarAzar(total:number): Promise<number>  {
     return time; 
 }
 
-async function productosActualizar(total:number): Promise<number>  {
+async function productosActualizar(total:number,contaInicial:number): Promise<number>  {
     let start = new Date().getTime();
-    for (let i = 1; i <= total; i++) {
+    for (let i = contaInicial; i <=Number(total) + Number(contaInicial); i++) {
         const ldata = {
             _id: i,
             nombre: "Producto " + i + " Actualizado",
@@ -88,9 +88,9 @@ async function productosActualizar(total:number): Promise<number>  {
     return time;
 }
 
-async function productosEliminar(total:number): Promise<number>  {
+async function productosEliminar(total:number,contaInicial:number): Promise<number>  {
     let start = new Date().getTime();
-    for (let i = 1; i <= total; i++) {
+    for (let i = contaInicial; i <=Number(total) + Number(contaInicial); i++) {
         await $fetch('/api/mongo/producto/'+i, {
         method: 'DELETE',
         headers: {
