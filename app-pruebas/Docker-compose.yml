@@ -12,8 +12,7 @@
 #     ports:
 #       - "3000:3000"
 #     environment:
-#       HOST_MYSQL: mysql
-#       HOST_RETHINK: rethinkdb
+#       HOST_DB: mysql
 #     deploy:
 #           resources:
 #             limits:
@@ -61,12 +60,8 @@ services:
     ports:
       - "3000:3000"
     environment:
-      HOST_RETHINK: rethinkdb
-    depends_on:
-      rethinkdb:
-        condition: service_healthy
-    networks:
-      - rethinkdb_network
+      HOST_DB: rethinkdb  
+    
 
   # Servicio de la base de datos RethinkDB
   rethinkdb:
@@ -82,27 +77,7 @@ services:
       interval: 10s
       timeout: 15s
       retries: 3
-    networks:
-      - rethinkdb_network
+    volumes:
+      - ../RethinkDB/script.js:/docker-entrypoint-initdb.d/init-rethinkdb.js:ro 
 
-  # Script de inicialización
-  init-script:
-    build:
-      context: ./rethink
-      dockerfile: Dockerfile
-    container_name: rethinkdb_init
-    depends_on:
-      rethinkdb:
-        condition: service_healthy
-    environment:
-      RETHINKDB_HOST: rethinkdb
-      RETHINKDB_PORT: 28015
-      DB_NAME: cafeteria
-      TABLES: categorias,productos,ordenes
-    restart: "no"
-    networks:
-      - rethinkdb_network
-
-networks:
-  rethinkdb_network:
-    name: rethinkdb_network
+ 
