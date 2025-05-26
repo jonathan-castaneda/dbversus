@@ -31,8 +31,6 @@ COPY ["package.json", "package-lock.json*", "./"]
 RUN npm ci
 COPY . .
 RUN npm run build
-
-# Etapa de producción
 FROM node:21.7.3-alpine as production
 WORKDIR /app
 COPY ["package.json", "package-lock.json*", "./"]
