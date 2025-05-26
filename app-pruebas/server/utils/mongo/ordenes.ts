@@ -1,6 +1,6 @@
 import pruebas from '../pruebas.json'
 
-async function ordenesInsertar(total: number, totaldetalle: number,contaInicial:number): Promise<number> {
+async function ordenesInsertarMongo(total: number, totaldetalle: number,contaInicial:number): Promise<number> {
   console.log("Iniciando inserción de órdenes en MongoDB")
   let start = new Date().getTime();
 
@@ -57,7 +57,7 @@ async function ordenesInsertar(total: number, totaldetalle: number,contaInicial:
   return end - start;
 }
 
-async function ordenesConsultarAzar(total: number,contaInicial:number): Promise<number> {
+async function ordenesConsultarAzarMongo(total: number,contaInicial:number): Promise<number> {
   let start = new Date().getTime();
   for (let i = contaInicial; i <=Number(total) + Number(contaInicial); i++) {
     let id = Math.floor(Math.random() * pruebas.ordenes.insertar) + 1;
@@ -76,7 +76,7 @@ async function ordenesConsultarAzar(total: number,contaInicial:number): Promise<
   return end - start;
 }
 
-async function ordenesActualizar(total: number,contaInicial:number): Promise<number> {
+async function ordenesActualizarMongo(total: number,contaInicial:number): Promise<number> {
   let start = new Date().getTime();
 
   for (let i = contaInicial; i <=Number(total) + Number(contaInicial); i++) {
@@ -130,7 +130,7 @@ async function ordenesActualizar(total: number,contaInicial:number): Promise<num
 }
 
 
-async function ordenesEliminar(total: number,contaInicial:number): Promise<number> {
+async function ordenesEliminarMongo(total: number,contaInicial:number): Promise<number> {
   let start = new Date().getTime();
 
   for (let i = contaInicial; i <=Number(total) + Number(contaInicial); i++) {
@@ -152,8 +152,8 @@ async function ordenesEliminar(total: number,contaInicial:number): Promise<numbe
 }
 
 export {
-  ordenesInsertar,
-  ordenesConsultarAzar,
-  ordenesActualizar,
-  ordenesEliminar
+  ordenesInsertarMongo,
+  ordenesConsultarAzarMongo,
+  ordenesActualizarMongo,
+  ordenesEliminarMongo
 }

@@ -1,6 +1,6 @@
 import pruebas from '../pruebas.json';
 
-async function productosInsertar(total: number,contaInicial:number): Promise<number> { 
+async function productosInsertarMongo(total: number,contaInicial:number): Promise<number> { 
     console.log("Iniciando inserción de productos en MongoDB");   
     let start = new Date().getTime();    
     for (let i = contaInicial; i <=Number(total) + Number(contaInicial); i++) {
@@ -27,7 +27,7 @@ async function productosInsertar(total: number,contaInicial:number): Promise<num
     return time;
 }
 
-async function productosConsultar(): Promise<number>  {    
+async function productosConsultarMongo(): Promise<number>  {    
     let start = new Date().getTime();
     await $fetch('/api/mongo/productos', {
         method: 'GET',
@@ -43,7 +43,7 @@ async function productosConsultar(): Promise<number>  {
     return time;       
 }
 
-async function productosConsultarAzar(total:number,contaInicial:number): Promise<number>  {    
+async function productosConsultarAzarMongo(total:number,contaInicial:number): Promise<number>  {    
     let start = new Date().getTime();
     for (let i = contaInicial; i <=Number(total) + Number(contaInicial); i++) {
         let id = Math.floor(Math.random() * pruebas.productos.insertar) + 1;
@@ -62,7 +62,7 @@ async function productosConsultarAzar(total:number,contaInicial:number): Promise
     return time; 
 }
 
-async function productosActualizar(total:number,contaInicial:number): Promise<number>  {
+async function productosActualizarMongo(total:number,contaInicial:number): Promise<number>  {
     let start = new Date().getTime();
     for (let i = contaInicial; i <=Number(total) + Number(contaInicial); i++) {
         const ldata = {
@@ -88,7 +88,7 @@ async function productosActualizar(total:number,contaInicial:number): Promise<nu
     return time;
 }
 
-async function productosEliminar(total:number,contaInicial:number): Promise<number>  {
+async function productosEliminarMongo(total:number,contaInicial:number): Promise<number>  {
     let start = new Date().getTime();
     for (let i = contaInicial; i <=Number(total) + Number(contaInicial); i++) {
         await $fetch('/api/mongo/producto/'+i, {
@@ -107,4 +107,4 @@ async function productosEliminar(total:number,contaInicial:number): Promise<numb
     return time; 
 }
 
-export { productosInsertar, productosConsultar, productosConsultarAzar, productosActualizar, productosEliminar };
+export { productosInsertarMongo, productosConsultarMongo, productosConsultarAzarMongo, productosActualizarMongo, productosEliminarMongo };

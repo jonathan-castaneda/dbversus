@@ -1,6 +1,6 @@
 import pruebas from '../pruebas.json'
 //insertando nuevas categorias
-async function categoriasInsertar(total: number,contaInicial:number): Promise<number> {
+async function categoriasInsertarMongo(total: number,contaInicial:number): Promise<number> {
     console.log("Iniciando insercion de categorias")
     let start = new Date().getTime();    
     for (let i = contaInicial; i <=Number(total) + Number(contaInicial); i++) {
@@ -26,7 +26,7 @@ async function categoriasInsertar(total: number,contaInicial:number): Promise<nu
 }
 
 //Consultando todas las categorias
-async function categoriasConsultar(): Promise<number> {    
+async function categoriasConsultarMongo(): Promise<number> {    
     let start = new Date().getTime();
     await $fetch('/api/mongo/categorias', {
         method: 'GET',
@@ -43,7 +43,7 @@ async function categoriasConsultar(): Promise<number> {
 }
 
 //Consultamos categorias al azar
-async function categoriasConsultarAzar(total:number,contaInicial:number): Promise<number> {    
+async function categoriasConsultarAzarMongo(total:number,contaInicial:number): Promise<number> {    
     let start = new Date().getTime();
     for (let i = contaInicial; i <=Number(total) + Number(contaInicial); i++) {
         let id = Math.floor(Math.random() * pruebas.categorias.insertar) + 1;
@@ -62,7 +62,7 @@ async function categoriasConsultarAzar(total:number,contaInicial:number): Promis
     return time;
 }
 
-async function categoriasActualizar(total:number,contaInicial:number): Promise<number> {
+async function categoriasActualizarMongo(total:number,contaInicial:number): Promise<number> {
     let start = new Date().getTime();
     for (let i = contaInicial; i <=Number(total) + Number(contaInicial); i++) {
         const ldata = {
@@ -87,7 +87,7 @@ async function categoriasActualizar(total:number,contaInicial:number): Promise<n
 }
 
 //eliminando las categorias
-async function categoriasEliminar(total: number,contaInicial:number): Promise<number> {
+async function categoriasEliminarMongo(total: number,contaInicial:number): Promise<number> {
     let start = new Date().getTime();
     for (let i = contaInicial; i <=Number(total) + Number(contaInicial); i++) {
         await $fetch(`/api/mongo/categoria/${i}`, {
@@ -106,4 +106,4 @@ async function categoriasEliminar(total: number,contaInicial:number): Promise<nu
 }
 
 
-export { categoriasInsertar, categoriasConsultar, categoriasConsultarAzar, categoriasActualizar, categoriasEliminar }
+export { categoriasInsertarMongo, categoriasConsultarMongo, categoriasConsultarAzarMongo, categoriasActualizarMongo, categoriasEliminarMongo }
