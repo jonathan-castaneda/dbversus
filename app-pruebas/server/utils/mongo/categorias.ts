@@ -1,15 +1,15 @@
 import pruebas from '../pruebas.json'
 //insertando nuevas categorias
-async function categoriasInsertar(total: number): Promise<number> {
+async function categoriasInsertarMongo(total: number,contaInicial:number): Promise<number> {
     console.log("Iniciando insercion de categorias")
     let start = new Date().getTime();    
-    for (let i = 1; i <= total; i++) {
+    for (let i = contaInicial; i <=Number(total) + Number(contaInicial); i++) {
         const ldata = {
             _id: i,// el ID AHORA SI ES NUMERICO
             nombre: "Categoria " + i,
         }
         //agrego usando $fetch        
-        await $fetch('http://localhost:3000/api/mongo/categoria', {
+        await $fetch('/api/mongo/categoria', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -26,9 +26,9 @@ async function categoriasInsertar(total: number): Promise<number> {
 }
 
 //Consultando todas las categorias
-async function categoriasConsultar(): Promise<number> {    
+async function categoriasConsultarMongo(): Promise<number> {    
     let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/mongo/categorias', {
+    await $fetch('/api/mongo/categorias', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -43,11 +43,11 @@ async function categoriasConsultar(): Promise<number> {
 }
 
 //Consultamos categorias al azar
-async function categoriasConsultarAzar(total:number): Promise<number> {    
+async function categoriasConsultarAzarMongo(total:number,contaInicial:number): Promise<number> {    
     let start = new Date().getTime();
-    for (let i = 1; i <= total; i++) {
+    for (let i = contaInicial; i <=Number(total) + Number(contaInicial); i++) {
         let id = Math.floor(Math.random() * pruebas.categorias.insertar) + 1;
-        await $fetch('http://localhost:3000/api/mongo/categoria/' + id, {
+        await $fetch('/api/mongo/categoria/' + id, {
             method: 'GET',
             headers: {
                     'Content-Type': 'application/json',
@@ -62,14 +62,14 @@ async function categoriasConsultarAzar(total:number): Promise<number> {
     return time;
 }
 
-async function categoriasActualizar(total:number): Promise<number> {
+async function categoriasActualizarMongo(total:number,contaInicial:number): Promise<number> {
     let start = new Date().getTime();
-    for (let i = 1; i <= total; i++) {
+    for (let i = contaInicial; i <=Number(total) + Number(contaInicial); i++) {
         const ldata = {
             _id: i,
             nombre: "Categoria " + i + " Actualizada",
         }
-        await $fetch('http://localhost:3000/api/mongo/categoria/'+i, {
+        await $fetch('/api/mongo/categoria/'+i, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -87,10 +87,10 @@ async function categoriasActualizar(total:number): Promise<number> {
 }
 
 //eliminando las categorias
-async function categoriasEliminar(total: number): Promise<number> {
+async function categoriasEliminarMongo(total: number,contaInicial:number): Promise<number> {
     let start = new Date().getTime();
-    for (let i = 1; i <= total; i++) {
-        await $fetch(`http://localhost:3000/api/mongo/categoria/${i}`, {
+    for (let i = contaInicial; i <=Number(total) + Number(contaInicial); i++) {
+        await $fetch(`/api/mongo/categoria/${i}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -106,4 +106,4 @@ async function categoriasEliminar(total: number): Promise<number> {
 }
 
 
-export { categoriasInsertar, categoriasConsultar, categoriasConsultarAzar, categoriasActualizar, categoriasEliminar }
+export { categoriasInsertarMongo, categoriasConsultarMongo, categoriasConsultarAzarMongo, categoriasActualizarMongo, categoriasEliminarMongo }
