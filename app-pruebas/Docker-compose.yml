@@ -40,44 +40,5 @@
 #               memory: 1G
 #             reservations:
 #               cpus: '1'
-#               memory: 1G
-
-
-
-
-# version: '3.8'
-
-services:
-  # Servicio principal de la app Nuxt
-  appversus:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      # CAMBIAR A LA IMAGEN DE SU APP
-    image: sams126/dbversusapp:1.0
-    container_name: appversus
-    restart: unless-stopped
-    ports:
-      - "3000:3000"
-    environment:
-      HOST_DB: rethinkdb  
-    
-
-  # Servicio de la base de datos RethinkDB
-  rethinkdb:
-    image: rethinkdb:latest
-    container_name: rethinkdb_container
-    command: rethinkdb --bind all
-    ports:
-      - "8080:8080"
-      - "28015:28015"
-      - "29015:29015"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080"]
-      interval: 10s
-      timeout: 15s
-      retries: 3
-    volumes:
-      - ../RethinkDB/script.js:/docker-entrypoint-initdb.d/init-rethinkdb.js:ro 
-
+#               memory: 1G 
  
