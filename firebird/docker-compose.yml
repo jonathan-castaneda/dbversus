@@ -11,9 +11,9 @@ services:
     ports:
       - "3051:3050"  # Puerto predeterminado de Firebird
     volumes:
-      - ./cafeteria.fdb:/firebird/data/cafeteria.fdb  # Archivo de base de datos
-      - ./cafeteria.sql:/docker-entrypoint-initdb.d/cafeteria.sql  # Script de inicialización
-      - ./firebird.conf:/opt/firebird/firebird.conf  # Montar el archivo de configuración personalizado
+      - ./cafeteria.fdb:/firebird/data/cafeteria.fdb:Z  # Archivo de base de datos
+      - ./cafeteria.sql:/docker-entrypoint-initdb.d/cafeteria.sql:Z  # Script de inicialización
+      - ./firebird.conf:/opt/firebird/firebird.conf:Z  # Montar el archivo de configuración personalizado
     deploy:
       resources:
         limits:

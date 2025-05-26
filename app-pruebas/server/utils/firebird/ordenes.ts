@@ -158,7 +158,7 @@ async function ordenesActualizar(total:number,contaInicial:number): Promise<numb
 
             try {
                 await $fetch(
-                    '/firebird/detalleorden/' + i + '/' + detalle.idproducto,
+                    '/api/firebird/detalleorden/' + i + '/' + detalle.idproducto,
                     {
                         method: 'PUT',
                         headers: {
