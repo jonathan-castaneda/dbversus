@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
     const updateOps = docs.map(doc =>
       rethink.table('ordenes')
         .get(doc.id)
-        .update({ nombre: `${doc.nombre} (editado)` })
+        .update({ total: Math.floor(Math.random() * 100) + 1, }) // actualizamos el total con un nuevo valor aleatorio entre 1 y 100
         .run(conn)
     );
 

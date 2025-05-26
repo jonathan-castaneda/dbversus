@@ -42,21 +42,7 @@
 #             reservations:
 #               cpus: '1'
 #               memory: 1G
-#   rethinkdb:
-#     image: rethinkdb:2.4
-#     container_name: rethinkdb
-#     restart: unless-stopped
-#     ports:
-#       - "28015:28015"   # puerto para conexiones desde backend
-#       - "8080:8080"     # panel web opcional
-#     deploy:
-#       resources:
-#         limits:
-#           cpus: '1'
-#           memory: 1G
-#         reservations:
-#           cpus: '1'
-#           memory: 1G  
+
 
 
 
@@ -68,6 +54,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      # CAMBIAR A LA IMAGEN DE SU APP
     image: sams126/dbversusapp:1.0
     container_name: appversus
     restart: unless-stopped
