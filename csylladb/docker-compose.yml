@@ -1,17 +1,18 @@
 services:
   scylla:
     image: scylladb/scylla:latest
-    container_name: scylla
+    container_name: scylla_container
     restart: unless-stopped
-    environment:
-      - SCYLLA_CLUSTER_NAME=TestCluster
-      - SCYLLA_SEEDS=scylla
     ports:
       - "9042:9042"
-    volumes:
-      - ./init.cql:/init.cql
-      - ./init.sh:/init.sh
-    entrypoint: ["/bin/bash", "/init.sh"]
+    command: --smp 1 --memory 500M --developer-mode 1
+    healthcheck:
+      test: ["CMD-SHELL", "nodetool status || exit 1"]
+      interval: 10s
+      timeout: 15s
+      retries: 3
+    environment:
+      - SCYLLA_DEVELOPER_MODE=1
     deploy:
       resources:
         limits:
@@ -21,26 +22,15 @@ services:
           cpus: '1'
           memory: 1G
 
-
-# services:
-#   cassandra:
-#     image: cassandra:latest
-#     container_name: cassandra
-#     restart: unless-stopped
-#     environment:
-#       - CASSANDRA_CLUSTER_NAME=TestCluster
-#       - CASSANDRA_SEEDS=cassandra
-#     ports:
-#       - "9042:9042"
-#     volumes:
-#       - ./init.cql:/init.cql
-#       - ./init.sh:/init.sh
-#     entrypoint: ["/bin/bash", "/init.sh"]
-#     deploy:
-#       resources:
-#         limits:
-#           cpus: '1'
-#           memory: 3G
-#         reservations:
-#           cpus: '1'
-#           memory: 1G
+  init-script:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: scylla_init
+    depends_on:
+      scylla:
+        condition: service_healthy
+    environment:
+      SCYLLA_HOST: scylla
+      DB_NAME: cafeteria
+    restart: "no"

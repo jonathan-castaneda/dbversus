@@ -5,16 +5,16 @@
     </div>
     <div class="row">
       <div class="text-caption col-12 q-px-md">
-        Recuerda que debes tener arrancado el contenedor de MYSQL levantado con
-        docker y no debe tener datos, solo debe tener la estructura de las
+        Recuerda que debes tener arrancado el contenedor de ScyllaDB levantado
+        con docker y no debe tener datos, solo debe tener la estructura de las
         tablas. Haz clic en iniciar y comenzamos las pruebas, primero
         insertando, luego actualizando, consultando y eliminando. Si vuelves ha
         hacer pruebas se recomienda que ejecutes docker compose down y luego
         <strong>docker compose up -d</strong>
         <p>
           Recuerda que en el archivo
-          <strong>/mysql/docker-compose.yml</strong> defines la memoria y el CPU
-          asignado al contenedor para las pruebas
+          <strong>/csylladb/docker-compose.yml</strong> defines la memoria y el
+          CPU asignado al contenedor para las pruebas
         </p>
       </div>
       <div class="col-12 row q-px-md">
@@ -143,7 +143,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref } from "vue"
 
 import {
   categoriasActualizarScylladb,
@@ -151,41 +151,41 @@ import {
   categoriasConsultarScylladb,
   categoriasEliminarScylladb,
   categoriasInsertarScylladb,
-} from "../server/utils/scylladb/categorias";
+} from "../server/utils/scylladb/categorias"
 import {
   ordenesActualizarScylladb,
   ordenesConsultarAzarScylladb,
   ordenesEliminarScylladb,
   ordenesInsertarScylladb,
-} from "../server/utils/scylladb/ordenes";
+} from "../server/utils/scylladb/ordenes"
 import {
   productosActualizarScylladb,
   productosConsultarAzarScylladb,
   productosConsultarScylladb,
   productosEliminarScylladb,
   productosInsertarScylladb,
-} from "../server/utils/scylladb/productos";
+} from "../server/utils/scylladb/productos"
 import {
   resumenesContarOrdenesScylladb,
   resumenesProductosScylladb,
   resumenesProductosFechaScylladb,
   resumenesToptenScylladb,
   resumenesTotalDiarioScylladb,
-} from "../server/utils/scylladb/resumenes";
-import pruebas from "../server/utils/pruebas.json";
+} from "../server/utils/scylladb/resumenes"
+import pruebas from "../server/utils/pruebas.json"
 
-const tiemposInsercion = ref<number[]>([]);
-const tiemposConsulta = ref<number[]>([]);
-const tiemposActualizacion = ref<number[]>([]);
-const tiemposResumen = ref<number[]>([]);
-const tiemposEliminacion = ref<number[]>([]);
-const erroresInsercion = ref<number>(0);
-const erroresConsulta = ref<number>(0);
-const erroresActualizacion = ref<number>(0);
-const erroresEliminacion = ref<number>(0);
-const cargando = ref<boolean>(false);
-const totalPruebas = ref<number>(19);
-const mensajes = ref<string[]>([]);
+const tiemposInsercion = ref<number[]>([])
+const tiemposConsulta = ref<number[]>([])
+const tiemposActualizacion = ref<number[]>([])
+const tiemposResumen = ref<number[]>([])
+const tiemposEliminacion = ref<number[]>([])
+const erroresInsercion = ref<number>(0)
+const erroresConsulta = ref<number>(0)
+const erroresActualizacion = ref<number>(0)
+const erroresEliminacion = ref<number>(0)
+const cargando = ref<boolean>(false)
+const totalPruebas = ref<number>(19)
+const mensajes = ref<string[]>([])
 
 //propiedad computada del porcentaje de pruebas realizadas
 const avance = computed(() => {
@@ -197,8 +197,8 @@ const avance = computed(() => {
       tiemposResumen.value.length) /
       totalPruebas.value) *
       100
-  );
-});
+  )
+})
 
 //propiedades para la tabla
 const columns = [
@@ -217,7 +217,7 @@ const columns = [
   { name: "c", align: "left" as const, label: "C", field: "c" },
   { name: "d", align: "left" as const, label: "D", field: "d" },
   { name: "e", align: "left" as const, label: "E", field: "e" },
-];
+]
 
 const rows = computed(() => {
   return [
@@ -266,106 +266,104 @@ const rows = computed(() => {
       e: tiemposEliminacion.value[4] ? tiemposEliminacion.value[4] : 0,
       total: tiemposEliminacion.value.reduce((a, b) => a + b, 0) / 1000,
     },
-  ];
-});
+  ]
+})
 
 async function realizarPruebas() {
   try {
-    cargando.value = true;
-    totalPruebas.value = 19; // son 19 pruebas a realizar
-    let tiempo: number;
+    cargando.value = true
+    totalPruebas.value = 19 // son 19 pruebas a realizar
+    let tiempo: number
 
     //INSERTANDO DATOS
-    mensajes.value.push("Iniciando pruebas de inserción");
-    tiempo = await categoriasInsertarScylladb(pruebas.categorias.insertar);
+    mensajes.value.push("Iniciando pruebas de inserción")
+    tiempo = await categoriasInsertarScylladb(pruebas.categorias.insertar)
     tiempo == -1
       ? erroresInsercion.value++
-      : tiemposInsercion.value.push(tiempo);
+      : tiemposInsercion.value.push(tiempo)
 
-    tiempo = await productosInsertarScylladb(pruebas.productos.insertar);
+    tiempo = await productosInsertarScylladb(pruebas.productos.insertar)
     tiempo == -1
       ? erroresInsercion.value++
-      : tiemposInsercion.value.push(tiempo);
+      : tiemposInsercion.value.push(tiempo)
     tiempo = await ordenesInsertarScylladb(
       pruebas.ordenes.insertar,
       pruebas.ordenes.detalleoden
-    );
+    )
     tiempo == -1
       ? erroresInsercion.value++
-      : tiemposInsercion.value.push(tiempo);
+      : tiemposInsercion.value.push(tiempo)
 
-    mensajes.value.push("Iniciando pruebas de consultas");
+    mensajes.value.push("Iniciando pruebas de consultas")
 
     //PROCEDEMOS A CONSULTAR LOS DATOS
-    tiempo = await categoriasConsultarScylladb();
-    tiempo == -1 ? erroresConsulta.value++ : tiemposConsulta.value.push(tiempo);
+    tiempo = await categoriasConsultarScylladb()
+    tiempo == -1 ? erroresConsulta.value++ : tiemposConsulta.value.push(tiempo)
 
-    tiempo = await categoriasConsultarAzarScylladb(
-      pruebas.categorias.aleatorio
-    );
-    tiempo == -1 ? erroresConsulta.value++ : tiemposConsulta.value.push(tiempo);
+    tiempo = await categoriasConsultarAzarScylladb(pruebas.categorias.aleatorio)
+    tiempo == -1 ? erroresConsulta.value++ : tiemposConsulta.value.push(tiempo)
 
-    tiempo = await productosConsultarScylladb();
-    tiempo == -1 ? erroresConsulta.value++ : tiemposConsulta.value.push(tiempo);
+    tiempo = await productosConsultarScylladb()
+    tiempo == -1 ? erroresConsulta.value++ : tiemposConsulta.value.push(tiempo)
 
-    tiempo = await productosConsultarAzarScylladb(pruebas.productos.aleatorio);
-    tiempo == -1 ? erroresConsulta.value++ : tiemposConsulta.value.push(tiempo);
+    tiempo = await productosConsultarAzarScylladb(pruebas.productos.aleatorio)
+    tiempo == -1 ? erroresConsulta.value++ : tiemposConsulta.value.push(tiempo)
 
     // CONSULTAMOS ORDENES AL AZAR DEBEMOS TRAER LOS DATOS DE ORDEN Y SUS DETALLES
-    tiempo = await ordenesConsultarAzarScylladb(pruebas.ordenes.aleatorio);
-    tiempo == -1 ? erroresConsulta.value++ : tiemposConsulta.value.push(tiempo);
+    tiempo = await ordenesConsultarAzarScylladb(pruebas.ordenes.aleatorio)
+    tiempo == -1 ? erroresConsulta.value++ : tiemposConsulta.value.push(tiempo)
 
     //ACTUALIZACION DE DATOS
-    mensajes.value.push("Iniciando pruebas de actualización");
+    mensajes.value.push("Iniciando pruebas de actualización")
 
-    tiempo = await categoriasActualizarScylladb(pruebas.categorias.actualizar);
+    tiempo = await categoriasActualizarScylladb(pruebas.categorias.actualizar)
     tiempo == -1
       ? erroresActualizacion.value++
-      : tiemposActualizacion.value.push(tiempo);
+      : tiemposActualizacion.value.push(tiempo)
 
-    tiempo = await productosActualizarScylladb(pruebas.productos.actualizar);
+    tiempo = await productosActualizarScylladb(pruebas.productos.actualizar)
     tiempo == -1
       ? erroresActualizacion.value++
-      : tiemposActualizacion.value.push(tiempo);
-    tiempo = await ordenesActualizarScylladb(pruebas.ordenes.actualizar);
+      : tiemposActualizacion.value.push(tiempo)
+    tiempo = await ordenesActualizarScylladb(pruebas.ordenes.actualizar)
     tiempo == -1
       ? erroresActualizacion.value++
-      : tiemposActualizacion.value.push(tiempo);
+      : tiemposActualizacion.value.push(tiempo)
 
     //Consultas de Resumentes o Totales -Avanzadas
-    mensajes.value.push("Iniciando pruebas de resumenes");
-    tiempo = await resumenesContarOrdenesScylladb();
-    tiempo == -1 ? erroresConsulta.value++ : tiemposResumen.value.push(tiempo);
-    tiempo = await resumenesProductosScylladb();
-    tiempo == -1 ? erroresConsulta.value++ : tiemposResumen.value.push(tiempo);
-    tiempo = await resumenesProductosFechaScylladb();
-    tiempo == -1 ? erroresConsulta.value++ : tiemposResumen.value.push(tiempo);
-    tiempo = await resumenesTotalDiarioScylladb();
-    tiempo == -1 ? erroresConsulta.value++ : tiemposResumen.value.push(tiempo);
-    tiempo = await resumenesToptenScylladb();
-    tiempo == -1 ? erroresConsulta.value++ : tiemposResumen.value.push(tiempo);
+    mensajes.value.push("Iniciando pruebas de resumenes")
+    tiempo = await resumenesContarOrdenesScylladb()
+    tiempo == -1 ? erroresConsulta.value++ : tiemposResumen.value.push(tiempo)
+    tiempo = await resumenesProductosScylladb()
+    tiempo == -1 ? erroresConsulta.value++ : tiemposResumen.value.push(tiempo)
+    tiempo = await resumenesProductosFechaScylladb()
+    tiempo == -1 ? erroresConsulta.value++ : tiemposResumen.value.push(tiempo)
+    tiempo = await resumenesTotalDiarioScylladb()
+    tiempo == -1 ? erroresConsulta.value++ : tiemposResumen.value.push(tiempo)
+    tiempo = await resumenesToptenScylladb()
+    tiempo == -1 ? erroresConsulta.value++ : tiemposResumen.value.push(tiempo)
 
     // //Eliminacion de datos
-    mensajes.value.push("Iniciando pruebas de eliminación");
-    tiempo = await ordenesEliminarScylladb(pruebas.ordenes.insertar);
+    mensajes.value.push("Iniciando pruebas de eliminación")
+    tiempo = await ordenesEliminarScylladb(pruebas.ordenes.insertar)
     tiempo == -1
       ? erroresEliminacion.value++
-      : tiemposEliminacion.value.push(tiempo);
-    tiempo = await productosEliminarScylladb(pruebas.productos.insertar);
+      : tiemposEliminacion.value.push(tiempo)
+    tiempo = await productosEliminarScylladb(pruebas.productos.insertar)
     tiempo == -1
       ? erroresEliminacion.value++
-      : tiemposEliminacion.value.push(tiempo);
+      : tiemposEliminacion.value.push(tiempo)
 
-    tiempo = await categoriasEliminarScylladb(pruebas.categorias.insertar);
+    tiempo = await categoriasEliminarScylladb(pruebas.categorias.insertar)
     tiempo == -1
       ? erroresEliminacion.value++
-      : tiemposEliminacion.value.push(tiempo);
+      : tiemposEliminacion.value.push(tiempo)
 
-    console.log("Terminaron las pruebas realizadas");
-    mensajes.value.push("Terminaron las pruebas realizadas");
-    cargando.value = false;
+    console.log("Terminaron las pruebas realizadas")
+    mensajes.value.push("Terminaron las pruebas realizadas")
+    cargando.value = false
   } catch (error) {
-    console.error(error);
+    console.error(error)
   }
 }
 </script>

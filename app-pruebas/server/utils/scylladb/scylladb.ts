@@ -1,24 +1,31 @@
-import { Client } from "cassandra-driver";
+import { Client } from "cassandra-driver"
 
 // Variable de entorno para la IP o nombre del servidor de scylladb
-let hostdb = process.env.HOST_DB || "172.18.0.2";
+let hostdb = process.env.HOST_DB || "scylla_container"
 
 // Configuración del cliente de scylladb
 const scylladb = new Client({
   contactPoints: [hostdb], // Dirección del servidor
-  localDataCenter: "datacenter1", // Cambiar según la configuración de tu clúster
-  keyspace: "cafeteria", // Nombre del keyspace en scylladb
-});
+  localDataCenter: "datacenter1",
+  keyspace: "cafeteria",
+  socketOptions: {
+    readTimeout: 10000, // Aumentamos el timeout para desarrollo
+  },
+  protocolOptions: {
+    port: 9042, // Puerto por defecto de ScyllaDB
+  },
+})
 // Verificar conexión
-scylladb.connect()
+scylladb
+  .connect()
   .then(() => console.log("✅ Conectado a Scylladb en Docker"))
-  .catch(err => console.error("❌ Error al conectar con scylladb:", err));
+  .catch((err) => console.error("❌ Error al conectar con scylladb:", err))
 
 // Definición de las tablas con sus columnas
-const categoriasTable = "categorias";
-const productosTable = "productos";
-const ordenesTable = "ordenes";
-const detalleOrdenesTable = "detalleordenes";
+const categoriasTable = "categorias"
+const productosTable = "productos"
+const ordenesTable = "ordenes"
+const detalleOrdenesTable = "detalleordenes"
 
 // Función para crear las tablas en scylladb (Si no existen)
 const createTables = async () => {
@@ -28,7 +35,7 @@ const createTables = async () => {
         id UUID PRIMARY KEY,
         nombre TEXT
       )
-    `);
+    `)
 
     await scylladb.execute(`
       CREATE TABLE IF NOT EXISTS ${productosTable} (
@@ -37,7 +44,7 @@ const createTables = async () => {
         precio DECIMAL,
         idCategoria UUID
       )
-    `);
+    `)
 
     await scylladb.execute(`
       CREATE TABLE IF NOT EXISTS ${ordenesTable} (
@@ -45,7 +52,7 @@ const createTables = async () => {
         fecha TIMESTAMP,
         total DECIMAL
       )
-    `);
+    `)
 
     await scylladb.execute(`
       CREATE TABLE IF NOT EXISTS ${detalleOrdenesTable} (
@@ -55,22 +62,22 @@ const createTables = async () => {
         precio DECIMAL,
         PRIMARY KEY (idorden, idproducto)
       )
-    `);
+    `)
 
-    console.log("Tablas creadas/verificadas en scylladb.");
+    console.log("Tablas creadas/verificadas en scylladb.")
   } catch (error) {
-    console.error("Error al crear/verificar tablas en scylladb:", error);
+    console.error("Error al crear/verificar tablas en scylladb:", error)
   }
-};
+}
 
 // Llamamos a la función de creación de tablas al inicio
-createTables();
+createTables()
 
 // Exportamos el cliente y los nombres de las tablas
 export {
-  scylladb,
   categoriasTable,
-  productosTable,
-  ordenesTable,
   detalleOrdenesTable,
-};
+  ordenesTable,
+  productosTable,
+  scylladb,
+}
