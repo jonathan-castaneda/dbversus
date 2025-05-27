@@ -33,6 +33,7 @@
             
                 </div>
                 <div class="col-3 q-ml-lg">
+                <q-input dense style="width: 150px;" type="number" outlined v-model="contaInicial" label="Contador Inicial en:" />
                 <q-btn size="lg" :loading="cargando" @click="realizarPruebas" color="primary">Iniciar Pruebas</q-btn>
                 <q-circular-progress
                 show-value
@@ -105,12 +106,12 @@ import { ref, computed} from 'vue'
 import { exportFile } from 'quasar'
 
 import pruebas from '../server/utils/pruebas.json'
-import { categoriasInsertar, categoriasConsultar, categoriasConsultarAzar, categoriasActualizar, categoriasEliminar } from '../server/utils/mongo/categorias'
-import { productosInsertar, productosConsultar, productosConsultarAzar, productosActualizar, productosEliminar } from '../server/utils/mongo/productos'
-import { ordenesInsertar, ordenesConsultarAzar, ordenesActualizar, ordenesEliminar } from '../server/utils/mongo/ordenes'
-import { resumenesContarOrdenes, resumenesProductos, resumenesProductosFecha, resumenesTotalDiario, resumenesTopten } from '../server/utils/mongo/resumenes'
+import { categoriasInsertarMongo, categoriasConsultarMongo, categoriasConsultarAzarMongo, categoriasActualizarMongo, categoriasEliminarMongo } from '../server/utils/mongo/categorias'
+import { productosInsertarMongo, productosConsultarMongo, productosConsultarAzarMongo, productosActualizarMongo, productosEliminarMongo } from '../server/utils/mongo/productos'
+import { ordenesInsertarMongo, ordenesConsultarAzarMongo, ordenesActualizarMongo, ordenesEliminarMongo } from '../server/utils/mongo/ordenes'
+import { resumenesContarOrdenesMongo, resumenesProductosMongo, resumenesProductosFechaMongo, resumenesTotalDiarioMongo, resumenesToptenMongo } from '../server/utils/mongo/resumenes'
 
-
+const contaInicial= ref(1)
 const tiemposInsercion= ref([])
 const tiemposConsulta= ref([ ])
 const tiemposActualizacion= ref([ ])
@@ -213,65 +214,65 @@ async function realizarPruebas() {
     
     //INSERTANDO DATOS
     mensajes.value.push("Iniciando pruebas de inserción")    
-    tiempo=await categoriasInsertar(pruebas.categorias.insertar)
+    tiempo=await categoriasInsertarMongo(pruebas.categorias.insertar,contaInicial.value)
     tiempo==-1? erroresInsercion.value++: tiemposInsercion.value.push(tiempo);   
     
-    tiempo=await productosInsertar(pruebas.productos.insertar)
+    tiempo=await productosInsertarMongo(pruebas.productos.insertar,contaInicial.value)
     tiempo==-1? erroresInsercion.value++: tiemposInsercion.value.push(tiempo);   
-    tiempo=await ordenesInsertar(pruebas.ordenes.insertar, pruebas.ordenes.detalleoden)
+    tiempo=await ordenesInsertarMongo(pruebas.ordenes.insertar, pruebas.ordenes.detalleoden,contaInicial.value)
     tiempo==-1? erroresInsercion.value++: tiemposInsercion.value.push(tiempo);
     
     mensajes.value.push("Iniciando pruebas de consultas")
     
     //PROCEDEMOS A CONSULTAR LOS DATOS    
-    tiempo=await categoriasConsultar()
+    tiempo=await categoriasConsultarMongo()
     tiempo==-1? erroresConsulta.value++: tiemposConsulta.value.push(tiempo);
     
-    tiempo=await categoriasConsultarAzar(pruebas.categorias.aleatorio)
+    tiempo=await categoriasConsultarAzarMongo(pruebas.categorias.aleatorio,contaInicial.value)
     tiempo==-1? erroresConsulta.value++: tiemposConsulta.value.push(tiempo);
     
-    tiempo=await productosConsultar()
+    tiempo=await productosConsultarMongo()
     tiempo==-1? erroresConsulta.value++: tiemposConsulta.value.push(tiempo);
 
-    tiempo=await productosConsultarAzar(pruebas.productos.aleatorio)
+    tiempo=await productosConsultarAzarMongo(pruebas.productos.aleatorio,contaInicial.value)
     tiempo==-1? erroresConsulta.value++: tiemposConsulta.value.push(tiempo);
 
     // CONSULTAMOS ORDENES AL AZAR DEBEMOS TRAER LOS DATOS DE ORDEN Y SUS DETALLES    
-    tiempo=await ordenesConsultarAzar(pruebas.ordenes.aleatorio)
+    tiempo=await ordenesConsultarAzarMongo(pruebas.ordenes.aleatorio,contaInicial.value)
     tiempo==-1? erroresConsulta.value++: tiemposConsulta.value.push(tiempo);
 
     //ACTUALIZACION DE DATOS
     mensajes.value.push("Iniciando pruebas de actualización")
     
-    tiempo=await categoriasActualizar(pruebas.categorias.actualizar)
+    tiempo=await categoriasActualizarMongo(pruebas.categorias.actualizar,contaInicial.value)
     tiempo==-1? erroresActualizacion.value++: tiemposActualizacion.value.push(tiempo);
     
-    tiempo=await productosActualizar(pruebas.productos.actualizar)
+    tiempo=await productosActualizarMongo(pruebas.productos.actualizar,contaInicial.value)
     tiempo==-1? erroresActualizacion.value++: tiemposActualizacion.value.push(tiempo);
-    tiempo=await ordenesActualizar(pruebas.ordenes.actualizar)
+    tiempo=await ordenesActualizarMongo(pruebas.ordenes.actualizar,contaInicial.value)
     tiempo==-1? erroresActualizacion.value++: tiemposActualizacion.value.push(tiempo);
     
     //Consultas de Resumentes o Totales -Avanzadas
     mensajes.value.push("Iniciando pruebas de resumenes")
-    tiempo=await resumenesContarOrdenes()
+    tiempo=await resumenesContarOrdenesMongo()
     tiempo==-1? erroresConsulta.value++: tiemposResumen.value.push(tiempo);
-    tiempo=await resumenesProductos()
+    tiempo=await resumenesProductosMongo()
     tiempo==-1? erroresConsulta.value++: tiemposResumen.value.push(tiempo);
-    tiempo=await resumenesProductosFecha()
+    tiempo=await resumenesProductosFechaMongo()
     tiempo==-1? erroresConsulta.value++: tiemposResumen.value.push(tiempo);
-    tiempo=await resumenesTotalDiario()
+    tiempo=await resumenesTotalDiarioMongo()
     tiempo==-1? erroresConsulta.value++: tiemposResumen.value.push(tiempo);
-    tiempo=await resumenesTopten()
+    tiempo=await resumenesToptenMongo()
     tiempo==-1? erroresConsulta.value++: tiemposResumen.value.push(tiempo);
 
     //Eliminacion de datos
     mensajes.value.push("Iniciando pruebas de eliminación")
-    tiempo=await ordenesEliminar(pruebas.ordenes.insertar)
+    tiempo=await ordenesEliminarMongo(pruebas.ordenes.insertar,contaInicial.value)
     tiempo==-1? erroresEliminacion.value++: tiemposEliminacion.value.push(tiempo);
-    tiempo=await productosEliminar(pruebas.productos.insertar)
+    tiempo=await productosEliminarMongo(pruebas.productos.insertar,contaInicial.value)
     tiempo==-1? erroresEliminacion.value++: tiemposEliminacion.value.push(tiempo);
     
-    tiempo=await categoriasEliminar(pruebas.categorias.insertar)
+    tiempo=await categoriasEliminarMongo(pruebas.categorias.insertar,contaInicial.value)
     tiempo==-1? erroresEliminacion.value++: tiemposEliminacion.value.push(tiempo);
 
     console.log("Terminaron las pruebas realizadas")

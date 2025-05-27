@@ -9,11 +9,7 @@ const uri = `mongodb://${hostdb}:27017/${database}`;
 mongoose.connect(uri);
 
 
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "Error de conexión a MongoDB:"));
-db.once("open", () => {
-  console.log("Conectado a MongoDB");
-});
+
 
 // Definición del esquema de Categorías
 const categoriaSchema = new mongoose.Schema({
@@ -57,6 +53,6 @@ const Orden = mongoose.model("Orden", ordenSchema);
 
 
 
-export { db, Categoria, Producto, Orden };
+export {Categoria, Producto, Orden };
 
 
