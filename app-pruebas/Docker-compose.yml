@@ -13,7 +13,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - HOST_DB=rethinkdb
+      - HOST_DB=firebird
     deploy:
           resources:
             limits:
@@ -63,40 +63,40 @@ services:
   #         memory: 1G
 
 # #SI LA BASE ES RETHINKDB
-  rethinkdb:
-    image: rethinkdb:2.4
-    container_name: rethinkdb
-    restart: unless-stopped
-    ports:
-      - "8080:8080"
-      - "28015:28015"
-      - "29015:29015"
+  # rethinkdb:
+  #   image: rethinkdb:2.4
+  #   container_name: rethinkdb
+  #   restart: unless-stopped
+  #   ports:
+  #     - "8080:8080"
+  #     - "28015:28015"
+  #     - "29015:29015"
 
-  initdb:
-    build: ../RethinkDB/initdb
-    depends_on:
-      - rethinkdb
+  # initdb:
+  #   build: ../RethinkDB/initdb
+  #   depends_on:
+  #     - rethinkdb
 
 # #SI LA BASE ES FIREBIRD
-# firebird:
-#     image: firebirdsql/firebird:latest
-#     container_name: firebird
-#     restart: unless-stopped
-#     environment:
-#       - FIREBIRD_DATABASE=cafeteria.fdb
-#       - FIREBIRD_USER=SYSDBA
-#       - FIREBIRD_PASSWORD=masterkey
-#     ports:
-#       - "3050:3050"  # Puerto predeterminado de Firebird
-#     volumes:
-#       - ../firebird/cafeteria.fdb:/firebird/data/cafeteria.fdb:Z  # Archivo de base de datos
-#       - ../firebird/cafeteria.sql:/docker-entrypoint-initdb.d/cafeteria.sql:Z  # Script de inicialización
-#       - ../firebird/firebird.conf:/opt/firebird/firebird.conf:Z  # Montar el archivo de configuración personalizado
-#     deploy:
-#       resources:
-#         limits:
-#           cpus: '1'
-#           memory: 1G
-#         reservations:
-#           cpus: '1'
-#           memory: 1G
+firebird:
+    image: firebirdsql/firebird:latest
+    container_name: firebird
+    restart: unless-stopped
+    environment:
+      - FIREBIRD_DATABASE=cafeteria.fdb
+      - FIREBIRD_USER=SYSDBA
+      - FIREBIRD_PASSWORD=masterkey
+    ports:
+      - "3050:3050"  # Puerto predeterminado de Firebird
+    volumes:
+      - ../firebird/cafeteria.fdb:/firebird/data/cafeteria.fdb:Z  # Archivo de base de datos
+      - ../firebird/cafeteria.sql:/docker-entrypoint-initdb.d/cafeteria.sql:Z  # Script de inicialización
+      - ../firebird/firebird.conf:/opt/firebird/firebird.conf:Z  # Montar el archivo de configuración personalizado
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '1'
+          memory: 1G
