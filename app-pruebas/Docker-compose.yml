@@ -78,7 +78,7 @@ services:
   #     - rethinkdb
 
 # #SI LA BASE ES FIREBIRD
-firebird:
+  firebird:
     image: firebirdsql/firebird:latest
     container_name: firebird
     restart: unless-stopped
