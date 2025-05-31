@@ -76,6 +76,28 @@ services:
   #   build: ../RethinkDB/initdb
   #   depends_on:
   #     - rethinkdb
+# SI LA BASE ES MARIADB
+ # mariadb:
+ #   image: mariadb:latest
+ #   container_name: mariadb
+ #   restart: unless-stopped
+ #   environment:
+ #     MYSQL_ROOT_PASSWORD: 'root'    
+ #     MMYSQL_USER: 'admin'
+ #     MYSQL_PASSWORD: 'admin'
+ #     MYSQL_DATABASE: 'cafeteria'     
+ #   ports:
+ #     - "3306:3306"
+ #   volumes:
+ #     - ../mariadb/cafeteria.sql:/docker-entrypoint-initdb.d/cafeteria.sql
+ #   deploy:
+ #         resources:
+ #           limits:
+ #             cpus: '1'
+ #             memory: 1G
+ #           reservations:
+ #             cpus: '1'
+ #             memory: 1G 
 
 # #SI LA BASE ES FIREBIRD
   firebird:
