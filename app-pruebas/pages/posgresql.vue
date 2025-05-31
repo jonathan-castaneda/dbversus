@@ -145,7 +145,7 @@ const cargando= ref(false)
 const totalPruebas= ref(19)
 const mensajes= ref([])
 
-const inicioId=ref(0)
+const inicioId=ref(1)
 
 //propiedad computada del porcentaje de pruebas realizadas
 const avance = computed(() => {
@@ -261,7 +261,7 @@ async function realizarPruebas() {
     tiempo==-1? erroresConsulta.value++: tiemposConsulta.value.push(tiempo);
 
     // CONSULTAMOS ORDENES AL AZAR DEBEMOS TRAER LOS DATOS DE ORDEN Y SUS DETALLES    
-    tiempo=await ordenesConsultarAzar(pruebas.ordenes.aleatorio)
+    tiempo=await ordenesConsultarAzar(pruebas.ordenes.aleatorio, inicioId.value)
     tiempo==-1? erroresConsulta.value++: tiemposConsulta.value.push(tiempo);
 
     //ACTUALIZACION DE DATOS
@@ -290,7 +290,7 @@ async function realizarPruebas() {
 
     //Eliminacion de datos
     mensajes.value.push("Iniciando pruebas de eliminación")
-    tiempo=await ordenesEliminar(pruebas.ordenes.insertar)
+    tiempo=await ordenesEliminar(pruebas.ordenes.insertar, inicioId)
     tiempo==-1? erroresEliminacion.value++: tiemposEliminacion.value.push(tiempo);
     tiempo=await productosEliminar(pruebas.productos.insertar)
     tiempo==-1? erroresEliminacion.value++: tiemposEliminacion.value.push(tiempo);

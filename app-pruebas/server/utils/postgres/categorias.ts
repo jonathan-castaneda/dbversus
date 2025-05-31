@@ -3,14 +3,14 @@ import pruebas from '../pruebas.json'
 async function categoriasInsertar(total: number, inicioId:number): Promise<number> {
     console.log("Iniciando insercion de categorias desde "+inicioId)
     let start = new Date().getTime();    
-    for (let i = 1; i <= total; i++) {
-        console.log("Tipo de inicioId: ", typeof inicioId);
-        console.log("Tipo de i: ", typeof i);
-        console.log("Tipo de id: ", typeof (inicioId + i));
+    for (let i = inicioId; i <= Number(total) + Number(inicioId); i++) {
+        //console.log("Tipo de inicioId: ", typeof inicioId);
+        //console.log("Tipo de i: ", typeof i);
+        //console.log("Tipo de id: ", typeof (inicioId + i));
 
         const ldata = {
-            id: Number(inicioId) + i,
-            nombre: "Categoria " + (Number(inicioId) + i),
+            id: i,
+            nombre: "Categoria " + i,
         }
         console.log(`Insertando categoria con id: ${ldata.id}`)
         console.log('Datos del categoria:', JSON.stringify(ldata, null, 2));

@@ -3,12 +3,12 @@ import pruebas from '../pruebas.json'
 async function productosInsertar(total: number,inicioId:number): Promise<number>  { 
     console.log("Iniciando insercion de productos "+(Number(inicioId)+1))  
     let start = new Date().getTime();    
-    for (let i = 1; i <= total; i++) {
+    for (let i = inicioId; i <= Number(total) + Number(inicioId); i++) {
         const ldata = {
-            id: Number(inicioId) + i,
-            nombre: "Producto " + (Number(inicioId) + i),
+            id: i,
+            nombre: "Producto " + i,
             precio: Math.floor(Math.random() * 100) + 1,
-            idcategoria: Math.floor(Math.random() * pruebas.categorias.insertar) + 1,
+            idcategoria: Math.floor(Math.random() * pruebas.categorias.insertar) + Number(inicioId),
         }
         console.log(`Insertando producto con id: ${ldata.id}`)
         console.log('Datos del producto:', JSON.stringify(ldata, null, 2));

@@ -2,13 +2,13 @@ import pruebas from '../pruebas.json'
 async function ordenesInsertar(total:number, totaldetalle:number,inicioId:number): Promise<number> {
     console.log("Iniciando insercion de ordenes desde "+inicioId)
     let start = new Date().getTime();
-    for (let conta=1; conta<=total; conta ++){
+    for (let conta=inicioId; conta<=Number(total) + Number(inicioId); conta ++){
         let anio = new Date().getFullYear();
         //mes es un numero del 1 al 12
         let mes = Math.floor(Math.random() * 12)+1;
         let lfecha: string = anio +","+ mes + "," + Math.floor(Math.random() * 28 + 1);
         const ldata = {
-                id: Number(inicioId) + conta,
+                id: conta,
                 fecha:lfecha,
                 total: Math.floor(Math.random() * 100) + 1,
         }
@@ -31,7 +31,7 @@ async function ordenesInsertar(total:number, totaldetalle:number,inicioId:number
             })
             
         //ahora vienen los detalles de cada orden
-        await detalleOrdenInsertar(conta+Number(inicioId), totaldetalle)
+        await detalleOrdenInsertar(conta, totaldetalle,inicioId)
     }//fin del for del conta de las ordenes
    
     let end = new Date().getTime();
@@ -39,9 +39,9 @@ async function ordenesInsertar(total:number, totaldetalle:number,inicioId:number
     return time;
 }
 
-async function detalleOrdenInsertar(idOrden: number, totaldetalle: number) {   
+async function detalleOrdenInsertar(idOrden: number, totaldetalle: number, inicioId:number) {   
                 //Ahora Agregamos los detalles de la orden los cuales serán segun el totaldetalle
-                for (let j = 1; j <= totaldetalle; j++) {
+                for (let j = inicioId; j <= Number(totaldetalle)+ Number(inicioId); j++) {
                     const ldatadetalle = {                        
                         idorden: idOrden,
                         //idproducto: Math.floor(Math.random() * (pruebas.productos.insertar/2)) + 1,
@@ -68,10 +68,10 @@ async function detalleOrdenInsertar(idOrden: number, totaldetalle: number) {
 
 }
 
-async function ordenesConsultarAzar(total:number): Promise<number> {    
+async function ordenesConsultarAzar(total:number, inicioId:number): Promise<number> {    
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
-        let id = Math.floor(Math.random() * pruebas.ordenes.insertar) + 1;
+        let id = Math.floor(Math.random() * Number(pruebas.ordenes.insertar)) + Number(inicioId);
         await $fetch('http://localhost:3000/api/postgres/orden/' + id, {
             method: 'GET',
             headers: {
@@ -97,9 +97,12 @@ async function ordenesConsultarAzar(total:number): Promise<number> {
     return time;
 }
 
-async function ordenesActualizar(total:number): Promise<number> {
+
+
+
+async function ordenesActualizar(total:number, inicioId:number): Promise<number> {
     let start = new Date().getTime();
-    for (let i = 1; i <= total; i++) {
+    for (let i = inicioId; i <= Number(total) + Number(inicioId); i++) {
         const ldata = {
             id: i,
             fecha: new Date().toISOString(),
@@ -159,9 +162,9 @@ async function ordenesActualizar(total:number): Promise<number> {
     return time;
 }
 
-async function ordenesEliminar(total:number) : Promise<number>{
+async function ordenesEliminar(total:number, inicioId:number) : Promise<number>{
     let start = new Date().getTime();
-    for (let i = 1; i <= total; i++) {
+    for (let i = inicioId; i <= Number(total) + Number(inicioId); i++) {
         
         await $fetch('http://localhost:3000/api/postgres/orden/'+i, {
         method: 'DELETE',
