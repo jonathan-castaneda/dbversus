@@ -1,5 +1,5 @@
 import pruebas from '../pruebas.json'
-async function ordenesInsertar(total:number, totaldetalle:number, contaInicial:number): Promise<number> {
+async function ordenesInsertar(total:number, totaldetalle:number, contaInicial:number, ipServer:string): Promise<number> {
     console.log("Iniciando insercion de ordenes")
     let start = new Date().getTime();
     for (let conta=contaInicial; conta<=Number(total) + Number(contaInicial); conta ++){
@@ -13,7 +13,7 @@ async function ordenesInsertar(total:number, totaldetalle:number, contaInicial:n
                 total: Math.floor(Math.random() * 100) + 1,
         }
         //agrego usando $fetch        
-        await $fetch('http://localhost:3000/api/mariadb/orden', {
+        await $fetch('http://'+ ipServer +':3000/api/mariadb/orden', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -29,7 +29,7 @@ async function ordenesInsertar(total:number, totaldetalle:number, contaInicial:n
             })
             
         //ahora vienen los detalles de cada orden
-        await detalleOrdenInsertar(conta, totaldetalle, contaInicial)
+        await detalleOrdenInsertar(conta, totaldetalle, contaInicial, ipServer)
     }//fin del for del conta de las ordenes
    
     let end = new Date().getTime();
@@ -37,7 +37,7 @@ async function ordenesInsertar(total:number, totaldetalle:number, contaInicial:n
     return time;
 }
 
-async function detalleOrdenInsertar(idOrden: number, totaldetalle: number, contaInicial:number) {   
+async function detalleOrdenInsertar(idOrden: number, totaldetalle: number, contaInicial:number, ipServer:string) {   
                 //Ahora Agregamos los detalles de la orden los cuales serán segun el totaldetalle
                 for (let j = contaInicial; j <= Number(totaldetalle) + Number(contaInicial) ; j++) {
                     const ldatadetalle = {                        
@@ -48,7 +48,7 @@ async function detalleOrdenInsertar(idOrden: number, totaldetalle: number, conta
                         precio: Math.floor(Math.random() * 100) + 1,
                     }
                     //agrego usando $fetch        
-                    await $fetch('http://localhost:3000/api/mariadb/detalleorden', {
+                    await $fetch('http://'+ ipServer +':3000/api/mariadb/detalleorden', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -59,18 +59,13 @@ async function detalleOrdenInsertar(idOrden: number, totaldetalle: number, conta
                         },
                     })        
                 }
-
-               
-     
-
-
 }
 
-async function ordenesConsultarAzar(total:number, contaInicial:number): Promise<number> {    
+async function ordenesConsultarAzar(total:number, contaInicial:number, ipServer:string): Promise<number> {    
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
         let id = Math.floor(Math.random() * pruebas.ordenes.insertar) + Number(contaInicial);
-        await $fetch('http://localhost:3000/api/mariadb/orden/' + id, {
+        await $fetch('http://'+ ipServer +':3000/api/mariadb/orden/' + id, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -80,7 +75,7 @@ async function ordenesConsultarAzar(total:number, contaInicial:number): Promise<
             },
         })
         //ahora consultamos los detalles de la orden
-        await $fetch('http://localhost:3000/api/mariadb/detalleorden/' + id, {
+        await $fetch('http://'+ ipServer +':3000/api/mariadb/detalleorden/' + id, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -95,7 +90,7 @@ async function ordenesConsultarAzar(total:number, contaInicial:number): Promise<
     return time;
 }
 
-async function ordenesActualizar(total:number,contaInicial:number): Promise<number> {
+async function ordenesActualizar(total:number,contaInicial:number, ipServer:string): Promise<number> {
     let start = new Date().getTime();
     for (let i = contaInicial; i <= Number(total) + Number(contaInicial); i++) {
         const ldata = {
@@ -103,7 +98,7 @@ async function ordenesActualizar(total:number,contaInicial:number): Promise<numb
             fecha: new Date().toISOString(),
             total: Math.floor(Math.random() * 100) + 1,
         }
-        await $fetch('http://localhost:3000/api/mariadb/orden/'+i, {
+        await $fetch('http://'+ ipServer +':3000/api/mariadb/orden/'+i, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -115,7 +110,7 @@ async function ordenesActualizar(total:number,contaInicial:number): Promise<numb
         })
         //ahora actualizamos los detalles de la orden, primero hacemos GET y traemos todos los detalles
         // luego le multiplicamos por dos la cantidad y enviamos las actualizaciones de cada detalle
-        let datos = await $fetch('http://localhost:3000/api/mariadb/detalleorden/' + i, {
+        let datos = await $fetch('http://'+ ipServer +':3000/api/mariadb/detalleorden/' + i, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -138,7 +133,7 @@ async function ordenesActualizar(total:number,contaInicial:number): Promise<numb
             }
             //console.log(ldatadetalle)
             //ahora invocamos PUT detalleorden para enviar los cambios
-            await $fetch('http://localhost:3000/api/mariadb/detalleorden/' + ldatos[j].idorden + '/'+  ldatos[j].idproducto  , {
+            await $fetch('http://'+ ipServer +':3000/api/mariadb/detalleorden/' + ldatos[j].idorden + '/'+  ldatos[j].idproducto  , {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -157,11 +152,11 @@ async function ordenesActualizar(total:number,contaInicial:number): Promise<numb
     return time;
 }
 
-async function ordenesEliminar(total:number, contaInicial:number) : Promise<number>{
+async function ordenesEliminar(total:number, contaInicial:number, ipServer:string) : Promise<number>{
     let start = new Date().getTime();
     for (let i = contaInicial; i <= Number(total) + Number(contaInicial); i++) {
         
-        await $fetch('http://localhost:3000/api/mariadb/orden/'+i, {
+        await $fetch('http://'+ ipServer +':3000/api/mariadb/orden/'+i, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',

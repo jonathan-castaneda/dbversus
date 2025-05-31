@@ -7,7 +7,7 @@
 #limitamos el procesador y mejoria de contenedor
 #levante con docker-compose up -d
 services:
-  mysql:
+  mariadb:
     image: mariadb:latest
     container_name: mariadb
     restart: unless-stopped

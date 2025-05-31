@@ -34,7 +34,9 @@
                 </div>
                 <div class="col-3 q-ml-lg">
                     <q-input dense style="width: 150px;" type="number" outlined v-model="contaInicial" label="Contador Inicial en:" />
-                <q-btn :disable="errorConexion" size="lg" :loading="cargando" @click="realizarPruebas" color="primary">Iniciar Pruebas</q-btn>
+                <q-input dense style="width: 150px;" outlined v-model="ipServer" label="Servidor nuxt:" />
+                    
+                    <q-btn size="lg" :loading="cargando" @click="realizarPruebas" color="primary">Iniciar Pruebas</q-btn>
                 <q-circular-progress
                 show-value
                 font-size="12px"
@@ -257,19 +259,20 @@ import { resumenesContarOrdenes, resumenesProductos, resumenesProductosFecha, re
 
 const errorConexion= ref(false)
 const contaInicial= ref(1)
+const ipServer= ref('127.0.0.1')
 
-const tiemposInsercion= ref([])
-const tiemposConsulta= ref([ ])
-const tiemposActualizacion= ref([ ])
-const tiemposResumen= ref([ ])
-const tiemposEliminacion= ref([])
-const erroresInsercion= ref(0)
-const erroresConsulta= ref(0)
-const erroresActualizacion= ref(0)
-const erroresEliminacion= ref(0)
-const cargando= ref(false)
-const totalPruebas= ref(19)
-const mensajes= ref([])
+const tiemposInsercion = ref([])
+const tiemposConsulta = ref([ ])
+const tiemposActualizacion = ref([ ])
+const tiemposResumen = ref([ ])
+const tiemposEliminacion = ref([])
+const erroresInsercion = ref(0)
+const erroresConsulta = ref(0)
+const erroresActualizacion = ref(0)
+const erroresEliminacion = ref(0)
+const cargando = ref(false)
+const totalPruebas = ref(19)
+const mensajes = ref([])
 
 //propiedad computada del porcentaje de pruebas realizadas
 const avance = computed(() => {
@@ -349,7 +352,18 @@ const rows=computed(() => {
     
 })
 
-
+async function probando(){
+    try {
+        console.log("probando")
+        let tiempo:number;
+        tiempo=await categoriasConsultar(ipServer.value)
+        tiempo==-1? erroresConsulta.value++: tiemposConsulta.value.push(tiempo);
+        
+    } catch (error) {
+        console.error(error)
+        errorConexion.value=true
+    }
+}
 
 async function realizarPruebas() {
     try {
@@ -360,66 +374,66 @@ async function realizarPruebas() {
     
     //INSERTANDO DATOS
     mensajes.value.push("Iniciando pruebas de inserción")    
-    tiempo=await categoriasInsertar(pruebas.categorias.insertar, contaInicial.value)
+    tiempo=await categoriasInsertar(pruebas.categorias.insertar, contaInicial.value, ipServer.value)
     tiempo==-1? erroresInsercion.value++: tiemposInsercion.value.push(tiempo);   
     
     
-    tiempo=await productosInsertar(pruebas.productos.insertar, contaInicial.value)
+    tiempo=await productosInsertar(pruebas.productos.insertar, contaInicial.value, ipServer.value)
     tiempo==-1? erroresInsercion.value++: tiemposInsercion.value.push(tiempo);   
-    tiempo=await ordenesInsertar(pruebas.ordenes.insertar, pruebas.ordenes.detalleoden, contaInicial.value)
+    tiempo=await ordenesInsertar(pruebas.ordenes.insertar, pruebas.ordenes.detalleoden, contaInicial.value, ipServer.value)
     tiempo==-1? erroresInsercion.value++: tiemposInsercion.value.push(tiempo);
     
     mensajes.value.push("Iniciando pruebas de consultas")
     
     //PROCEDEMOS A CONSULTAR LOS DATOS    
-    tiempo=await categoriasConsultar()
+    tiempo=await categoriasConsultar(ipServer.value)
     tiempo==-1? erroresConsulta.value++: tiemposConsulta.value.push(tiempo);
     
-    tiempo=await categoriasConsultarAzar(pruebas.categorias.aleatorio, contaInicial.value)
+    tiempo=await categoriasConsultarAzar(pruebas.categorias.aleatorio, contaInicial.value, ipServer.value)
     tiempo==-1? erroresConsulta.value++: tiemposConsulta.value.push(tiempo);
     
-    tiempo=await productosConsultar()
+    tiempo=await productosConsultar(ipServer.value)
     tiempo==-1? erroresConsulta.value++: tiemposConsulta.value.push(tiempo);
 
-    tiempo=await productosConsultarAzar(pruebas.productos.aleatorio,contaInicial.value)
+    tiempo=await productosConsultarAzar(pruebas.productos.aleatorio,contaInicial.value, ipServer.value)
     tiempo==-1? erroresConsulta.value++: tiemposConsulta.value.push(tiempo);
 
     // CONSULTAMOS ORDENES AL AZAR DEBEMOS TRAER LOS DATOS DE ORDEN Y SUS DETALLES    
-    tiempo=await ordenesConsultarAzar(pruebas.ordenes.aleatorio, contaInicial.value)
+    tiempo=await ordenesConsultarAzar(pruebas.ordenes.aleatorio, contaInicial.value, ipServer.value)
     tiempo==-1? erroresConsulta.value++: tiemposConsulta.value.push(tiempo);
 
     //ACTUALIZACION DE DATOS
     mensajes.value.push("Iniciando pruebas de actualización")
     
-    tiempo=await categoriasActualizar(pruebas.categorias.actualizar, contaInicial.value)
+    tiempo=await categoriasActualizar(pruebas.categorias.actualizar, contaInicial.value, ipServer.value)
     tiempo==-1? erroresActualizacion.value++: tiemposActualizacion.value.push(tiempo);
     
-    tiempo=await productosActualizar(pruebas.productos.actualizar, contaInicial.value)
+    tiempo=await productosActualizar(pruebas.productos.actualizar, contaInicial.value, ipServer.value)
     tiempo==-1? erroresActualizacion.value++: tiemposActualizacion.value.push(tiempo);
-    tiempo=await ordenesActualizar(pruebas.ordenes.actualizar, contaInicial.value)
+    tiempo=await ordenesActualizar(pruebas.ordenes.actualizar, contaInicial.value, ipServer.value)
     tiempo==-1? erroresActualizacion.value++: tiemposActualizacion.value.push(tiempo);
     
     //Consultas de Resumentes o Totales -Avanzadas
     mensajes.value.push("Iniciando pruebas de resumenes")
-    tiempo=await resumenesContarOrdenes()
+    tiempo=await resumenesContarOrdenes(ipServer.value)
     tiempo==-1? erroresConsulta.value++: tiemposResumen.value.push(tiempo);
-    tiempo=await resumenesProductos()
+    tiempo=await resumenesProductos(ipServer.value)
     tiempo==-1? erroresConsulta.value++: tiemposResumen.value.push(tiempo);
-    tiempo=await resumenesProductosFecha()
+    tiempo=await resumenesProductosFecha(ipServer.value)
     tiempo==-1? erroresConsulta.value++: tiemposResumen.value.push(tiempo);
-    tiempo=await resumenesTotalDiario()
+    tiempo=await resumenesTotalDiario(ipServer.value)
     tiempo==-1? erroresConsulta.value++: tiemposResumen.value.push(tiempo);
-    tiempo=await resumenesTopten()
+    tiempo=await resumenesTopten(ipServer.value)
     tiempo==-1? erroresConsulta.value++: tiemposResumen.value.push(tiempo);
 
     //Eliminacion de datos
     mensajes.value.push("Iniciando pruebas de eliminación")
-    tiempo=await ordenesEliminar(pruebas.ordenes.insertar, contaInicial.value)
+    tiempo=await ordenesEliminar(pruebas.ordenes.insertar, contaInicial.value, ipServer.value)
     tiempo==-1? erroresEliminacion.value++: tiemposEliminacion.value.push(tiempo);
-    tiempo=await productosEliminar(pruebas.productos.insertar, contaInicial.value)
+    tiempo=await productosEliminar(pruebas.productos.insertar, contaInicial.value, ipServer.value)
     tiempo==-1? erroresEliminacion.value++: tiemposEliminacion.value.push(tiempo);
     
-    tiempo=await categoriasEliminar(pruebas.categorias.insertar, contaInicial.value)
+    tiempo=await categoriasEliminar(pruebas.categorias.insertar, contaInicial.value, ipServer.value)
     tiempo==-1? erroresEliminacion.value++: tiemposEliminacion.value.push(tiempo);
 
     console.log("Terminaron las pruebas realizadas")
@@ -433,7 +447,8 @@ async function realizarPruebas() {
 
 async function probarConexion(){
     try {
-        await categoriasConsultar()
+        console.log("Probando conexión con el servidor: ", ipServer.value);
+        await categoriasConsultar(ipServer.value)
         errorConexion.value=false
     } catch (error) {
         errorConexion.value=true
@@ -441,7 +456,8 @@ async function probarConexion(){
 }
 
 onMounted(()=>{
-    probarConexion()
+  ipServer.value=window.location.hostname
+  probarConexion()
 })
 
 </script>
