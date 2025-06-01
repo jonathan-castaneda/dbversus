@@ -11,34 +11,36 @@
 // SE DEBE INVOCAR ASI
 //http://localhost:3000/api/mysql/resumenes/productosdiariosfecha?fecha=2024-01-02
 
-import { ordenes, detalleordenes, productos } from "../../../utils/postgres/postgres";
-export default defineEventHandler(async (event) => {   
-    
-    //return { statusCode:200, "hola": getQuery(event) };
-    const { fecha } = getQuery(event);
-    try {               
-        const data = await ordenes.findAll({
-            attributes: ['fecha'],
-            include: [
-                {
-                    model: detalleordenes,
-                    attributes: ['cantidad'],
-                    include: [
-                        {
-                            model: productos,
-                            attributes: ['id','nombre'],
-                        }
-                    ]
-                }
-            ],
-            where: { fecha: fecha },            
-            group: ['fecha','id', 'detalleordenes.idproducto', 'nombre'],
-            order: ['fecha']
-        });
-        return { statusCode:200, data };
-    } catch (error) {
-        console.error('Error productosdiarios:', error);
-        return(error)
-    }    
-})
+import { sequelize } from '../../../utils/postgres/postgres';
 
+export default defineEventHandler(async (event) => {
+    const { fecha } = getQuery(event);
+    
+    if (!fecha) {
+        return { statusCode: 400, error: "Falta el parámetro 'fecha'" };
+    }
+
+    try {
+        const [result] = await sequelize.query(`
+            SELECT 
+                o.fecha, 
+                d.idproducto, 
+                p.nombre, 
+                SUM(d.cantidad) AS cantidad_total
+            FROM ordenes o
+            JOIN detalleordenes d ON o.id = d.idorden
+            JOIN productos p ON d.idproducto = p.id
+            WHERE o.fecha = :fecha
+            GROUP BY o.fecha, d.idproducto, p.nombre
+            ORDER BY o.fecha
+        `, {
+            replacements: { fecha }
+        });
+
+        console.log("Resumen de productos por fecha:", result);
+        return { statusCode: 200, data: result };
+    } catch (error) {
+        console.error('Error productosdiariosfecha:', error);
+        return { statusCode: 500, error: 'Error interno del servidor' };
+    }
+});

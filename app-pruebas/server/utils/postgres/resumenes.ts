@@ -31,27 +31,6 @@ async function resumenesProductos(): Promise<number>  {
     return time;
 }
 
-async function resumenesProductosFecha(): Promise<number>  {
-    let start = new Date().getTime();
-    let anio = new Date().getFullYear();        
-    let mes = Math.floor(Math.random() * 12)+1;
-    let dia = Math.floor(Math.random() * 28 + 1);
-    let fecha= anio + "-" + mes + "-" + dia;
-
-    await $fetch('http://localhost:3000/api/postgres/resumenes/productosdiariosfecha?fecha=' + fecha, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        onRequestError({ request, options, error }) {
-            return -1;
-        },
-    })
-    let end = new Date().getTime();
-    let time = end - start;
-    return time;
-}
-
 async function resumenesTotalDiario() : Promise<number> {
     let start = new Date().getTime();
     await $fetch('http://localhost:3000/api/postgres/resumenes/totaldiario', {
@@ -67,6 +46,31 @@ async function resumenesTotalDiario() : Promise<number> {
     let time = end - start;
     return time;
 }
+async function resumenesProductosFecha(): Promise<number> {
+    let start = new Date().getTime();
+    let anio = new Date().getFullYear();        
+    let mes = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
+    let dia = String(Math.floor(Math.random() * 28 + 1)).padStart(2, '0');
+    let fecha = `${anio}-${mes}-${dia}`;
+
+    console.log("Fecha generada:", fecha); // Útil para depurar
+
+    try {
+        await $fetch('http://localhost:3000/api/postgres/resumenes/productosdiariosfecha?fecha=' + fecha, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+    } catch (error) {
+        console.error("Error en productosdiariosfecha:", error);
+        return -1;
+    }
+
+    let end = new Date().getTime();
+    return end - start;
+}
+
 
 async function resumenesTopten(): Promise<number>  {
     let start = new Date().getTime();

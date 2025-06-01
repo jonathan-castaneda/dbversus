@@ -6,30 +6,27 @@
 //join productos on detalleordenes.idproducto = productos.id 
 //group by ordenes.fecha, detalleordenes.idproducto, productos.nombre order by ordenes.fecha
 //implementamos esta consulta sql en sequelize
-import { ordenes, detalleordenes, productos } from "../../../utils/postgres/postgres";
-export default defineEventHandler(async (event) => {      
-    try {
-        const data = await ordenes.findAll({
-            attributes: ['fecha'],
-            include: [
-                {
-                    model: detalleordenes,
-                    attributes: ['cantidad'],
-                    include: [
-                        {
-                            model: productos,
-                            attributes: ['id','nombre'],
-                        }
-                    ]
-                }
-            ],
-            group: ['fecha','id', 'detalleordenes.idproducto', 'nombre'],
-            order: ['fecha']
-        });
-        return { statusCode:200, data };
-    } catch (error) {
-        console.error('Error productosdiarios:', error);
-        return(error)
-    }    
-})
 
+import { sequelize } from '../../../utils/postgres/postgres';
+
+export default defineEventHandler(async (event) => {
+    try {
+        const [result] = await sequelize.query(`
+            SELECT 
+                o.fecha, 
+                d.idproducto, 
+                p.nombre, 
+                SUM(d.cantidad) AS cantidad_total
+            FROM ordenes o
+            JOIN detalleordenes d ON o.id = d.idorden
+            JOIN productos p ON d.idproducto = p.id
+            GROUP BY o.fecha, d.idproducto, p.nombre
+            ORDER BY o.fecha
+        `);
+
+        return { statusCode: 200, data: result };
+    } catch (error) {
+        console.error("Error productosdiarios:", error);
+        return { statusCode: 500, error: "Error al obtener productos diarios" };
+    }
+});
