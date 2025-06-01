@@ -5,7 +5,7 @@
         </strong> <br> Dentro encontramos un proyecto de Nuxt en el cual se levanta el backend y el frontend ssr para poder correr las pruebas. </p>
 
         <p>Luego tenemos las carpetas donde se define los contenedores para levantar los gestores, dentro de la carpeta se encuentra el docker-compose.yml que define como levantar el contenedor y ademas otros archivos que definen aspectos de configuracion necesarios para levantar la imagen de docker</p>
-        <p>Para las pruebas de base de datos relacionales se usa Sequelize para optimizarlas, puede ver el ejemplo de oracle que ya esta completo.</p>
+        <p>Para las pruebas de base de datos relacionales se usa Sequelize para optimizarlas, puede ver el ejemplo de mysql que ya esta completo.</p>
         <p>Recuerde que en el docker compose puede modificar los recursos asignados al contenedor, la idea es correr las pruebas con los mismos recursos asignados a los gestores.</p>
         <p>deploy:
           resources:
