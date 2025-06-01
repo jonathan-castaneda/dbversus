@@ -12,7 +12,7 @@ async function productosInsertar(total: number, contaInicial:number): Promise<nu
             idCategoria: Math.floor(Math.random() * pruebas.categorias.insertar) + Number(contaInicial),
         }
         //agrego usando $fetch        
-        await $fetch('http://localhost:3000/api/mysql/producto', {
+        await $fetch('/api/mysql/producto', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -31,7 +31,7 @@ async function productosInsertar(total: number, contaInicial:number): Promise<nu
 
 async function productosConsultar(): Promise<number>  {    
     let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/mysql/productos', {
+    await $fetch('/api/mysql/productos', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -49,7 +49,7 @@ async function productosConsultarAzar(total:number, contaInicial:number): Promis
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
         let id = Math.floor(Math.random() * pruebas.productos.insertar) + Number(contaInicial);
-        await $fetch('http://localhost:3000/api/mysql/producto/' + id, {
+        await $fetch('/api/mysql/producto/' + id, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ async function productosActualizar(total:number, contaInicial:number): Promise<n
             categoria: Math.floor(Math.random() * pruebas.categorias.insertar) + 1,
         }
 
-        await $fetch('http://localhost:3000/api/mysql/producto/'+i, {
+        await $fetch('/api/mysql/producto/'+i, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ async function productosActualizar(total:number, contaInicial:number): Promise<n
 async function productosEliminar(total:number, contaInicial:number): Promise<number>  {
     let start = new Date().getTime();
     for (let i = contaInicial; i <= Number(total) + Number(contaInicial); i++) {
-        await $fetch('http://localhost:3000/api/mysql/producto/'+i, {
+        await $fetch('/api/mysql/producto/'+i, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',

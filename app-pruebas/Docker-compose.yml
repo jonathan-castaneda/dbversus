@@ -1,3 +1,4 @@
+
 #debes usar una variable de entorno para la direccion de la base de datos
 #lee la documentacion de la imagen calderonperaza/dbversusapp
 #esto es para produccion dockerizado
