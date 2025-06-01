@@ -6,13 +6,13 @@
 version: '3.1'
 services:
   appversus:
-    image: diegoosorio24/dbversusapp:1.1
+    image: calderonperaza/dbversusapp:1.0
     container_name: appversus
     restart: unless-stopped    
     ports:
       - "3000:3000"
     environment:
-      - HOST_DB=oracle
+      - HOST_DB=firebird
     deploy:
           resources:
             limits:
@@ -22,16 +22,117 @@ services:
               cpus: '1'
               memory: 1G
 #SI LA BASE DE DATOS ES MYSQL
-  oracle:
-    image: gvenzl/oracle-free:23.5-amd64
-    container_name: oracle
+  # mysql:
+  #   image: mysql:8.0-debian
+  #   container_name: mysql
+  #   restart: unless-stopped
+  #   environment:
+  #     MYSQL_ALLOW_EMPTY_PASSWORD: "yes"      
+  #     MYSQL_DATABASE: cafeteria      
+  #   ports:
+  #     - "3306:3306"
+  #   volumes:
+  #     - ../mysql/cafeteria.sql:/docker-entrypoint-initdb.d/cafeteria.sql
+  #   deploy:
+  #         resources:
+  #           limits:
+  #             cpus: '1'
+  #             memory: 1G
+  #           reservations:
+  #             cpus: '1'
+  #             memory: 1G
+  #SI LA BASE DE DATOS ES MONGODB
+  # mongodb:
+  #   image: mongo:6.0
+  #   container_name: mongo
+  #   restart: unless-stopped
+  #   environment:
+  #     MONGO_INITDB_DATABASE: cafeteria
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - ../mongo/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '1'
+  #         memory: 1G
+  #       reservations:
+  #         cpus: '1'
+  #         memory: 1G
+
+# #SI LA BASE ES RETHINKDB
+  # rethinkdb:
+  #   image: rethinkdb:2.4
+  #   container_name: rethinkdb
+  #   restart: unless-stopped
+  #   ports:
+  #     - "8080:8080"
+  #     - "28015:28015"
+  #     - "29015:29015"
+
+  # initdb:
+  #   build: ../RethinkDB/initdb
+  #   depends_on:
+  #     - rethinkdb
+# SI LA BASE ES MARIADB
+ # mariadb:
+ #   image: mariadb:latest
+ #   container_name: mariadb
+ #   restart: unless-stopped
+ #   environment:
+ #     MYSQL_ROOT_PASSWORD: 'root'    
+ #     MMYSQL_USER: 'admin'
+ #     MYSQL_PASSWORD: 'admin'
+ #     MYSQL_DATABASE: 'cafeteria'     
+ #   ports:
+ #     - "3306:3306"
+ #   volumes:
+ #     - ../mariadb/cafeteria.sql:/docker-entrypoint-initdb.d/cafeteria.sql
+ #   deploy:
+ #         resources:
+ #           limits:
+ #             cpus: '1'
+ #             memory: 1G
+ #           reservations:
+ #             cpus: '1'
+ #             memory: 1G
+
+ #SI LA BASE DE DATOS ES ORACLE
+  # oracle:
+  #   image: gvenzl/oracle-free:23.5-amd64
+  #   container_name: oracle
+  #   restart: unless-stopped
+  #   environment:
+  #     ORACLE_PASSWORD: "oracle"  # Contraseña de SYS y SYSTEM
+  #   ports:
+  #     - "1521:1521"  # Puerto de Oracle
+  #   volumes:
+  #     - ../oracle/cafeteria.sql:/docker-entrypoint-initdb.d/cafeteria.sql  # Importación del archivo SQL
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '1'
+  #         memory: 1G
+  #       reservations:
+  #         cpus: '1'
+  #         memory: 1G  
+
+# #SI LA BASE ES FIREBIRD
+  firebird:
+    image: firebirdsql/firebird:latest
+    container_name: firebird
     restart: unless-stopped
     environment:
-      ORACLE_PASSWORD: "oracle"  # Contraseña de SYS y SYSTEM
+      - FIREBIRD_DATABASE=cafeteria.fdb
+      - FIREBIRD_USER=SYSDBA
+      - FIREBIRD_PASSWORD=masterkey
     ports:
-      - "1521:1521"  # Puerto de Oracle
+      - "3050:3050"  # Puerto predeterminado de Firebird
     volumes:
-      - ../oracle/cafeteria.sql:/docker-entrypoint-initdb.d/cafeteria.sql  # Importación del archivo SQL
+      - ../firebird/cafeteria.fdb:/firebird/data/cafeteria.fdb:Z  # Archivo de base de datos
+      - ../firebird/cafeteria.sql:/docker-entrypoint-initdb.d/cafeteria.sql:Z  # Script de inicialización
+      - ../firebird/firebird.conf:/opt/firebird/firebird.conf:Z  # Montar el archivo de configuración personalizado
     deploy:
       resources:
         limits:
@@ -39,4 +140,4 @@ services:
           memory: 1G
         reservations:
           cpus: '1'
-          memory: 1G    
+          memory: 1G
