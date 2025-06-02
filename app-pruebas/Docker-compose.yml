@@ -97,7 +97,27 @@ services:
  #             memory: 1G
  #           reservations:
  #             cpus: '1'
- #             memory: 1G 
+ #             memory: 1G
+
+ #SI LA BASE DE DATOS ES ORACLE
+  # oracle:
+  #   image: gvenzl/oracle-free:23.5-amd64
+  #   container_name: oracle
+  #   restart: unless-stopped
+  #   environment:
+  #     ORACLE_PASSWORD: "oracle"  # Contraseña de SYS y SYSTEM
+  #   ports:
+  #     - "1521:1521"  # Puerto de Oracle
+  #   volumes:
+  #     - ../oracle/cafeteria.sql:/docker-entrypoint-initdb.d/cafeteria.sql  # Importación del archivo SQL
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '1'
+  #         memory: 1G
+  #       reservations:
+  #         cpus: '1'
+  #         memory: 1G  
 
 # #SI LA BASE ES FIREBIRD
   firebird:
