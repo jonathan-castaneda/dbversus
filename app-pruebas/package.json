@@ -12,6 +12,7 @@
   "dependencies": {
     "@quasar/extras": "^1.16.11",
     "@sequelize/mariadb": "^7.0.0-alpha.46",
+    "cassandra-driver": "^4.8.0",
     "mongoose": "^8.12.2",
     "mysql2": "^3.10.0",
     "node-firebird": "^1.1.9",
@@ -22,6 +23,7 @@
     "rethinkdb": "^2.4.2",
     "sequelize": "^6.37.3",
     "typescript": "^5.8.2",
+    "uuid": "^11.1.0",
     "vue": "^3.4.27",
     "vue-router": "^4.3.2"
   },
