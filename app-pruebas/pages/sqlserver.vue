@@ -34,22 +34,25 @@
           Consulta: <strong>{{ pruebas.ordenes.aleatorio }}</strong><br>
           Detalle Órdenes: <strong>{{ pruebas.ordenes.detalleoden }}</strong><br>
         </div>
-
+        
         <div class="col-3 q-ml-lg">
-          <q-btn size="lg" :loading="cargando" @click="realizarPruebas" color="primary">Iniciar Pruebas</q-btn>
-          <q-circular-progress
-            show-value
-            font-size="12px"
-            :value="avance"
-            size="50px"
-            :thickness="0.22"
-            color="teal"
-            track-color="grey-3"
-            class="q-ma-md"
-          >
-            {{ avance }}%
-          </q-circular-progress>
-        </div>
+          <q-input dense style="width: 150px;" type="number" outlined v-model="contaInicial" label="Contador Inicial en:" />
+          
+          <q-btn :disable="errorConexion" size="lg" :loading="cargando" @click="realizarPruebas" color="primary">Iniciar Pruebas</q-btn>
+        <q-circular-progress
+        show-value
+        font-size="12px"
+        :value="avance"
+        size="50px"
+        :thickness="0.22"
+        color="teal"
+        track-color="grey-3"
+        class="q-ma-md"
+        >
+        {{ avance }}%
+        </q-circular-progress>
+        <div v-show="errorConexion" class="text-caption text-red">Error de conexion, No es posible conectar con la base de datos revise el host, la ip o si el servicio esta levantado.</div>
+      </div>
       </div>
     </div>
 
@@ -98,6 +101,9 @@ import { categoriasInsertarSqlServer, categoriasConsultarSqlServer, categoriasCo
 import { productosInsertarSqlServer, productosConsultarSqlServer, productosConsultarAzarSqlServer, productosActualizarSqlServer, productosEliminarSqlServer } from '../server/utils/sqlserver/productos'
 import { ordenesInsertarSqlServer, ordenesConsultarAzarSqlServer, ordenesActualizarSqlServer, ordenesEliminarSqlServer } from '../server/utils/sqlserver/ordenes'
 import { resumenesContarOrdenesSqlServer, resumenesProductosSqlServer, resumenesProductosFechaSqlServer, resumenesTotalDiarioSqlServer, resumenesToptenSqlServer } from '../server/utils/sqlserver/resumenes'
+
+const errorConexion= ref(false)
+const contaInicial= ref(1)
 
 const tiemposInsercion = ref<number[]>([])
 const tiemposConsulta = ref<number[]>([])
@@ -148,13 +154,13 @@ async function realizarPruebas() {
     cargando.value = true
     mensajes.value.push("Iniciando pruebas de inserción")
 
-    let tiempo = await categoriasInsertarSqlServer(pruebas.categorias.insertar)
+    let tiempo = await categoriasInsertarSqlServer(pruebas.categorias.insertar, contaInicial.value)
     tiempo === -1 ? erroresInsercion.value++ : tiemposInsercion.value.push(tiempo)
 
-    tiempo = await productosInsertarSqlServer(pruebas.productos.insertar)
+    tiempo = await productosInsertarSqlServer(pruebas.productos.insertar, contaInicial.value)
     tiempo === -1 ? erroresInsercion.value++ : tiemposInsercion.value.push(tiempo)
 
-    tiempo = await ordenesInsertarSqlServer(pruebas.ordenes.insertar, pruebas.ordenes.detalleoden)
+    tiempo = await ordenesInsertarSqlServer(pruebas.ordenes.insertar, pruebas.ordenes.detalleoden, contaInicial.value)
     tiempo === -1 ? erroresInsercion.value++ : tiemposInsercion.value.push(tiempo)
 
     mensajes.value.push("Iniciando pruebas de consultas")
@@ -162,27 +168,27 @@ async function realizarPruebas() {
     tiempo = await categoriasConsultarSqlServer()
     tiempo === -1 ? erroresConsulta.value++ : tiemposConsulta.value.push(tiempo)
 
-    tiempo = await categoriasConsultarAzarSqlServer(pruebas.categorias.aleatorio)
+    tiempo = await categoriasConsultarAzarSqlServer(pruebas.categorias.aleatorio, contaInicial.value)
     tiempo === -1 ? erroresConsulta.value++ : tiemposConsulta.value.push(tiempo)
 
     tiempo = await productosConsultarSqlServer()
     tiempo === -1 ? erroresConsulta.value++ : tiemposConsulta.value.push(tiempo)
 
-    tiempo = await productosConsultarAzarSqlServer(pruebas.productos.aleatorio)
+    tiempo = await productosConsultarAzarSqlServer(pruebas.productos.aleatorio, contaInicial.value)
     tiempo === -1 ? erroresConsulta.value++ : tiemposConsulta.value.push(tiempo)
 
-    tiempo = await ordenesConsultarAzarSqlServer(pruebas.ordenes.aleatorio)
+    tiempo = await ordenesConsultarAzarSqlServer(pruebas.ordenes.aleatorio, contaInicial.value)
     tiempo === -1 ? erroresConsulta.value++ : tiemposConsulta.value.push(tiempo)
 
     mensajes.value.push("Iniciando pruebas de actualización")
 
-    tiempo = await categoriasActualizarSqlServer(pruebas.categorias.actualizar)
+    tiempo = await categoriasActualizarSqlServer(pruebas.categorias.actualizar, contaInicial.value)
     tiempo === -1 ? erroresActualizacion.value++ : tiemposActualizacion.value.push(tiempo)
 
-    tiempo = await productosActualizarSqlServer(pruebas.productos.actualizar)
+    tiempo = await productosActualizarSqlServer(pruebas.productos.actualizar, contaInicial.value)
     tiempo === -1 ? erroresActualizacion.value++ : tiemposActualizacion.value.push(tiempo)
 
-    tiempo = await ordenesActualizarSqlServer(pruebas.ordenes.actualizar)
+    tiempo = await ordenesActualizarSqlServer(pruebas.ordenes.actualizar, contaInicial.value)
     tiempo === -1 ? erroresActualizacion.value++ : tiemposActualizacion.value.push(tiempo)
 
     mensajes.value.push("Iniciando pruebas de resumenes")
@@ -204,13 +210,13 @@ async function realizarPruebas() {
 
     mensajes.value.push("Iniciando pruebas de eliminación")
 
-    tiempo = await ordenesEliminarSqlServer(pruebas.ordenes.insertar)
+    tiempo = await ordenesEliminarSqlServer(pruebas.ordenes.insertar, contaInicial.value)
     tiempo === -1 ? erroresEliminacion.value++ : tiemposEliminacion.value.push(tiempo)
 
-    tiempo = await productosEliminarSqlServer(pruebas.productos.insertar)
+    tiempo = await productosEliminarSqlServer(pruebas.productos.insertar, contaInicial.value)
     tiempo === -1 ? erroresEliminacion.value++ : tiemposEliminacion.value.push(tiempo)
 
-    tiempo = await categoriasEliminarSqlServer(pruebas.categorias.insertar)
+    tiempo = await categoriasEliminarSqlServer(pruebas.categorias.insertar, contaInicial.value)
     tiempo === -1 ? erroresEliminacion.value++ : tiemposEliminacion.value.push(tiempo)
 
     mensajes.value.push("Terminaron las pruebas realizadas")

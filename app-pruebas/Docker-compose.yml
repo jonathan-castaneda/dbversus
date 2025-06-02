@@ -1,43 +1,48 @@
-#debes usar una variable de entorno para la direccion de la base de datos
-#lee la documentacion de la imagen calderonperaza/dbversusapp
-#esto es para produccion dockerizado
-#para correr ejecuta
-#docker-compose up -d
 version: '3.1'
 services:
   appversus:
-    image: calderonperaza/dbversusapp:1.0
+    image: jonathancastaneda/dbversusapp:1.0
     container_name: appversus
-    restart: unless-stopped    
+    restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
-      - HOST_DB=mysql
+      - HOST_DB=sqlserver
     deploy:
-          resources:
-            limits:
-              cpus: '1'
-              memory: 1G
-            reservations:
-              cpus: '1'
-              memory: 1G
-#SI LA BASE DE DATOS ES MYSQL
-  mysql:
-    image: mysql:8.0-debian
-    container_name: mysql
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '1'
+          memory: 1G
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2017-latest # Mantenemos 2017
+    container_name: sqlserver1
     restart: unless-stopped
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"      
-      MYSQL_DATABASE: cafeteria      
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "TuPasswordFuerte123"
+      MSSQL_ENCRYPT: "0" # <-- ¡Añade esta línea para que SQL Server no use encriptación!
     ports:
-      - "3306:3306"
+      - "1433:1433"
     volumes:
-      - ../mysql/cafeteria.sql:/docker-entrypoint-initdb.d/cafeteria.sql
-    deploy:
-          resources:
-            limits:
-              cpus: '1'
-              memory: 1G
-            reservations:
-              cpus: '1'
-              memory: 1G
+      - ../sqlserver/cafeteria.sql:/docker-entrypoint-initdb.d/cafeteria.sql
+      #- ./cafeteria.sql:/tmp/cafeteria.sql
+    entrypoint: >
+      /bin/bash -c "
+        echo 'Iniciando SQL Server...' && \
+        /opt/mssql/bin/sqlservr & \
+        sleep 40 && \
+        # QUITAMOS -N y --TrustServerCertificate. SQL Server no encriptará.
+        until /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'TuPasswordFuerte123' -Q 'SELECT 1' > /dev/null 2>&1; \
+        do echo 'Esperando que SQL Server esté listo...'; sleep 5; done; \
+        echo 'SQL Server está listo. Comprobando script...' ; \
+        if [ -f /docker-entrypoint-initdb.d/cafeteria.sql ]; then \
+          echo 'SQL Server está listo. Ejecutando script...' && \
+          /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'TuPasswordFuerte123' -d master -i /docker-entrypoint-initdb.d/cafeteria.sql; \
+        else \
+          echo 'Error: No se encontró el archivo SQL.'; \
+        fi; \
+        tail -f /dev/null
+      "

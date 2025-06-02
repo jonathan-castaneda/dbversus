@@ -1,4 +1,4 @@
-FROM node:21.7.3-alpine as build
+FROM node:21.7.3-alpine AS build
 WORKDIR /codigo
 COPY ["package.json", "package-lock.json*", "./"]
 # instala dependencias clear install
@@ -6,8 +6,8 @@ RUN npm ci
 #copiamos todos los archivos de la carpeta actual excepto node_modules
 # que se excluye por el archivo .dockerignore
 COPY . .
-RUN npm run build
-FROM node:21.7.3-alpine as production
+RUN npx nuxt build
+FROM node:21.7.3-alpine AS production
 WORKDIR /app
 COPY ["package.json", "package-lock.json*", "./"]
 RUN npm ci --omit=dev

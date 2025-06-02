@@ -1,4 +1,5 @@
 import { Sequelize, DataTypes } from "sequelize";
+import tedious from "tedious";
 
 // Variable de entorno HOST_DB indica la IP o el nombre del servidor DB SQL Server
 let hostdb = process.env.HOST_DB || "localhost";
@@ -17,6 +18,8 @@ const sequelizeSqlServer = new Sequelize({
   }
 });
 
+
+
 // Tabla Categorías
 const categoriasSqlServer = sequelizeSqlServer.define("categorias", {
   id: { type: DataTypes.INTEGER, primaryKey: true },
@@ -34,7 +37,7 @@ const productosSqlServer = sequelizeSqlServer.define("productos", {
 // Tabla Órdenes
 const ordenesSqlServer = sequelizeSqlServer.define("ordenes", {
   id: { type: DataTypes.INTEGER, primaryKey: true },
-  fecha: { type: DataTypes.DATE, allowNull: false }, // Se usa `DATE` en vez de `DATEONLY` para SQL Server
+  fecha: { type: DataTypes.DATE, allowNull: false }, // Se usa DATE en vez de DATEONLY para SQL Server
   total: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
 }, { timestamps: false });
 

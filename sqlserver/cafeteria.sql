@@ -1,11 +1,20 @@
--- Crear la base de datos 'cafeteria'
+-- Crear la base de datos si no existe
 IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = 'cafeteria')
 BEGIN
     CREATE DATABASE cafeteria;
+    -- Esperar explícitamente que esté lista
+    WHILE NOT EXISTS (
+        SELECT state_desc 
+        FROM sys.databases 
+        WHERE name = 'cafeteria' AND state_desc = 'ONLINE'
+    )
+    BEGIN
+        WAITFOR DELAY '00:00:01';
+    END
 END
 GO
 
--- Usar la base de datos 'cafeteria'
+-- Usar la base de datos
 USE cafeteria;
 GO
 
