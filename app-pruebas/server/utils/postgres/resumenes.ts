@@ -1,7 +1,7 @@
 //consultas de resumenes o totales
 async function resumenesContarOrdenes(): Promise<number>  {
     let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/postgres/resumenes/countordenes', {
+    await $fetch('/api/postgres/resumenes/countordenes', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -17,7 +17,7 @@ async function resumenesContarOrdenes(): Promise<number>  {
 
 async function resumenesProductos(): Promise<number>  {
     let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/postgres/resumenes/productosdiarios', {
+    await $fetch('/api/postgres/resumenes/productosdiarios', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ async function resumenesProductos(): Promise<number>  {
 
 async function resumenesTotalDiario() : Promise<number> {
     let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/postgres/resumenes/totaldiario', {
+    await $fetch('/api/postgres/resumenes/totaldiario', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ async function resumenesProductosFecha(): Promise<number> {
     console.log("Fecha generada:", fecha); // Útil para depurar
 
     try {
-        await $fetch('http://localhost:3000/api/postgres/resumenes/productosdiariosfecha?fecha=' + fecha, {
+        await $fetch('/api/postgres/resumenes/productosdiariosfecha?fecha=' + fecha, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ async function resumenesProductosFecha(): Promise<number> {
 
 async function resumenesTopten(): Promise<number>  {
     let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/postgres/resumenes/topten', {
+    await $fetch('/api/postgres/resumenes/topten', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

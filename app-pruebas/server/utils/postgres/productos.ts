@@ -14,7 +14,7 @@ async function productosInsertar(total: number,inicioId:number): Promise<number>
         console.log('Datos del producto:', JSON.stringify(ldata, null, 2));
 
         //agrego usando $fetch        
-        await $fetch('http://localhost:3000/api/postgres/producto', {
+        await $fetch('/api/postgres/producto', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -33,7 +33,7 @@ async function productosInsertar(total: number,inicioId:number): Promise<number>
 
 async function productosConsultar(): Promise<number>  {    
     let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/postgres/productos', {
+    await $fetch('/api/postgres/productos', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ async function productosConsultarAzar(total:number): Promise<number>  {
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
         let id = Math.floor(Math.random() * pruebas.productos.insertar) + 1;
-        await $fetch('http://localhost:3000/api/postgres/producto/' + id, {
+        await $fetch('/api/postgres/producto/' + id, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ async function productosActualizar(total:number): Promise<number>  {
             categoria: Math.floor(Math.random() * pruebas.categorias.insertar) + 1,
         }
 
-        await $fetch('http://localhost:3000/api/postgres/producto/'+i, {
+        await $fetch('/api/postgres/producto/'+i, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ async function productosActualizar(total:number): Promise<number>  {
 async function productosEliminar(total:number): Promise<number>  {
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
-        await $fetch('http://localhost:3000/api/postgres/producto/'+i, {
+        await $fetch('/api/postgres/producto/'+i, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',

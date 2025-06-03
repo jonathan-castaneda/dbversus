@@ -15,7 +15,7 @@ async function categoriasInsertar(total: number, inicioId:number): Promise<numbe
         console.log(`Insertando categoria con id: ${ldata.id}`)
         console.log('Datos del categoria:', JSON.stringify(ldata, null, 2));
         //agrego usando $fetch        
-        await $fetch('http://localhost:3000/api/postgres/categoria', {
+        await $fetch('/api/postgres/categoria', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -34,7 +34,7 @@ async function categoriasInsertar(total: number, inicioId:number): Promise<numbe
 //Consultando todas las categorias
 async function categoriasConsultar(): Promise<number> {    
     let start = new Date().getTime();
-    await $fetch('http://localhost:3000/api/postgres/categorias', {
+    await $fetch('/api/postgres/categorias', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -53,7 +53,7 @@ async function categoriasConsultarAzar(total:number): Promise<number> {
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
         let id = Math.floor(Math.random() * pruebas.categorias.insertar) + 1;
-        await $fetch('http://localhost:3000/api/postgres/categoria/' + id, {
+        await $fetch('/api/postgres/categoria/' + id, {
             method: 'GET',
             headers: {
                     'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ async function categoriasActualizar(total:number): Promise<number> {
             id: i,
             nombre: "Categoria " + i + " Actualizada",
         }
-        await $fetch('http://localhost:3000/api/postgres/categoria/'+i, {
+        await $fetch('/api/postgres/categoria/'+i, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ async function categoriasActualizar(total:number): Promise<number> {
 async function categoriasEliminar(total:number): Promise<number> {
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
-        await $fetch('http://localhost:3000/api/postgres/categoria/'+i, {
+        await $fetch('/api/postgres/categoria/'+i, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',

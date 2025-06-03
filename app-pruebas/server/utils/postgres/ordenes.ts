@@ -15,7 +15,7 @@ async function ordenesInsertar(total:number, totaldetalle:number,inicioId:number
         console.log(`Insertando ordenes con id: ${ldata.id}`)
         console.log('Datos del ordenes:', JSON.stringify(ldata, null, 2));
         //agrego usando $fetch        
-        await $fetch('http://localhost:3000/api/postgres/orden', {
+        await $fetch('/api/postgres/orden', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -50,7 +50,7 @@ async function detalleOrdenInsertar(idOrden: number, totaldetalle: number, inici
                         precio: Math.floor(Math.random() * 100) + 1,
                     }
                     //agrego usando $fetch        
-                    await $fetch('http://localhost:3000/api/postgres/detalleorden', {
+                    await $fetch('/api/postgres/detalleorden', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -72,7 +72,7 @@ async function ordenesConsultarAzar(total:number, inicioId:number): Promise<numb
     let start = new Date().getTime();
     for (let i = 1; i <= total; i++) {
         let id = Math.floor(Math.random() * Number(pruebas.ordenes.insertar)) + Number(inicioId);
-        await $fetch('http://localhost:3000/api/postgres/orden/' + id, {
+        await $fetch('/api/postgres/orden/' + id, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -82,7 +82,7 @@ async function ordenesConsultarAzar(total:number, inicioId:number): Promise<numb
             },
         })
         //ahora consultamos los detalles de la orden
-        await $fetch('http://localhost:3000/api/postgres/detalleorden/' + id, {
+        await $fetch('/api/postgres/detalleorden/' + id, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -108,7 +108,7 @@ async function ordenesActualizar(total:number, inicioId:number): Promise<number>
             fecha: new Date().toISOString(),
             total: Math.floor(Math.random() * 100) + 1,
         }
-        await $fetch('http://localhost:3000/api/postgres/orden/'+i, {
+        await $fetch('/api/postgres/orden/'+i, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -120,7 +120,7 @@ async function ordenesActualizar(total:number, inicioId:number): Promise<number>
         })
         //ahora actualizamos los detalles de la orden, primero hacemos GET y traemos todos los detalles
         // luego le multiplicamos por dos la cantidad y enviamos las actualizaciones de cada detalle
-        let datos = await $fetch('http://localhost:3000/api/postgres/detalleorden/' + i, {
+        let datos = await $fetch('/api/postgres/detalleorden/' + i, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -143,7 +143,7 @@ async function ordenesActualizar(total:number, inicioId:number): Promise<number>
             }
             //console.log(ldatadetalle)
             //ahora invocamos PUT detalleorden para enviar los cambios
-            await $fetch('http://localhost:3000/api/postgres/detalleorden/' + ldatos[j].idorden + '/'+  ldatos[j].idproducto  , {
+            await $fetch('/api/postgres/detalleorden/' + ldatos[j].idorden + '/'+  ldatos[j].idproducto  , {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -166,7 +166,7 @@ async function ordenesEliminar(total:number, inicioId:number) : Promise<number>{
     let start = new Date().getTime();
     for (let i = inicioId; i <= Number(total) + Number(inicioId); i++) {
         
-        await $fetch('http://localhost:3000/api/postgres/orden/'+i, {
+        await $fetch('/api/postgres/orden/'+i, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
