@@ -138,10 +138,33 @@ services:
       - ../firebird/cafeteria.sql:/docker-entrypoint-initdb.d/cafeteria.sql:Z  # Script de inicialización
       - ../firebird/firebird.conf:/opt/firebird/firebird.conf:Z  # Montar el archivo de configuración personalizado
     deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 1G
-        reservations:
-          cpus: '1'
-          memory: 1G
+          resources:
+            limits:
+              cpus: '1'
+              memory: 1G
+            reservations:
+              cpus: '1'
+              memory: 1G
+
+# #SI LA BASE DE DATOS ES POSTGRESQL
+#   postgres:
+#       image: postgres:15-alpine
+#       container_name: postgres
+#       restart: unless-stopped
+#       environment:
+#         POSTGRES_USER: admin
+#         POSTGRES_PASSWORD: admin
+#         POSTGRES_DB: cafeteria
+#       ports:
+#         - "5432:5432"
+#       volumes:
+#         - ../postgressql/cafeteria.sql:/docker-entrypoint-initdb.d/cafeteria.sql
+#       deploy:
+#         resources:
+#           limits:
+#             cpus: '1'
+#             memory: 1G
+#           reservations:
+#             cpus: '1'
+#             memory: 1G
+
