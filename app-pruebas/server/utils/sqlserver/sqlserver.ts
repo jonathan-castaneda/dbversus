@@ -9,7 +9,7 @@ const sequelizeSqlServer = new Sequelize({
   dialect: "mssql",
   database: "cafeteria",
   username: "sa",
-  password: "TuPasswordFuerte123",
+  password: "Arevalo123_",
   host: hostdb,
   port: 1433,
   dialectOptions: {

@@ -1,7 +1,7 @@
 version: '3.1'
 services:
   appversus:
-    image: jonathancastaneda/dbversusapp:1.0
+    image: arevalogalicia/dbversusapp:1.4
     container_name: appversus
     restart: unless-stopped
     ports:
@@ -22,8 +22,9 @@ services:
     restart: unless-stopped
     environment:
       ACCEPT_EULA: "Y"
-      SA_PASSWORD: "TuPasswordFuerte123"
+      SA_PASSWORD: "Arevalo123_"
       MSSQL_ENCRYPT: "0" # <-- ¡Añade esta línea para que SQL Server no use encriptación!
+      
     ports:
       - "1433:1433"
     volumes:
@@ -35,12 +36,12 @@ services:
         /opt/mssql/bin/sqlservr & \
         sleep 40 && \
         # QUITAMOS -N y --TrustServerCertificate. SQL Server no encriptará.
-        until /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'TuPasswordFuerte123' -Q 'SELECT 1' > /dev/null 2>&1; \
+        until /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'Arevalo123_' -Q 'SELECT 1' > /dev/null 2>&1; \
         do echo 'Esperando que SQL Server esté listo...'; sleep 5; done; \
         echo 'SQL Server está listo. Comprobando script...' ; \
         if [ -f /docker-entrypoint-initdb.d/cafeteria.sql ]; then \
           echo 'SQL Server está listo. Ejecutando script...' && \
-          /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'TuPasswordFuerte123' -d master -i /docker-entrypoint-initdb.d/cafeteria.sql; \
+          /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'Arevalo123_' -d master -i /docker-entrypoint-initdb.d/cafeteria.sql; \
         else \
           echo 'Error: No se encontró el archivo SQL.'; \
         fi; \
