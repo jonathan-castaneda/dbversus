@@ -1,7 +1,7 @@
 FROM node:21.7.3-alpine as build
 WORKDIR /codigo
 COPY ["package.json", "package-lock.json*", "./"]
-# instala dependencias clear install
+ # instala dependencias clear install
 RUN npm ci
 #copiamos todos los archivos de la carpeta actual excepto node_modules
 # que se excluye por el archivo .dockerignore

@@ -28,11 +28,7 @@
                 <q-item-label>PostgreSQL</q-item-label>
               </q-item-section>
             </q-item>
-            <q-item clickable v-close-popup @click="navigateTo('/sqlite')">
-              <q-item-section>
-                <q-item-label>SQLite</q-item-label>
-              </q-item-section>
-            </q-item>
+            
           </q-list>
           <q-item clickable v-close-popup @click="navigateTo('/sqlserver')">
               <q-item-section>
@@ -81,11 +77,11 @@
                 <q-item-label>ScyllaDB</q-item-label>
               </q-item-section>
             </q-item>
-            <q-item clickable v-close-popup @click="navigateTo('/dynamodb')">
+            <!-- <q-item clickable v-close-popup @click="navigateTo('/dynamodb')">
               <q-item-section>
                 <q-item-label>DynamoDB</q-item-label>
               </q-item-section>
-            </q-item>            
+            </q-item>        -->
         </q-btn-dropdown>
         <!--
         <q-tab @click="navigateTo('/mariadb')"  label="MariaDB" class="text-capitalize" />

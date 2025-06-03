@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  rethinkdb:
+    image: rethinkdb:2.4
+    container_name: rethinkdb
+    ports:
+      - "8080:8080"     # Interfaz web de administración
+      - "28015:28015"   # Puerto de datos
+      - "29015:29015"   # Puerto de control
+
+  initdb:
+    build: ./initdb
+    depends_on:
+      - rethinkdb
