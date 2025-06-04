@@ -13,7 +13,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - HOST_DB=firebird
+      - HOST_DB=couchdb
     # depends_on:
     #   scylla:
     #     condition: service_healthy
@@ -45,6 +45,28 @@ services:
   #           reservations:
   #             cpus: '1'
   #             memory: 1G
+  #SI LA BASE DE DATOS ES COUCHDB
+  couchdb:
+    image: couchdb:3.1.1
+    container_name: couchdb
+    restart: unless-stopped
+    environment:
+      COUCHDB_USER: admin
+      COUCHDB_PASSWORD: password
+    ports:
+      - "5984:5984"
+    volumes:
+      - ../couchdb/entrypoint.sh:/entrypoint.sh
+      - ../couchdb/init-couchdb.sh:/init-couchdb.sh
+    entrypoint: [ "sh", "/entrypoint.sh" ]
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '1'
+          memory: 1G
   #SI LA BASE DE DATOS ES MONGODB
   # mongodb:
   #   image: mongo:6.0
@@ -157,28 +179,28 @@ services:
   #         memory: 1G  
 
 # #SI LA BASE ES FIREBIRD
-  firebird:
-    image: firebirdsql/firebird:latest
-    container_name: firebird
-    restart: unless-stopped
-    environment:
-      - FIREBIRD_DATABASE=cafeteria.fdb
-      - FIREBIRD_USER=SYSDBA
-      - FIREBIRD_PASSWORD=masterkey
-    ports:
-      - "3050:3050"  # Puerto predeterminado de Firebird
-    volumes:
-      - ../firebird/cafeteria.fdb:/firebird/data/cafeteria.fdb:Z  # Archivo de base de datos
-      - ../firebird/cafeteria.sql:/docker-entrypoint-initdb.d/cafeteria.sql:Z  # Script de inicialización
-      - ../firebird/firebird.conf:/opt/firebird/firebird.conf:Z  # Montar el archivo de configuración personalizado
-    deploy:
-          resources:
-            limits:
-              cpus: '1'
-              memory: 1G
-            reservations:
-              cpus: '1'
-              memory: 1G
+  #firebird:
+  #  image: firebirdsql/firebird:latest
+  #  container_name: firebird
+  #  restart: unless-stopped
+  #  environment:
+  #    - FIREBIRD_DATABASE=cafeteria.fdb
+  #    - FIREBIRD_USER=SYSDBA
+  #    - FIREBIRD_PASSWORD=masterkey
+  #  ports:
+  #    - "3050:3050"  # Puerto predeterminado de Firebird
+  #  volumes:
+  #    - ../firebird/cafeteria.fdb:/firebird/data/cafeteria.fdb:Z  # Archivo de base de datos
+  #    - ../firebird/cafeteria.sql:/docker-entrypoint-initdb.d/cafeteria.sql:Z  # Script de inicialización
+  #    - ../firebird/firebird.conf:/opt/firebird/firebird.conf:Z  # Montar el archivo de configuración personalizado
+  #  deploy:
+  #        resources:
+  #          limits:
+  #            cpus: '1'
+  #            memory: 1G
+  #          reservations:
+  #            cpus: '1'
+  #            memory: 1G
 
 # #SI LA BASE DE DATOS ES POSTGRESQL
 #   postgres:
