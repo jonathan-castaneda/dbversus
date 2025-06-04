@@ -224,3 +224,34 @@ services:
 #             cpus: '1'
 #             memory: 1G
 
+#Si la base de datos es SqlServer
+  # sqlserver:
+  #     image: mcr.microsoft.com/mssql/server:2017-latest
+  #     container_name: sqlserver1
+  #     restart: unless-stopped
+  #     environment:
+  #       ACCEPT_EULA: "Y"
+  #       SA_PASSWORD: "Arevalo123_"
+  #       MSSQL_ENCRYPT: "0"
+        
+  #     ports:
+  #       - "1433:1433"
+  #     volumes:
+  #       - ../sqlserver/cafeteria.sql:/docker-entrypoint-initdb.d/cafeteria.sql
+  #     entrypoint: >
+  #       /bin/bash -c "
+  #         echo 'Iniciando SQL Server...' && \
+  #         /opt/mssql/bin/sqlservr & \
+  #         sleep 40 && \
+  #         # QUITAMOS -N y --TrustServerCertificate. SQL Server no encriptará.
+  #         until /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'Arevalo123_' -Q 'SELECT 1' > /dev/null 2>&1; \
+  #         do echo 'Esperando que SQL Server esté listo...'; sleep 5; done; \
+  #         echo 'SQL Server está listo. Comprobando script...' ; \
+  #         if [ -f /docker-entrypoint-initdb.d/cafeteria.sql ]; then \
+  #           echo 'SQL Server está listo. Ejecutando script...' && \
+  #           /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'Arevalo123_' -d master -i /docker-entrypoint-initdb.d/cafeteria.sql; \
+  #         else \
+  #           echo 'Error: No se encontró el archivo SQL.'; \
+  #         fi; \
+  #         tail -f /dev/null
+  #       "
